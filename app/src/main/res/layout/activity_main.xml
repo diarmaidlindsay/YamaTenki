@@ -32,7 +32,7 @@
                 android:id="@+id/button_main_mountain_name_search"
                 android:src="@drawable/button_search_name"
                 style="@style/MainScreenButtonLeft"
-                android:layout_weight="0.25" />
+                android:layout_weight="0.65" />
 
             <ImageView
                 android:layout_width="fill_parent"
@@ -41,7 +41,7 @@
                 android:id="@+id/button_main_20_closest_search"
                 android:src="@drawable/button_search_close_mountain"
                 style="@style/MainScreenButtonLeft"
-                android:layout_weight="0.25" />
+                android:layout_weight="0.65" />
 
             <ImageView
                 android:layout_width="fill_parent"
@@ -50,17 +50,15 @@
                 android:id="@+id/button_main_my_mountain_list"
                 android:src="@drawable/button_my_yama_list"
                 style="@style/MainScreenButtonLeft"
-                android:layout_weight="0.25" />
+                android:layout_marginBottom="0dp"
+                android:layout_weight="0.65" />
 
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/image_main_deer"
-                android:id="@+id/button_main_hidden"
-                android:src="@drawable/button_settings"
-                style="@style/MainScreenButtonLeft"
-                android:visibility="invisible"
-                android:layout_weight="0.25" />
+                android:src="@drawable/deer"
+                android:layout_weight="0.20"/>
 
         </LinearLayout>
 
@@ -78,7 +76,7 @@
                 android:id="@+id/button_main_area_search"
                 android:src="@drawable/button_search_area"
                 style="@style/MainScreenButtonRight"
-                android:layout_weight="0.25" />
+                android:layout_weight="0.65" />
 
             <ImageView
                 android:layout_width="fill_parent"
@@ -87,7 +85,7 @@
                 android:id="@+id/button_main_height_search"
                 android:src="@drawable/button_search_height"
                 style="@style/MainScreenButtonRight"
-                android:layout_weight="0.25" />
+                android:layout_weight="0.65" />
 
             <ImageView
                 android:layout_width="fill_parent"
@@ -96,7 +94,8 @@
                 android:id="@+id/button_main_memo"
                 android:src="@drawable/button_my_memo"
                 style="@style/MainScreenButtonRight"
-                android:layout_weight="0.25" />
+                android:layout_marginBottom="0dp"
+                android:layout_weight="0.65" />
 
             <ImageView
                 android:layout_width="fill_parent"
@@ -104,17 +103,13 @@
                 android:contentDescription="@string/button_main_settings"
                 android:id="@+id/button_main_settings"
                 android:src="@drawable/button_settings"
+                android:layout_weight="0.20"
                 style="@style/MainScreenButtonRight"
-                android:layout_weight="0.25" />
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp" />
 
         </LinearLayout>
 
     </LinearLayout>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/image_main_deer"
-        android:src="@drawable/deer" />
 
 </RelativeLayout>
