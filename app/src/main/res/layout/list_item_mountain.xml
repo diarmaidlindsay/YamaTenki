@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight=".50"
+        android:gravity="start"
+        android:id="@+id/mountain_list_name"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_gravity="center" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight=".25"
+        android:gravity="center"
+        android:id="@+id/mountain_list_difficulty"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight=".25"
+        android:gravity="end"
+        android:id="@+id/mountain_list_height"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_gravity="center" />
+
+</LinearLayout>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="yama_background" type="color">#f6f6d4</item>
-    <item name="default_text_color" type="color">#51341c</item>
+    <item name="yama_brown" type="color">#51341c</item>
+    <item name="table_bg_alt" type="color">#d9be94</item>
 </resources>
