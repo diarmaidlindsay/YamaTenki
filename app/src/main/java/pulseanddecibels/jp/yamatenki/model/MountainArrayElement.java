@@ -3,17 +3,19 @@ package pulseanddecibels.jp.yamatenki.model;
 /**
  * Created by Diarmaid Lindsay on 2015/09/28.
  * Copyright Pulse and Decibels 2015
+ *
+ * Representation of a mountain "list" array element from "mountainList" JSON
  */
-public class MountainListItem {
+public class MountainArrayElement {
     String yid;
     String title;
     String kana;
-    Coordinate coordinate;
+    CoordinateElement coordinate;
     int area;
     int height;
     int currentMountainIndex;
 
-    public MountainListItem(String yid, String title, String kana, Coordinate coordinate, int area, int height, int currentMountainIndex) {
+    public MountainArrayElement(String yid, String title, String kana, CoordinateElement coordinate, int area, int height, int currentMountainIndex) {
         this.yid = yid;
         this.title = title;
         this.kana = kana;
@@ -35,7 +37,7 @@ public class MountainListItem {
         return kana;
     }
 
-    public Coordinate getCoordinate() {
+    public CoordinateElement getCoordinate() {
         return coordinate;
     }
 

@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
-        <!-- Customize your theme here. -->
+
     </style>
     <style name="ScreenTitle" parent="android:TextAppearance.Large">
         <item name="android:textSize">48sp</item>
@@ -28,5 +28,45 @@
         <item name="android:layout_height">2dp</item>
         <item name="android:background">@color/yama_brown</item>
     </style>
-
+    <style name="SmallBrownText">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/yama_brown</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="MediumBrownText">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/yama_brown</item>
+    </style>
+    <style name="ForecastTableHeader" parent="MediumBrownText">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@color/yama_brown</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="ForecastTableLeftSideColumn" parent="SmallBrownText">
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@color/table_bg_alt</item>
+        <item name="android:layout_weight">0.25</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_width">0dp</item>
+    </style>
+    <style name="ForecastTableLeftSideColumnGray" parent="ForecastTableLeftSideColumn">
+        <item name="android:background">@android:color/darker_gray</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="ForecastTableText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/yama_brown</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_weight">0.15</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="ForecastTableImage">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0.15</item>
+    </style>
 </resources>

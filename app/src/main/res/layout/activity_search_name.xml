@@ -39,40 +39,37 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/SmallBrownText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/table_header_name"
                 android:text="@string/text_search_table_header_name"
-                android:textSize="12sp"
                 android:clickable="true"
                 android:layout_weight=".60"
-                android:textColor="@color/yama_brown"
                 android:gravity="start"
                 android:paddingLeft="20dp"
                 android:paddingTop="10dp"/>
 
             <TextView
+                style="@style/SmallBrownText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/table_header_difficulty"
                 android:text="@string/text_search_table_header_difficulty"
-                android:textSize="12sp"
                 android:clickable="true"
                 android:layout_weight="0.10"
                 android:gravity="center"
-                android:textColor="@color/yama_brown"
                 android:paddingTop="10dp"/>
 
             <TextView
+                style="@style/SmallBrownText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/table_header_height"
                 android:text="@string/text_search_table_header_height"
-                android:textSize="12sp"
                 android:clickable="true"
                 android:layout_weight="0.15"
                 android:gravity="center"
-                android:textColor="@color/yama_brown"
                 android:paddingTop="10dp"/>
 
         </LinearLayout>

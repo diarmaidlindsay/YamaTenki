@@ -1,48 +1,35 @@
 package pulseanddecibels.jp.yamatenki.model;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+
+import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/29.
  * Copyright Pulse and Decibels 2015
+ *
+ * Representation of a mountain in the "mountain_list" JSON
  */
-public class MountainListJson {
-    ArrayList<MountainListItem> mountainListItems;
-    String timeStampString;
+public class MountainListJSON {
+    ArrayList<MountainArrayElement> mountainArrayElements;
+    String timestamp;
 
-    public MountainListJson() {
-        mountainListItems = new ArrayList<>();
+    public MountainListJSON() {
+        mountainArrayElements = new ArrayList<>();
         String timeStampString = "";
     }
 
-    public MountainListJson(ArrayList<MountainListItem> mountainListItems, String timeStampString) {
-        this.mountainListItems = mountainListItems;
-        this.timeStampString = timeStampString;
+    public MountainListJSON(ArrayList<MountainArrayElement> mountainArrayElements, String timeStampString) {
+        this.mountainArrayElements = mountainArrayElements;
+        this.timestamp = timeStampString;
     }
 
-    public ArrayList<MountainListItem> getMountainListItems() {
-        return mountainListItems;
+    public ArrayList<MountainArrayElement> getMountainArrayElements() {
+        return mountainArrayElements;
     }
 
-    public Timestamp getTimeStamp() {
-        //may need tweaked
-        //http://developer.android.com/reference/java/text/SimpleDateFormat.html
-        Timestamp timestamp = null;
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'1T'HH:mm:ss.ZZZZZ", Locale.JAPAN);
-            Date date = dateFormat.parse(timeStampString);
-            timestamp = new Timestamp(date.getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        //"timestamp" : "2015-09-181T00:00:00.+09:00"
-
-        return timestamp;
+    public Timestamp getTimestamp() {
+        return Utils.getTimeStamp(timestamp);
     }
 }

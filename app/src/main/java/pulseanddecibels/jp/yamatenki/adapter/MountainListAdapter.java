@@ -1,6 +1,7 @@
 package pulseanddecibels.jp.yamatenki.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pulseanddecibels.jp.yamatenki.R;
-import pulseanddecibels.jp.yamatenki.model.MountainListItem;
-import pulseanddecibels.jp.yamatenki.model.MountainListJson;
-import pulseanddecibels.jp.yamatenki.utils.JsonDownloader;
-import pulseanddecibels.jp.yamatenki.utils.JsonParser;
+import pulseanddecibels.jp.yamatenki.activity.MountainForecastActivity;
+import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
+import pulseanddecibels.jp.yamatenki.model.MountainListJSON;
+import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
+import pulseanddecibels.jp.yamatenki.utils.JSONParser;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/28.
@@ -24,7 +26,7 @@ import pulseanddecibels.jp.yamatenki.utils.JsonParser;
  */
 public class MountainListAdapter extends BaseAdapter {
 
-    private List<MountainListItem> mountainList = new ArrayList<>();
+    private List<MountainArrayElement> mountainList = new ArrayList<>();
     final SparseIntArray difficultyArray = new SparseIntArray() {
         {
             append(1, R.drawable.a_grade);
@@ -42,11 +44,11 @@ public class MountainListAdapter extends BaseAdapter {
     }
 
     private void initialiseDataSets() {
-        String json = JsonDownloader.getMockMountainList(mContext);
-        //String json = JsonDownloader.getJsonFromServer(); // Future way
+        String json = JSONDownloader.getMockMountainList(mContext);
+        //String json = JSONDownloader.getJsonFromServer(); // Future way
         //Will be stored in database eventually, in future will get from datasource
-        MountainListJson mountainListJson = JsonParser.parseMountainsFromMountainList(json);
-        mountainList = mountainListJson.getMountainListItems();
+        MountainListJSON mountainListJSON = JSONParser.parseMountainsFromMountainList(json);
+        mountainList = mountainListJSON.getMountainArrayElements();
     }
 
     @Override
@@ -89,17 +91,23 @@ public class MountainListAdapter extends BaseAdapter {
             viewHolder = (ViewHolderItem) convertView.getTag();
         }
 
-        MountainListItem mountainListItem = (MountainListItem) getItem(position);
-        viewHolder.name.setText(mountainListItem.getTitle());
-        String mountainId = mountainListItem.getYid();
+        //check first bit, if set then it is an odd number. We'll give alternate rows different backgrounds
+        if((position % 2) == 0) {
+            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.table_bg_alt));
+        }
+        MountainArrayElement mountainArrayElement = (MountainArrayElement) getItem(position);
+        viewHolder.name.setText(mountainArrayElement.getTitle());
+        final String yid = mountainArrayElement.getYid();
         final int difficulty = getRandomDifficulty(); //TODO : Lookup from current weather forecast (for now make random)
         viewHolder.difficulty.setImageResource(difficultyArray.get(difficulty));
-        viewHolder.height.setText(String.valueOf(mountainListItem.getHeight())+"m");
+        viewHolder.height.setText(String.valueOf(mountainArrayElement.getHeight())+"m");
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(mContext, MountainForecastActivity.class);
+                intent.putExtra("yid", yid);
+                mContext.startActivity(intent);
             }
         });
 

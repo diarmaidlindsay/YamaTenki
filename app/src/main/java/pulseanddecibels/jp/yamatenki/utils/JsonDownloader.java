@@ -13,6 +13,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import pulseanddecibels.jp.yamatenki.R;
 
@@ -20,7 +22,7 @@ import pulseanddecibels.jp.yamatenki.R;
  * Created by Diarmaid Lindsay on 2015/09/28.
  * Copyright Pulse and Decibels 2015
  */
-public class JsonDownloader {
+public class JSONDownloader {
 
     /**
      * Sample code from StackOverflow.
@@ -50,7 +52,7 @@ public class JsonDownloader {
             }
             result = sb.toString();
         } catch (Exception e) {
-            Log.e(JsonDownloader.class.getSimpleName(), "Error when downloading JSON from server");
+            Log.e(JSONDownloader.class.getSimpleName(), "Error when downloading JSON from server");
         } finally {
             try {
                 if (inputStream != null) inputStream.close();
@@ -61,11 +63,7 @@ public class JsonDownloader {
         return result;
     }
 
-    /**
-     * Temporary while in development
-     */
-    public static String getMockMountainList(Context context) {
-        InputStream inputStream = context.getResources().openRawResource(R.raw.mountain_list);
+    private static String readJSONFile(InputStream inputStream) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
         StringBuilder stringBuilder = new StringBuilder();
@@ -82,5 +80,31 @@ public class JsonDownloader {
             return null;
         }
         return stringBuilder.toString();
+    }
+
+    /**
+     * Temporary while in development
+     */
+    public static String getMockMountainList(Context context) {
+        InputStream inputStream = context.getResources().openRawResource(R.raw.mountain_list);
+        return readJSONFile(inputStream);
+    }
+
+    private static final Map<String, Integer> detailJSONFiles;
+    static
+    {
+        detailJSONFiles = new HashMap<>();
+        detailJSONFiles.put("id0001", R.raw.id0001);
+        detailJSONFiles.put("id0002", R.raw.id0002);
+    }
+
+    public static String getMockMountainDetail(Context context, String yid) {
+        yid = yid.toLowerCase();
+        Integer detailJSONFile = detailJSONFiles.get(yid);
+        if(detailJSONFile != null) {
+            InputStream inputStream = context.getResources().openRawResource(detailJSONFile);
+            return readJSONFile(inputStream);
+        }
+        return null;
     }
 }

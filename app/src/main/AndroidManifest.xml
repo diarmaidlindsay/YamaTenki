@@ -30,7 +30,7 @@
         </activity>
 
         <!-- Mountain Detail Activity -->
-        <activity android:name=".activity.MountainDetailActivity"
+        <activity android:name=".activity.MountainForecastActivity"
             android:label="@string/app_name">
 
         </activity>

@@ -15,4 +15,13 @@
     <string name="text_search_table_header_name">名前</string>
     <string name="text_search_table_header_difficulty">現在の登山指数</string>
     <string name="text_search_table_header_height">標高</string>
+    <string name="text_unset">NA</string>
+    <string name="text_forecast_table_pressure">高度%%sm付近（%%shPa )</string>
+    <string name="text_forecast_table_time">時間</string>
+    <string name="text_forecast_table_difficulty">登山指数</string>
+    <string name="text_forecast_atmospheric_temperature">気温（°C）</string>
+    <string name="text_forecast_wind_speed">風(m/s)</string>
+    <string name="text_forecast_closest_city_weather_info">%%sの気象情報</string>
+    <string name="text_forecast_weather">天気</string>
+    <string name="text_forecast_chance_of_rain">降水確率（％）</string>
 </resources>
