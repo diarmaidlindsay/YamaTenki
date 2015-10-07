@@ -1,0 +1,105 @@
+// ID0001.json
+
+{
+	"mountain" : {
+		"yid" : "ID0001",
+		"title" : "富士山富士宮口５合目",
+		"kana" : "ふじさんふじみやぐちごごうめ",
+		"coordinate" : {
+			"lat" : 40.6935133,
+			"lng" : 140.9367265
+		},
+		"area" : 4,
+		"height" : 2318,
+		"currentMountainIndex" : 1
+	},
+
+	"forecasts" : [ //short term (detailed)
+		{
+			"dateTime" : "2015-09-18T06:00:00.+09:00",
+			"mountainIndex" : 1,
+			"windAndTemperatures" : [
+				{
+					"temperature" : 7,
+					"windVelocity" : 12,
+					"windDirection" : 1
+				},
+				{
+					"temperature" : 13,
+					"windVelocity" : 9,
+					"windDirection" : 2
+				}
+			],
+			"weather" : 1,
+			"temperature" : 22,
+			"precipitation" : 0 //mm
+		},
+		{
+			"dateTime" : "2015-09-18T09:00:00.+09:00",
+			"mountainIndex" : 2,
+			"windAndTemperatures" : [
+				{
+					"temperature" : 7,
+					"windVelocity" : 11,
+					"windDirection" : 1
+				},
+				{
+					"temperature" : 13,
+					"windVelocity" : 8,
+					"windDirection" : 2
+				}
+			],
+			"weather" : 1,
+			"temperature" : 22,
+			"precipitation" : 0.1 //mm
+		}
+	],
+	"forecastsDaily" : [ //long term (rough)
+		{
+			"dateTime" : "2015-09-20T00:00:00.+09:00",
+			"mountainIndex" : 1,
+			"windAndTemperatures" : [
+				{
+					"temperature" : 7,
+					"windVelocity" : 6,
+					"windDirection" : 2
+				},
+				{
+					"temperature" : 12,
+					"windVelocity" : 1,
+					"windDirection" : 0
+				}
+			],
+			"weather" : 0,
+			"temperatureHigh" : 28,
+			"temperatureLow" : 19,
+			"precipitation" : 10 //percentage
+		},
+		{
+			"dateTime" : "2015-09-21T00:00:00.+09:00",
+			"mountainIndex" : 3,
+			"windAndTemperatures" : [
+				{
+					"temperature" : 7,
+					"windVelocity" : 4,
+					"windDirection" : 3
+				},
+				{
+					"temperature" : 10,
+					"windVelocity" : 4,
+					"windDirection" : 4
+				}
+			],
+			"weather" : 3,
+			"temperatureHigh" : 24,
+			"temperatureLow" : 16,
+			"precipitation" : 60 //percentage
+		}
+	],
+	"referenceCity" : "富士宮市",
+	"heights" : [
+		3100,
+		2000
+	],
+	"timestamp" : "2015-09-18T00:00:00.+09:00"
+}

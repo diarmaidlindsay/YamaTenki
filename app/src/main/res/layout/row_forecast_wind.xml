@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            style="@style/ForecastTableLeftSideColumn"
+            android:text="@string/text_forecast_wind_speed"/>
+        <TextView
+            style="@style/ForecastTableText"
+            android:text="@string/text_unset"
+            android:id="@+id/forecast_wind_00"/>
+        <TextView
+            style="@style/ForecastTableText"
+            android:text="@string/text_unset"
+            android:id="@+id/forecast_wind_03"/>
+        <TextView
+            style="@style/ForecastTableText"
+            android:text="@string/text_unset"
+            android:id="@+id/forecast_wind_06"/>
+        <TextView
+            style="@style/ForecastTableText"
+            android:text="@string/text_unset"
+            android:id="@+id/forecast_wind_09"/>
+        <TextView
+            style="@style/ForecastTableText"
+            android:text="@string/text_unset"
+            android:id="@+id/forecast_wind_12"/>
+    </LinearLayout>
+</TableRow>

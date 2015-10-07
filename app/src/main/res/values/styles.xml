@@ -47,7 +47,7 @@
     <style name="ForecastTableLeftSideColumn" parent="SmallBrownText">
         <item name="android:textStyle">bold</item>
         <item name="android:background">@color/table_bg_alt</item>
-        <item name="android:layout_weight">0.25</item>
+        <item name="android:layout_weight">0.30</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:layout_width">0dp</item>
     </style>

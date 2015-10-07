@@ -15,12 +15,12 @@ public class WindAndTemperatureElement {
         this.windDirection = windDirection;
     }
 
-    public int getTemperature() {
-        return temperature;
+    public String getTemperature() {
+        return ""+temperature;
     }
 
-    public int getWindVelocity() {
-        return windVelocity;
+    public String getWindVelocity() {
+        return ""+windVelocity;
     }
 
     public int getWindDirection() {

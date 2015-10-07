@@ -7,7 +7,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pulseanddecibels.jp.yamatenki.model.CoordinateElement;
 import pulseanddecibels.jp.yamatenki.model.ForecastArrayElement;
@@ -57,17 +59,21 @@ public class JSONParser {
             MountainArrayElement mountain = parseMountain(mountainObject);
 
             JSONArray forecasts = jsonRoot.optJSONArray("forecasts");
-            List<ForecastArrayElement> longTermForecastList = new ArrayList<>();
+            Map<String, ForecastArrayElement> shortTermForecastMap = new HashMap<>();
             //It will have 9-16 ForecastArrayElement objects according to the design
             for(int i = 0; i < forecasts.length(); i++) {
-                longTermForecastList.add(parseForecast(forecasts.getJSONObject(i)));
+                ForecastArrayElement element = parseForecast(forecasts.getJSONObject(i));
+                String key = DateUtils.timeStampToMapKey(element.getDateTime());
+                shortTermForecastMap.put(key, element);
             }
 
             JSONArray forecastsDaily = jsonRoot.optJSONArray("forecastsDaily");
-            List<ForecastArrayElement> shortTermForecastList = new ArrayList<>();
+            Map<String, ForecastArrayElement> longTermForecastMap = new HashMap<>();
             //It will have 9-16 ForecastArrayElement objects according to the design
             for(int i = 0; i < forecastsDaily.length(); i++) {
-                shortTermForecastList.add(parseForecast(forecastsDaily.getJSONObject(i)));
+                ForecastArrayElement element = parseForecast(forecastsDaily.getJSONObject(i));
+                String key = DateUtils.timeStampToMapKey(element.getDateTime());
+                longTermForecastMap.put(key, element);
             }
 
             String referenceCity = jsonRoot.optString("referenceCity");
@@ -78,7 +84,7 @@ public class JSONParser {
             }
             String dateTime = jsonRoot.optString("timestamp");
 
-            mountainForecastJSON = new MountainForecastJSON(mountain, longTermForecastList, shortTermForecastList,
+            mountainForecastJSON = new MountainForecastJSON(mountain, shortTermForecastMap, longTermForecastMap,
                     referenceCity, heightsList, dateTime);
 
         } catch (JSONException e) {

@@ -29,9 +29,9 @@ public class MountainListAdapter extends BaseAdapter {
     private List<MountainArrayElement> mountainList = new ArrayList<>();
     final SparseIntArray difficultyArray = new SparseIntArray() {
         {
-            append(1, R.drawable.a_grade);
-            append(2, R.drawable.b_grade);
-            append(3, R.drawable.c_grade);
+            append(1, R.drawable.a_difficulty_small);
+            append(2, R.drawable.b_difficulty_small);
+            append(3, R.drawable.c_difficulty_small);
         }
     };
     private Context mContext;

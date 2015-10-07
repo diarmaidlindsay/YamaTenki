@@ -90,19 +90,19 @@ public class JSONDownloader {
         return readJSONFile(inputStream);
     }
 
-    private static final Map<String, Integer> detailJSONFiles;
+    private static final Map<String, Integer> forecastJSONFiles;
     static
     {
-        detailJSONFiles = new HashMap<>();
-        detailJSONFiles.put("id0001", R.raw.id0001);
-        detailJSONFiles.put("id0002", R.raw.id0002);
+        forecastJSONFiles = new HashMap<>();
+        forecastJSONFiles.put("id0001", R.raw.id0001);
+        forecastJSONFiles.put("id0002", R.raw.id0002);
     }
 
-    public static String getMockMountainDetail(Context context, String yid) {
+    public static String getMockMountainForecast(Context context, String yid) {
         yid = yid.toLowerCase();
-        Integer detailJSONFile = detailJSONFiles.get(yid);
-        if(detailJSONFile != null) {
-            InputStream inputStream = context.getResources().openRawResource(detailJSONFile);
+        Integer forecastJSONFile = forecastJSONFiles.get(yid);
+        if(forecastJSONFile != null) {
+            InputStream inputStream = context.getResources().openRawResource(forecastJSONFile);
             return readJSONFile(inputStream);
         }
         return null;

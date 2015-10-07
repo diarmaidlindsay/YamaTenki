@@ -1,0 +1,32 @@
+// mountainList.json
+
+{
+	"list" : [
+		{
+			"yid" : "ID0001",
+			"title" : "富士山富士宮口５合目",
+			"kana" : "ふじさんふじみやぐちごごうめ",
+			"coordinate" : {
+				"lat" : 40.6935133,
+				"lng" : 140.9367265
+			},
+			"area" : 4,
+			"height" : 2318,
+			"currentMountainIndex" : 1
+		},
+		{
+			"yid" : "ID0002",
+			"title" : "びわ湖バレイ",
+			"kana" : "びわこばれい",
+			"coordinate" : {
+				"lat" : 35.2030409,
+				"lng" : 135.9068334
+			},
+			"area" : 1,
+			"height" : 1100,
+			"currentMountainIndex" : 2
+		}
+
+	],
+	"timestamp" : "2015-09-181T00:00:00.+09:00"
+}

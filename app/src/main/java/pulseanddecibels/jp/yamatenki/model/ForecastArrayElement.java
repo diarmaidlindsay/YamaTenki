@@ -57,19 +57,19 @@ public class ForecastArrayElement {
         return weather;
     }
 
-    public Integer getTemperatureHigh() {
-        return temperatureHigh;
+    public String getTemperatureHigh() {
+        return ""+temperatureHigh;
     }
 
-    public Integer getTemperatureLow() {
-        return temperatureLow;
+    public String getTemperatureLow() {
+        return ""+temperatureLow;
     }
 
-    public Integer getTemperature() {
-        return temperature;
+    public String getTemperature() {
+        return ""+temperature;
     }
 
-    public float getPrecipitation() {
-        return precipitation;
+    public String getPrecipitation() {
+        return ""+precipitation;
     }
 }
