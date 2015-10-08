@@ -21,15 +21,11 @@
 
         <SearchView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:id="@+id/search_name_searchView"
             android:background="@drawable/round_edittext"
-            android:drawableRight="@drawable/round_edittext"
-            android:drawableEnd="@drawable/round_edittext"
             android:inputType="textAutoComplete"
             android:hint="@string/text_search_name_textbox"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
             android:layout_marginBottom="10dp"
             android:textColorHint="@android:color/darker_gray"
             android:textAppearance="?android:attr/textAppearanceSmallInverse"/>
