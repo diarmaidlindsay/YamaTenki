@@ -28,6 +28,8 @@ public class DateUtils {
         }
     };
 
+    private static DateTimeZone JAPAN_TIME_ZONE = DateTimeZone.forOffsetHours(9);
+
     //0 == today, 1 == tomorrow etc
     private static final String[] JAPANESE_DAY_NAMES =  { "本日", "明日", "", "", "", "", "" };
 
@@ -35,7 +37,7 @@ public class DateUtils {
         DateTime dateTime = new DateTime();
         //don't cause IndexOutOfBoundsException
         if(index > 0 && index < JAPANESE_DAY_NAMES.length - 1) {
-            dateTime.plusDays(index);
+            dateTime = dateTime.plusDays(index);
         }
         String format = "%s %d/%d （%s）";
         String dayString = JAPANESE_DAY_NAMES[index];
@@ -58,7 +60,7 @@ public class DateUtils {
     public static String timeToMapKey(int dayIndex, String columnId) {
         DateTime dateTime = new DateTime();
         if(dayIndex > 0) {
-            dateTime.plusDays(dayIndex);
+            dateTime = dateTime.plusDays(dayIndex);
         }
         return
             Utils.num2DigitString(dateTime.getMonthOfYear()) +
@@ -79,5 +81,13 @@ public class DateUtils {
             Utils.num2DigitString(dateTime.getDayOfMonth()) +
             "-" +
             Utils.num2DigitString(dateTime.getHourOfDay());
+    }
+
+    /**
+     * All instances of Joda Time (DateTime) will use this Time Zone.
+     * Should be called as early as possible during JVM instantiation
+     */
+    public static void setDefaultTimeZone() {
+        DateTimeZone.setDefault(JAPAN_TIME_ZONE);
     }
 }

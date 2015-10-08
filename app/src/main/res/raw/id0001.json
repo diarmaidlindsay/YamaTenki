@@ -16,7 +16,7 @@
 
 	"forecasts" : [ //short term (detailed)
 		{
-			"dateTime" : "2015-09-18T06:00:00.+09:00",
+			"dateTime" : "2015-10-08T09:00:00.+09:00",
 			"mountainIndex" : 1,
 			"windAndTemperatures" : [
 				{
@@ -35,7 +35,7 @@
 			"precipitation" : 0 //mm
 		},
 		{
-			"dateTime" : "2015-09-18T09:00:00.+09:00",
+			"dateTime" : "2015-10-08T12:00:00.+09:00",
 			"mountainIndex" : 2,
 			"windAndTemperatures" : [
 				{
@@ -101,5 +101,5 @@
 		3100,
 		2000
 	],
-	"timestamp" : "2015-09-18T00:00:00.+09:00"
+	"timestamp" : "2015-10-07T00:00:00.+09:00"
 }

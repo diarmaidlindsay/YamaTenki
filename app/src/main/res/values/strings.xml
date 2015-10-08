@@ -20,7 +20,6 @@
     <string name="text_forecast_table_difficulty">登山指数</string>
     <string name="text_forecast_atmospheric_temperature">気温（°C）</string>
     <string name="text_forecast_wind_speed">風（m/s）</string>
-    <string name="text_forecast_closest_city_weather_info">%%sの気象情報</string>
     <string name="text_forecast_weather">天気</string>
     <string name="text_forecast_chance_of_rain">降水確率（％）</string>
 </resources>

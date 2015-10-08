@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.view.View;
 
 import pulseanddecibels.jp.yamatenki.R;
+import pulseanddecibels.jp.yamatenki.utils.DateUtils;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/24.
@@ -15,14 +16,17 @@ import pulseanddecibels.jp.yamatenki.R;
  */
 public class SplashActivity extends Activity {
 
-    //Splash Screen Timeout
-    private static int SPLASH_TIME_OUT = 2000;
+    static {
+        //change to Japan Time Zone
+        DateUtils.setDefaultTimeZone();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         goFullScreen();
+        final int SPLASH_TIME_OUT = 2000;
         new Handler().postDelayed(new Runnable() {
 
             /*

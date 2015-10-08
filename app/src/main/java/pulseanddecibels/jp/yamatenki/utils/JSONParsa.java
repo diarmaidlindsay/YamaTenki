@@ -24,7 +24,7 @@ import pulseanddecibels.jp.yamatenki.model.WindAndTemperatureElement;
  *
  * Parse the JSON Data containing weather forecasts
  */
-public class JSONParser {
+public class JSONParsa {
     public static MountainListJSON parseMountainsFromMountainList(String json) {
         MountainListJSON mountainListJSON = new MountainListJSON();
         ArrayList<MountainArrayElement> mountains = new ArrayList<>();
@@ -42,7 +42,7 @@ public class JSONParser {
             mountainListJSON = new MountainListJSON(mountains, timestamp);
 
         } catch (JSONException e) {
-            Log.e(JSONParser.class.getSimpleName(), "Error while parsing Mountain List JSON");
+            Log.e(JSONParsa.class.getSimpleName(), "Error while parsing Mountain List JSON");
             e.printStackTrace();
         }
 
@@ -80,7 +80,7 @@ public class JSONParser {
             JSONArray heights = jsonRoot.optJSONArray("heights");
             List<Integer> heightsList = new ArrayList<>();
             for(int i = 0; i < heights.length(); i++) {
-                heightsList.add(heights.getInt(0));
+                heightsList.add(heights.getInt(i));
             }
             String dateTime = jsonRoot.optString("timestamp");
 
@@ -88,7 +88,7 @@ public class JSONParser {
                     referenceCity, heightsList, dateTime);
 
         } catch (JSONException e) {
-            Log.e(JSONParser.class.getSimpleName(), "Error while parsing Mountain Forecast JSON");
+            Log.e(JSONParsa.class.getSimpleName(), "Error while parsing Mountain Forecast JSON");
             e.printStackTrace();
         }
 

@@ -30,23 +30,18 @@
                     android:text="@string/text_forecast_table_time"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_time_00"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_time_03"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_time_06"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_time_09"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_time_12"/>
             </LinearLayout>
         </TableRow>
@@ -60,24 +55,24 @@
                     android:text="@string/text_forecast_table_difficulty"/>
                 <ImageView
                     style="@style/ForecastTableImage"
-                    android:id="@+id/forecast_difficulty_00"
-                    android:src="@drawable/c_difficulty_small"/>
+                    android:src="@drawable/difficulty_blank_small"
+                    android:id="@+id/forecast_difficulty_00"/>
                 <ImageView
                     style="@style/ForecastTableImage"
-                    android:id="@+id/forecast_difficulty_03"
-                    android:src="@drawable/b_difficulty_small"/>
+                    android:src="@drawable/difficulty_blank_small"
+                    android:id="@+id/forecast_difficulty_03"/>
                 <ImageView
                     style="@style/ForecastTableImage"
-                    android:id="@+id/forecast_difficulty_06"
-                    android:src="@drawable/a_difficulty_small"/>
+                    android:src="@drawable/difficulty_blank_small"
+                    android:id="@+id/forecast_difficulty_06"/>
                 <ImageView
                     style="@style/ForecastTableImage"
-                    android:id="@+id/forecast_difficulty_09"
-                    android:src="@drawable/b_difficulty_small"/>
+                    android:src="@drawable/difficulty_blank_small"
+                    android:id="@+id/forecast_difficulty_09"/>
                 <ImageView
                     style="@style/ForecastTableImage"
-                    android:id="@+id/forecast_difficulty_12"
-                    android:src="@drawable/c_difficulty_small"/>
+                    android:src="@drawable/difficulty_blank_small"
+                    android:id="@+id/forecast_difficulty_12"/>
             </LinearLayout>
         </TableRow>
         <include
@@ -102,7 +97,7 @@
             <TextView style="@style/SmallBrownText"
                 android:id="@+id/forecast_closest_city_weather_info_AM"
                 android:textColor="@android:color/darker_gray"
-                android:text="@string/text_forecast_closest_city_weather_info"
+                android:text="@string/text_unset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="start"
@@ -120,23 +115,23 @@
                 <ImageView
                     style="@style/ForecastTableImage"
                     android:id="@+id/forecast_picture_weather_00"
-                    android:src="@drawable/a_difficulty_small"/>
+                    android:src="@drawable/difficulty_blank_small"/>
                 <ImageView
                     style="@style/ForecastTableImage"
                     android:id="@+id/forecast_picture_weather_03"
-                    android:src="@drawable/b_difficulty_small"/>
+                    android:src="@drawable/difficulty_blank_small"/>
                 <ImageView
                     style="@style/ForecastTableImage"
                     android:id="@+id/forecast_picture_weather_06"
-                    android:src="@drawable/c_difficulty_small"/>
+                    android:src="@drawable/difficulty_blank_small"/>
                 <ImageView
                     style="@style/ForecastTableImage"
                     android:id="@+id/forecast_picture_weather_09"
-                    android:src="@drawable/b_difficulty_small"/>
+                    android:src="@drawable/difficulty_blank_small"/>
                 <ImageView
                     style="@style/ForecastTableImage"
                     android:id="@+id/forecast_picture_weather_12"
-                    android:src="@drawable/c_difficulty_small"/>
+                    android:src="@drawable/difficulty_blank_small"/>
             </LinearLayout>
         </TableRow>
         <TableRow>
@@ -149,23 +144,18 @@
                     android:text="@string/text_forecast_atmospheric_temperature"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_atmospheric_temp_00"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_atmospheric_temp_03"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_atmospheric_temp_06"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_atmospheric_temp_09"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_atmospheric_temp_12"/>
             </LinearLayout>
         </TableRow>
@@ -179,23 +169,18 @@
                     android:text="@string/text_forecast_chance_of_rain"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_rain_chance_00"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_rain_chance_03"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_rain_chance_06"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_rain_chance_09"/>
                 <TextView
                     style="@style/ForecastTableText"
-                    android:text="@string/text_unset"
                     android:id="@+id/forecast_rain_chance_12"/>
             </LinearLayout>
         </TableRow>

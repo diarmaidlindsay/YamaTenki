@@ -17,8 +17,8 @@ import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.activity.MountainForecastActivity;
 import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainListJSON;
-import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
-import pulseanddecibels.jp.yamatenki.utils.JSONParser;
+import pulseanddecibels.jp.yamatenki.utils.JSONDownloada;
+import pulseanddecibels.jp.yamatenki.utils.JSONParsa;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/28.
@@ -44,10 +44,10 @@ public class MountainListAdapter extends BaseAdapter {
     }
 
     private void initialiseDataSets() {
-        String json = JSONDownloader.getMockMountainList(mContext);
-        //String json = JSONDownloader.getJsonFromServer(); // Future way
+        String json = JSONDownloada.getMockMountainList(mContext);
+        //String json = JSONDownloada.getJsonFromServer(); // Future way
         //Will be stored in database eventually, in future will get from datasource
-        MountainListJSON mountainListJSON = JSONParser.parseMountainsFromMountainList(json);
+        MountainListJSON mountainListJSON = JSONParsa.parseMountainsFromMountainList(json);
         mountainList = mountainListJSON.getMountainArrayElements();
     }
 
