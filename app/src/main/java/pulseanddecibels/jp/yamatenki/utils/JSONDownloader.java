@@ -22,7 +22,7 @@ import pulseanddecibels.jp.yamatenki.R;
  * Created by Diarmaid Lindsay on 2015/09/28.
  * Copyright Pulse and Decibels 2015
  */
-public class JSONDownloada {
+public class JSONDownloader {
 
     /**
      * Sample code from StackOverflow.
@@ -52,7 +52,7 @@ public class JSONDownloada {
             }
             result = sb.toString();
         } catch (Exception e) {
-            Log.e(JSONDownloada.class.getSimpleName(), "Error when downloading JSON from server");
+            Log.e(JSONDownloader.class.getSimpleName(), "Error when downloading JSON from server");
         } finally {
             try {
                 if (inputStream != null) inputStream.close();

@@ -21,8 +21,8 @@ import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
 import pulseanddecibels.jp.yamatenki.model.WindAndTemperatureElement;
 import pulseanddecibels.jp.yamatenki.utils.DateUtils;
-import pulseanddecibels.jp.yamatenki.utils.JSONDownloada;
-import pulseanddecibels.jp.yamatenki.utils.JSONParsa;
+import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
+import pulseanddecibels.jp.yamatenki.utils.JSONParser;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
@@ -75,8 +75,8 @@ public class MountainForecastActivity extends Activity {
         currentDifficultyImage = (ImageView) findViewById(R.id.mountain_forecast_current_difficulty);
 
         initialiseWidgets();
-        populateWidgets(JSONParsa.parseMountainForecastFromFile(
-                JSONDownloada.getMockMountainForecast(this, yid)));
+        populateWidgets(JSONParser.parseMountainForecastFromFile(
+                JSONDownloader.getMockMountainForecast(this, yid)));
     }
 
     private void initialiseWidgets() {
