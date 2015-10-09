@@ -10,7 +10,7 @@
     <string name="image_main_deer">Picture of a deer</string>
     <string name="text_main_header">山サーチ</string>
     <string name="text_search_name_header">山の名前で探す</string>
-    <string name="text_search_name_textbox">漢字一文字やひらがなからでも検索できます。</string>
+    <string name="text_search_name_textbox_hint">漢字一文字やひらがなからでも検索できます。</string>
     <string name="text_search_name_search_button">検索</string>
     <string name="text_search_table_header_name">名前</string>
     <string name="text_search_table_header_difficulty">現在の登山指数</string>

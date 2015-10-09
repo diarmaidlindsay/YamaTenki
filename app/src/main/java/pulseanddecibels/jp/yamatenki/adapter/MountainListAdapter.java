@@ -100,7 +100,7 @@ public class MountainListAdapter extends BaseAdapter {
         final String yid = mountainArrayElement.getYid();
         final int difficulty = getRandomDifficulty(); //TODO : Lookup from current weather forecast (for now make random)
         viewHolder.difficulty.setImageResource(difficultyArray.get(difficulty));
-        viewHolder.height.setText(String.valueOf(mountainArrayElement.getHeight())+"m");
+        viewHolder.height.setText(String.format("%sm", String.valueOf(mountainArrayElement.getHeight())));
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
