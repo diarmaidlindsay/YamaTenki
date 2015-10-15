@@ -1,6 +1,7 @@
 package pulseanddecibels.jp.yamatenki.utils;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -90,17 +91,17 @@ public class JSONDownloader {
         return readJSONFile(inputStream);
     }
 
-    private static final Map<String, Integer> forecastJSONFiles;
+    private static final Map<Long, Integer> forecastJSONFiles;
     static
     {
         forecastJSONFiles = new HashMap<>();
-        forecastJSONFiles.put("id0001", R.raw.id0001);
-        forecastJSONFiles.put("id0002", R.raw.id0002);
+        forecastJSONFiles.put(1L, R.raw.id0001);
+        forecastJSONFiles.put(2L, R.raw.id0002);
     }
 
-    public static String getMockMountainForecast(Context context, String yid) {
-        yid = yid.toLowerCase();
-        Integer forecastJSONFile = forecastJSONFiles.get(yid);
+    @Nullable
+    public static String getMockMountainForecast(Context context, long mountainId) {
+        Integer forecastJSONFile = forecastJSONFiles.get(mountainId);
         if(forecastJSONFile != null) {
             InputStream inputStream = context.getResources().openRawResource(forecastJSONFile);
             return readJSONFile(inputStream);

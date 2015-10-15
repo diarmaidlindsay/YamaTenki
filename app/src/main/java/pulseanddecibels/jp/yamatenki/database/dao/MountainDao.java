@@ -26,10 +26,15 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Yid = new Property(1, String.class, "yid", false, "YID");
-        public final static Property Title = new Property(2, String.class, "title", false, "TITLE");
-        public final static Property Kana = new Property(3, String.class, "kana", false, "KANA");
-        public final static Property AreaId = new Property(4, long.class, "areaId", false, "AREA_ID");
+        public final static Property KanjiName = new Property(1, String.class, "kanjiName", false, "KANJI_NAME");
+        public final static Property KanjiNameArea = new Property(2, String.class, "kanjiNameArea", false, "KANJI_NAME_AREA");
+        public final static Property HiraganaName = new Property(3, String.class, "hiraganaName", false, "HIRAGANA_NAME");
+        public final static Property RomajiName = new Property(4, String.class, "romajiName", false, "ROMAJI_NAME");
+        public final static Property Height = new Property(5, Integer.class, "height", false, "HEIGHT");
+        public final static Property PrefectureId = new Property(6, long.class, "prefectureId", false, "PREFECTURE_ID");
+        public final static Property AreaId = new Property(7, long.class, "areaId", false, "AREA_ID");
+        public final static Property CoordinateId = new Property(8, long.class, "coordinateId", false, "COORDINATE_ID");
+        public final static Property ClosestTown = new Property(9, String.class, "closestTown", false, "CLOSEST_TOWN");
     };
 
     private DaoSession daoSession;
@@ -48,11 +53,16 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'MOUNTAIN' (" + //
-                "'_id' INTEGER PRIMARY KEY ," + // 0: id
-                "'YID' TEXT," + // 1: yid
-                "'TITLE' TEXT," + // 2: title
-                "'KANA' TEXT," + // 3: kana
-                "'AREA_ID' INTEGER NOT NULL );"); // 4: areaId
+                "'_id' INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "'KANJI_NAME' TEXT," + // 1: kanjiName
+                "'KANJI_NAME_AREA' TEXT," + // 2: kanjiNameArea
+                "'HIRAGANA_NAME' TEXT," + // 3: hiraganaName
+                "'ROMAJI_NAME' TEXT," + // 4: romajiName
+                "'HEIGHT' INTEGER," + // 5: height
+                "'PREFECTURE_ID' INTEGER NOT NULL ," + // 6: prefectureId
+                "'AREA_ID' INTEGER NOT NULL ," + // 7: areaId
+                "'COORDINATE_ID' INTEGER NOT NULL ," + // 8: coordinateId
+                "'CLOSEST_TOWN' TEXT);"); // 9: closestTown
     }
 
     /** Drops the underlying database table. */
@@ -71,21 +81,38 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
             stmt.bindLong(1, id);
         }
  
-        String yid = entity.getYid();
-        if (yid != null) {
-            stmt.bindString(2, yid);
+        String kanjiName = entity.getKanjiName();
+        if (kanjiName != null) {
+            stmt.bindString(2, kanjiName);
         }
  
-        String title = entity.getTitle();
-        if (title != null) {
-            stmt.bindString(3, title);
+        String kanjiNameArea = entity.getKanjiNameArea();
+        if (kanjiNameArea != null) {
+            stmt.bindString(3, kanjiNameArea);
         }
  
-        String kana = entity.getKana();
-        if (kana != null) {
-            stmt.bindString(4, kana);
+        String hiraganaName = entity.getHiraganaName();
+        if (hiraganaName != null) {
+            stmt.bindString(4, hiraganaName);
         }
-        stmt.bindLong(5, entity.getAreaId());
+ 
+        String romajiName = entity.getRomajiName();
+        if (romajiName != null) {
+            stmt.bindString(5, romajiName);
+        }
+ 
+        Integer height = entity.getHeight();
+        if (height != null) {
+            stmt.bindLong(6, height);
+        }
+        stmt.bindLong(7, entity.getPrefectureId());
+        stmt.bindLong(8, entity.getAreaId());
+        stmt.bindLong(9, entity.getCoordinateId());
+ 
+        String closestTown = entity.getClosestTown();
+        if (closestTown != null) {
+            stmt.bindString(10, closestTown);
+        }
     }
 
     @Override
@@ -105,10 +132,15 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
     public Mountain readEntity(Cursor cursor, int offset) {
         Mountain entity = new Mountain( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // yid
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // title
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // kana
-            cursor.getLong(offset + 4) // areaId
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // kanjiName
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // kanjiNameArea
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // hiraganaName
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // romajiName
+            cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5), // height
+            cursor.getLong(offset + 6), // prefectureId
+            cursor.getLong(offset + 7), // areaId
+            cursor.getLong(offset + 8), // coordinateId
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9) // closestTown
         );
         return entity;
     }
@@ -117,10 +149,15 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
     @Override
     public void readEntity(Cursor cursor, Mountain entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setYid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setTitle(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setKana(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setAreaId(cursor.getLong(offset + 4));
+        entity.setKanjiName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setKanjiNameArea(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setHiraganaName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setRomajiName(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setHeight(cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5));
+        entity.setPrefectureId(cursor.getLong(offset + 6));
+        entity.setAreaId(cursor.getLong(offset + 7));
+        entity.setCoordinateId(cursor.getLong(offset + 8));
+        entity.setClosestTown(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
      }
     
     /** @inheritdoc */
@@ -154,8 +191,14 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
             SqlUtils.appendColumns(builder, "T", getAllColumns());
             builder.append(',');
             SqlUtils.appendColumns(builder, "T0", daoSession.getAreaDao().getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T1", daoSession.getPrefectureDao().getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T2", daoSession.getCoordinateDao().getAllColumns());
             builder.append(" FROM MOUNTAIN T");
             builder.append(" LEFT JOIN AREA T0 ON T.'AREA_ID'=T0.'_id'");
+            builder.append(" LEFT JOIN PREFECTURE T1 ON T.'PREFECTURE_ID'=T1.'_id'");
+            builder.append(" LEFT JOIN COORDINATE T2 ON T.'COORDINATE_ID'=T2.'_id'");
             builder.append(' ');
             selectDeep = builder.toString();
         }
@@ -169,6 +212,18 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
         Area area = loadCurrentOther(daoSession.getAreaDao(), cursor, offset);
          if(area != null) {
             entity.setArea(area);
+        }
+        offset += daoSession.getAreaDao().getAllColumns().length;
+
+        Prefecture prefecture = loadCurrentOther(daoSession.getPrefectureDao(), cursor, offset);
+         if(prefecture != null) {
+            entity.setPrefecture(prefecture);
+        }
+        offset += daoSession.getPrefectureDao().getAllColumns().length;
+
+        Coordinate coordinate = loadCurrentOther(daoSession.getCoordinateDao(), cursor, offset);
+         if(coordinate != null) {
+            entity.setCoordinate(coordinate);
         }
 
         return entity;    

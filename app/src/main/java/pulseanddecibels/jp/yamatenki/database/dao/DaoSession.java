@@ -20,13 +20,15 @@ public class DaoSession extends AbstractDaoSession {
 
     private final DaoConfig mountainDaoConfig;
     private final DaoConfig coordinateDaoConfig;
-    private final DaoConfig areaDaoConfig;
     private final DaoConfig forecastDaoConfig;
+    private final DaoConfig areaDaoConfig;
+    private final DaoConfig prefectureDaoConfig;
 
     private final MountainDao mountainDao;
     private final CoordinateDao coordinateDao;
-    private final AreaDao areaDao;
     private final ForecastDao forecastDao;
+    private final AreaDao areaDao;
+    private final PrefectureDao prefectureDao;
 
     public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
@@ -38,28 +40,34 @@ public class DaoSession extends AbstractDaoSession {
         coordinateDaoConfig = daoConfigMap.get(CoordinateDao.class).clone();
         coordinateDaoConfig.initIdentityScope(type);
 
-        areaDaoConfig = daoConfigMap.get(AreaDao.class).clone();
-        areaDaoConfig.initIdentityScope(type);
-
         forecastDaoConfig = daoConfigMap.get(ForecastDao.class).clone();
         forecastDaoConfig.initIdentityScope(type);
 
+        areaDaoConfig = daoConfigMap.get(AreaDao.class).clone();
+        areaDaoConfig.initIdentityScope(type);
+
+        prefectureDaoConfig = daoConfigMap.get(PrefectureDao.class).clone();
+        prefectureDaoConfig.initIdentityScope(type);
+
         mountainDao = new MountainDao(mountainDaoConfig, this);
         coordinateDao = new CoordinateDao(coordinateDaoConfig, this);
-        areaDao = new AreaDao(areaDaoConfig, this);
         forecastDao = new ForecastDao(forecastDaoConfig, this);
+        areaDao = new AreaDao(areaDaoConfig, this);
+        prefectureDao = new PrefectureDao(prefectureDaoConfig, this);
 
         registerDao(Mountain.class, mountainDao);
         registerDao(Coordinate.class, coordinateDao);
-        registerDao(Area.class, areaDao);
         registerDao(Forecast.class, forecastDao);
+        registerDao(Area.class, areaDao);
+        registerDao(Prefecture.class, prefectureDao);
     }
     
     public void clear() {
         mountainDaoConfig.getIdentityScope().clear();
         coordinateDaoConfig.getIdentityScope().clear();
-        areaDaoConfig.getIdentityScope().clear();
         forecastDaoConfig.getIdentityScope().clear();
+        areaDaoConfig.getIdentityScope().clear();
+        prefectureDaoConfig.getIdentityScope().clear();
     }
 
     public MountainDao getMountainDao() {
@@ -70,12 +78,16 @@ public class DaoSession extends AbstractDaoSession {
         return coordinateDao;
     }
 
+    public ForecastDao getForecastDao() {
+        return forecastDao;
+    }
+
     public AreaDao getAreaDao() {
         return areaDao;
     }
 
-    public ForecastDao getForecastDao() {
-        return forecastDao;
+    public PrefectureDao getPrefectureDao() {
+        return prefectureDao;
     }
 
 }

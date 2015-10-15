@@ -13,12 +13,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.dao.query.QueryBuilder;
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.activity.MountainForecastActivity;
-import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
-import pulseanddecibels.jp.yamatenki.model.MountainListJSON;
-import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
-import pulseanddecibels.jp.yamatenki.utils.JSONParser;
+import pulseanddecibels.jp.yamatenki.database.Database;
+import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
+import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/28.
@@ -26,7 +26,7 @@ import pulseanddecibels.jp.yamatenki.utils.JSONParser;
  */
 public class MountainListAdapter extends BaseAdapter {
 
-    private List<MountainArrayElement> mountainList = new ArrayList<>();
+    private List mountainList = new ArrayList<>();
     final SparseIntArray difficultyArray = new SparseIntArray() {
         {
             append(1, R.drawable.a_difficulty_small);
@@ -44,11 +44,15 @@ public class MountainListAdapter extends BaseAdapter {
     }
 
     private void initialiseDataSets() {
-        String json = JSONDownloader.getMockMountainList(mContext);
-        //String json = JSONDownloader.getJsonFromServer(); // Future way
-        //Will be stored in database eventually, in future will get from datasource
-        MountainListJSON mountainListJSON = JSONParser.parseMountainsFromMountainList(json);
-        mountainList = mountainListJSON.getMountainArrayElements();
+//        String json = JSONDownloader.getMockMountainList(mContext);
+//        //String json = JSONDownloader.getJsonFromServer(); // Future way
+//        //Will be stored in database eventually, in future will get from datasource
+//        MountainListJSON mountainListJSON = JSONParser.parseMountainsFromMountainList(json);
+//        mountainList = mountainListJSON.getMountainArrayElements();
+
+        MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();
+        QueryBuilder qb = mountainDao.queryBuilder();
+        mountainList = qb.list();
     }
 
     @Override
@@ -73,13 +77,13 @@ public class MountainListAdapter extends BaseAdapter {
     private int getRandomDifficulty() {
         final int MIN = 1;
         final int MAX = 3;
-        return MIN + (int)(Math.random() * ((MAX - MIN) + 1));
+        return MIN + (int) (Math.random() * ((MAX - MIN) + 1));
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolderItem viewHolder;
-        if(convertView == null) {
+        if (convertView == null) {
             viewHolder = new ViewHolderItem();
             convertView = layoutInflater.inflate(R.layout.list_item_mountain, parent, false);
             viewHolder.name = (TextView) convertView.findViewById(R.id.mountain_list_name);
@@ -87,26 +91,26 @@ public class MountainListAdapter extends BaseAdapter {
             viewHolder.height = (TextView) convertView.findViewById(R.id.mountain_list_height);
 
             convertView.setTag(viewHolder);
-        }else {
+        } else {
             viewHolder = (ViewHolderItem) convertView.getTag();
         }
 
         //check first bit, if set then it is an odd number. We'll give alternate rows different backgrounds
-        if((position % 2) == 0) {
+        if ((position % 2) == 0) {
             convertView.setBackgroundColor(mContext.getResources().getColor(R.color.table_bg_alt));
         }
-        MountainArrayElement mountainArrayElement = (MountainArrayElement) getItem(position);
-        viewHolder.name.setText(mountainArrayElement.getTitle());
-        final String yid = mountainArrayElement.getYid();
+        Mountain mountain = (Mountain) getItem(position);
+        viewHolder.name.setText(mountain.getKanjiName());
+        final long mountainId = mountain.getId();
         final int difficulty = getRandomDifficulty(); //TODO : Lookup from current weather forecast (for now make random)
         viewHolder.difficulty.setImageResource(difficultyArray.get(difficulty));
-        viewHolder.height.setText(String.format("%sm", String.valueOf(mountainArrayElement.getHeight())));
+        viewHolder.height.setText(String.format("%sm", String.valueOf(mountain.getHeight())));
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MountainForecastActivity.class);
-                intent.putExtra("yid", yid);
+                intent.putExtra("mountainId", mountainId);
                 mContext.startActivity(intent);
             }
         });

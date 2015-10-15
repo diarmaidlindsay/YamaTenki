@@ -38,4 +38,8 @@ public class Utils {
     public static String num2DigitString(int number) {
         return number < 10 ? "0"+number : ""+number;
     }
+
+    public static boolean isNumeric(String value) {
+        return value.matches("\\d+");
+    }
 }

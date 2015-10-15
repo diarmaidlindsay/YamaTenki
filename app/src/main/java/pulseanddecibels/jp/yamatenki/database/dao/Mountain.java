@@ -11,10 +11,15 @@ import de.greenrobot.dao.DaoException;
 public class Mountain {
 
     private Long id;
-    private String yid;
-    private String title;
-    private String kana;
+    private String kanjiName;
+    private String kanjiNameArea;
+    private String hiraganaName;
+    private String romajiName;
+    private Integer height;
+    private long prefectureId;
     private long areaId;
+    private long coordinateId;
+    private String closestTown;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -25,6 +30,12 @@ public class Mountain {
     private Area area;
     private Long area__resolvedKey;
 
+    private Prefecture prefecture;
+    private Long prefecture__resolvedKey;
+
+    private Coordinate coordinate;
+    private Long coordinate__resolvedKey;
+
     private List<Forecast> forecastList;
 
     public Mountain() {
@@ -34,12 +45,17 @@ public class Mountain {
         this.id = id;
     }
 
-    public Mountain(Long id, String yid, String title, String kana, long areaId) {
+    public Mountain(Long id, String kanjiName, String kanjiNameArea, String hiraganaName, String romajiName, Integer height, long prefectureId, long areaId, long coordinateId, String closestTown) {
         this.id = id;
-        this.yid = yid;
-        this.title = title;
-        this.kana = kana;
+        this.kanjiName = kanjiName;
+        this.kanjiNameArea = kanjiNameArea;
+        this.hiraganaName = hiraganaName;
+        this.romajiName = romajiName;
+        this.height = height;
+        this.prefectureId = prefectureId;
         this.areaId = areaId;
+        this.coordinateId = coordinateId;
+        this.closestTown = closestTown;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -56,28 +72,52 @@ public class Mountain {
         this.id = id;
     }
 
-    public String getYid() {
-        return yid;
+    public String getKanjiName() {
+        return kanjiName;
     }
 
-    public void setYid(String yid) {
-        this.yid = yid;
+    public void setKanjiName(String kanjiName) {
+        this.kanjiName = kanjiName;
     }
 
-    public String getTitle() {
-        return title;
+    public String getKanjiNameArea() {
+        return kanjiNameArea;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setKanjiNameArea(String kanjiNameArea) {
+        this.kanjiNameArea = kanjiNameArea;
     }
 
-    public String getKana() {
-        return kana;
+    public String getHiraganaName() {
+        return hiraganaName;
     }
 
-    public void setKana(String kana) {
-        this.kana = kana;
+    public void setHiraganaName(String hiraganaName) {
+        this.hiraganaName = hiraganaName;
+    }
+
+    public String getRomajiName() {
+        return romajiName;
+    }
+
+    public void setRomajiName(String romajiName) {
+        this.romajiName = romajiName;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+
+    public long getPrefectureId() {
+        return prefectureId;
+    }
+
+    public void setPrefectureId(long prefectureId) {
+        this.prefectureId = prefectureId;
     }
 
     public long getAreaId() {
@@ -86,6 +126,22 @@ public class Mountain {
 
     public void setAreaId(long areaId) {
         this.areaId = areaId;
+    }
+
+    public long getCoordinateId() {
+        return coordinateId;
+    }
+
+    public void setCoordinateId(long coordinateId) {
+        this.coordinateId = coordinateId;
+    }
+
+    public String getClosestTown() {
+        return closestTown;
+    }
+
+    public void setClosestTown(String closestTown) {
+        this.closestTown = closestTown;
     }
 
     /** To-one relationship, resolved on first access. */
@@ -113,6 +169,62 @@ public class Mountain {
             this.area = area;
             areaId = area.getId();
             area__resolvedKey = areaId;
+        }
+    }
+
+    /** To-one relationship, resolved on first access. */
+    public Prefecture getPrefecture() {
+        long __key = this.prefectureId;
+        if (prefecture__resolvedKey == null || !prefecture__resolvedKey.equals(__key)) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            PrefectureDao targetDao = daoSession.getPrefectureDao();
+            Prefecture prefectureNew = targetDao.load(__key);
+            synchronized (this) {
+                prefecture = prefectureNew;
+            	prefecture__resolvedKey = __key;
+            }
+        }
+        return prefecture;
+    }
+
+    public void setPrefecture(Prefecture prefecture) {
+        if (prefecture == null) {
+            throw new DaoException("To-one property 'prefectureId' has not-null constraint; cannot set to-one to null");
+        }
+        synchronized (this) {
+            this.prefecture = prefecture;
+            prefectureId = prefecture.getId();
+            prefecture__resolvedKey = prefectureId;
+        }
+    }
+
+    /** To-one relationship, resolved on first access. */
+    public Coordinate getCoordinate() {
+        long __key = this.coordinateId;
+        if (coordinate__resolvedKey == null || !coordinate__resolvedKey.equals(__key)) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            CoordinateDao targetDao = daoSession.getCoordinateDao();
+            Coordinate coordinateNew = targetDao.load(__key);
+            synchronized (this) {
+                coordinate = coordinateNew;
+            	coordinate__resolvedKey = __key;
+            }
+        }
+        return coordinate;
+    }
+
+    public void setCoordinate(Coordinate coordinate) {
+        if (coordinate == null) {
+            throw new DaoException("To-one property 'coordinateId' has not-null constraint; cannot set to-one to null");
+        }
+        synchronized (this) {
+            this.coordinate = coordinate;
+            coordinateId = coordinate.getId();
+            coordinate__resolvedKey = coordinateId;
         }
     }
 

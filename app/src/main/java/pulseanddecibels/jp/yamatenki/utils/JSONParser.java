@@ -1,5 +1,6 @@
 package pulseanddecibels.jp.yamatenki.utils;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -13,8 +14,8 @@ import java.util.Map;
 
 import pulseanddecibels.jp.yamatenki.model.CoordinateElement;
 import pulseanddecibels.jp.yamatenki.model.ForecastArrayElement;
-import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
 import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
+import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
 import pulseanddecibels.jp.yamatenki.model.MountainListJSON;
 import pulseanddecibels.jp.yamatenki.model.WindAndTemperatureElement;
 
@@ -49,9 +50,12 @@ public class JSONParser {
         return mountainListJSON;
     }
 
+    @Nullable
     public static MountainForecastJSON parseMountainForecastFromFile(String json) {
         MountainForecastJSON mountainForecastJSON = new MountainForecastJSON();
-
+        if (json == null) {
+            return null;
+        }
         try {
             JSONObject jsonRoot = new JSONObject(json);
 

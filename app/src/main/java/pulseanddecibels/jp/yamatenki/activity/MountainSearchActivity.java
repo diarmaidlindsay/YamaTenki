@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,8 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-
-import java.lang.reflect.Field;
 
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.adapter.MountainListAdapter;

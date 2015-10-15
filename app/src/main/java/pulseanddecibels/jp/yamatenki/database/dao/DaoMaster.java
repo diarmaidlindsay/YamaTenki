@@ -20,16 +20,18 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void createAllTables(SQLiteDatabase db, boolean ifNotExists) {
         MountainDao.createTable(db, ifNotExists);
         CoordinateDao.createTable(db, ifNotExists);
-        AreaDao.createTable(db, ifNotExists);
         ForecastDao.createTable(db, ifNotExists);
+        AreaDao.createTable(db, ifNotExists);
+        PrefectureDao.createTable(db, ifNotExists);
     }
     
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(SQLiteDatabase db, boolean ifExists) {
         MountainDao.dropTable(db, ifExists);
         CoordinateDao.dropTable(db, ifExists);
-        AreaDao.dropTable(db, ifExists);
         ForecastDao.dropTable(db, ifExists);
+        AreaDao.dropTable(db, ifExists);
+        PrefectureDao.dropTable(db, ifExists);
     }
     
     public static abstract class OpenHelper extends SQLiteOpenHelper {
@@ -63,8 +65,9 @@ public class DaoMaster extends AbstractDaoMaster {
         super(db, SCHEMA_VERSION);
         registerDaoClass(MountainDao.class);
         registerDaoClass(CoordinateDao.class);
-        registerDaoClass(AreaDao.class);
         registerDaoClass(ForecastDao.class);
+        registerDaoClass(AreaDao.class);
+        registerDaoClass(PrefectureDao.class);
     }
     
     public DaoSession newSession() {

@@ -33,7 +33,7 @@ public class MountainForecastActivity extends Activity {
     TextView title;
     ImageView currentDifficultyImage;
     ScrollView mountainForecastScrollView;
-    String yid;
+    long mountainId;
     List<ForecastScrollViewElement> scrollViewElements = new ArrayList<>();
 
     final SparseIntArray DIFFICULTY_SMALL_IMAGES = new SparseIntArray() {
@@ -68,7 +68,7 @@ public class MountainForecastActivity extends Activity {
         setContentView(R.layout.activity_forecast);
 
         Bundle arguments = getIntent().getExtras();
-        yid = arguments.getString("yid"); //used to retrieve correct JSON file
+        mountainId = arguments.getLong("mountainId"); //used to retrieve correct JSON file
 
         title = (TextView) findViewById(R.id.text_forecast_header);
         title.setTypeface(Utils.getTitleTypeFace(this));
@@ -76,7 +76,7 @@ public class MountainForecastActivity extends Activity {
 
         initialiseWidgets();
         populateWidgets(JSONParser.parseMountainForecastFromFile(
-                JSONDownloader.getMockMountainForecast(this, yid)));
+                JSONDownloader.getMockMountainForecast(this, mountainId)));
     }
 
     private void initialiseWidgets() {
@@ -96,6 +96,9 @@ public class MountainForecastActivity extends Activity {
     }
 
     private void populateWidgets(MountainForecastJSON forecasts) {
+        if(forecasts == null) {
+            return;
+        }
         MountainArrayElement mountainInfo = forecasts.getMountainArrayElement();
         //set forecast page's title
         title.setText(mountainInfo.getTitle());
