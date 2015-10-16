@@ -49,7 +49,7 @@ public class MountainListAdapter extends BaseAdapter {
 //        String json = JSONDownloader.getMockMountainList(mContext);
 //        //String json = JSONDownloader.getJsonFromServer(); // Future way
 //        //Will be stored in database eventually, in future will get from datasource
-//        MountainListJSONZ mountainListJSON = JSONParser.parseMountainsFromMountainList(json);
+//        MountainListJSON mountainListJSON = JSONParser.parseMountainsFromMountainList(json);
 //        mountainList = mountainListJSON.getMountainArrayElements();
 
         search(""); //display all at first

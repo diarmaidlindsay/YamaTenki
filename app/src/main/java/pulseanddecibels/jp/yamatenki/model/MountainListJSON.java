@@ -11,16 +11,16 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  * <p/>
  * Representation of a mountain in the "mountain_list" JSON
  */
-public class MountainListJSONZ {
+public class MountainListJSON {
     ArrayList<MountainArrayElement> mountainArrayElements;
     String timestamp;
 
-    public MountainListJSONZ() {
+    public MountainListJSON() {
         mountainArrayElements = new ArrayList<>();
         String timeStampString = "";
     }
 
-    public MountainListJSONZ(ArrayList<MountainArrayElement> mountainArrayElements, String timeStampString) {
+    public MountainListJSON(ArrayList<MountainArrayElement> mountainArrayElements, String timeStampString) {
         this.mountainArrayElements = mountainArrayElements;
         this.timestamp = timeStampString;
     }
