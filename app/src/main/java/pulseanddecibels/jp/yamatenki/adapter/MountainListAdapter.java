@@ -2,6 +2,7 @@ package pulseanddecibels.jp.yamatenki.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import pulseanddecibels.jp.yamatenki.activity.MountainForecastActivity;
 import pulseanddecibels.jp.yamatenki.database.Database;
 import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
+import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/28.
@@ -27,6 +29,7 @@ import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
 public class MountainListAdapter extends BaseAdapter {
 
     private List mountainList = new ArrayList<>();
+
     final SparseIntArray difficultyArray = new SparseIntArray() {
         {
             append(1, R.drawable.a_difficulty_small);
@@ -50,9 +53,7 @@ public class MountainListAdapter extends BaseAdapter {
 //        MountainListJSON mountainListJSON = JSONParser.parseMountainsFromMountainList(json);
 //        mountainList = mountainListJSON.getMountainArrayElements();
 
-        MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();
-        QueryBuilder qb = mountainDao.queryBuilder();
-        mountainList = qb.list();
+        search(""); //display all at first
     }
 
     @Override
@@ -98,6 +99,8 @@ public class MountainListAdapter extends BaseAdapter {
         //check first bit, if set then it is an odd number. We'll give alternate rows different backgrounds
         if ((position % 2) == 0) {
             convertView.setBackgroundColor(mContext.getResources().getColor(R.color.table_bg_alt));
+        } else {
+            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.yama_background));
         }
         Mountain mountain = (Mountain) getItem(position);
         viewHolder.name.setText(mountain.getKanjiName());
@@ -122,5 +125,47 @@ public class MountainListAdapter extends BaseAdapter {
         TextView name;
         ImageView difficulty;
         TextView height;
+    }
+
+    public void search(String searchString) {
+        MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();
+        QueryBuilder qb = mountainDao.queryBuilder();
+
+        if(searchString.length() > 0) {
+
+            if(Utils.isKanji(searchString.charAt(0))) {
+                qb.where(MountainDao.Properties.KanjiName.like("%"+searchString+"%"));
+            } else if (Utils.isKana(searchString.charAt(0))) {
+                qb.where(MountainDao.Properties.HiraganaName.like("%"+searchString+"%"));
+            } else {
+                qb.where(MountainDao.Properties.RomajiName.like("%"+searchString+"%"));
+//                //Had to use raw query instead of GreenDAO because upper(X) function could not be used with API
+//                List<Mountain> romajiMountains = new ArrayList<>();
+//                SQLiteDatabase db = Database.getInstance(mContext).getDatabase();
+//                Cursor cursor = db.rawQuery("SELECT * FROM " + MountainDao.TABLENAME + " WHERE upper(" + MountainDao.Properties.RomajiName.columnName + ") LIKE '%?%'",
+//                        new String[]{searchString.toUpperCase()});
+//                cursor.moveToFirst();
+//                while(!cursor.isAfterLast()) {
+//                    romajiMountains.add(cursorToMountain(cursor));
+//                    cursor.moveToNext();
+//                }
+//                cursor.close();
+//                mountainList = romajiMountains;
+//                return;
+            }
+        }
+
+        mountainList = qb.list();
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Long id, String kanjiName, String kanjiNameArea,
+     * String hiraganaName, String romajiName, Integer height, long prefectureId,
+     * long areaId, long coordinateId, String closestTown
+     */
+    private Mountain cursorToMountain(Cursor cursor) {
+        return new Mountain(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4),
+                cursor.getInt(5), cursor.getLong(6), cursor.getLong(7), cursor.getLong(8), cursor.getString(9));
     }
 }

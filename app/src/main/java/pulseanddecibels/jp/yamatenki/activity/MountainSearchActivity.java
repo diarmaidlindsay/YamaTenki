@@ -5,7 +5,9 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -75,14 +77,37 @@ public class MountainSearchActivity extends Activity {
 
     private SearchView.OnQueryTextListener getTextListener() {
         return new SearchView.OnQueryTextListener() {
+            private String text;
+            Runnable mFilterTask = new Runnable() {
+
+                @Override
+                public void run() {
+                    mountainListAdapter.search(text);
+                    //result.setText(mountainListAdapter.getCount() + " items displayed");
+                }
+            };
+            private Handler mHandler = new Handler();
+
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                text = query;
+                mHandler.removeCallbacks(mFilterTask);
+                mHandler.postDelayed(mFilterTask, 0);
+                hideKeyboard();
+                mountainList.requestFocus();
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                //if text cleared display all again
+                if(newText.length() == 0) {
+                    text = newText;
+                    mHandler.removeCallbacks(mFilterTask);
+                    mHandler.postDelayed(mFilterTask, 0);
+                    mountainList.requestFocus();
+                }
+                return true;
             }
         };
     }
@@ -94,5 +119,11 @@ public class MountainSearchActivity extends Activity {
                 searchView.onActionViewExpanded();
             }
         };
+    }
+
+    public void hideKeyboard()
+    {
+        InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(searchView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }
