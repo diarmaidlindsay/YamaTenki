@@ -29,7 +29,7 @@
         <item name="android:background">@color/yama_brown</item>
     </style>
     <style name="SmallBrownText">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/yama_brown</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
