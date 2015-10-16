@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by Diarmaid Lindsay on 2015/09/30.
  * Copyright Pulse and Decibels 2015
- *
+ * <p/>
  * Representation of a forecast object in a
  * "forecastsDaily" or
  * "forecasts"
@@ -58,18 +58,18 @@ public class ForecastArrayElement {
     }
 
     public String getTemperatureHigh() {
-        return ""+temperatureHigh;
+        return "" + temperatureHigh;
     }
 
     public String getTemperatureLow() {
-        return ""+temperatureLow;
+        return "" + temperatureLow;
     }
 
     public String getTemperature() {
-        return ""+temperature;
+        return "" + temperature;
     }
 
     public String getPrecipitation() {
-        return ""+precipitation;
+        return "" + precipitation;
     }
 }

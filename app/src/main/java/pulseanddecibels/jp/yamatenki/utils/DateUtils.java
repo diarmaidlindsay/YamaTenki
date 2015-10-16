@@ -27,16 +27,14 @@ public class DateUtils {
             append(7, "土");
         }
     };
-
-    private static DateTimeZone JAPAN_TIME_ZONE = DateTimeZone.forOffsetHours(9);
-
     //0 == today, 1 == tomorrow etc
-    private static final String[] JAPANESE_DAY_NAMES =  { "本日", "明日", "", "", "", "", "" };
+    private static final String[] JAPANESE_DAY_NAMES = {"本日", "明日", "", "", "", "", ""};
+    private static DateTimeZone JAPAN_TIME_ZONE = DateTimeZone.forOffsetHours(9);
 
     public static String getFormattedHeader(int index) {
         DateTime dateTime = new DateTime();
         //don't cause IndexOutOfBoundsException
-        if(index > 0 && index < JAPANESE_DAY_NAMES.length - 1) {
+        if (index > 0 && index < JAPANESE_DAY_NAMES.length - 1) {
             dateTime = dateTime.plusDays(index);
         }
         String format = "%s %d/%d （%s）";
@@ -54,20 +52,21 @@ public class DateUtils {
 
     /**
      * Get key to match a scroll view column with the correct forecast
+     *
      * @param dayIndex 0 = today, 1 = tomorrow etc
      * @param columnId corresponds to hours of the day : 00, 03, 06, 09 etc
      */
     public static String timeToMapKey(int dayIndex, String columnId) {
         DateTime dateTime = new DateTime();
-        if(dayIndex > 0) {
+        if (dayIndex > 0) {
             dateTime = dateTime.plusDays(dayIndex);
         }
         return
-            Utils.num2DigitString(dateTime.getMonthOfYear()) +
-            "/" +
-            Utils.num2DigitString(dateTime.getDayOfMonth()) +
-            "-" +
-            columnId;
+                Utils.num2DigitString(dateTime.getMonthOfYear()) +
+                        "/" +
+                        Utils.num2DigitString(dateTime.getDayOfMonth()) +
+                        "-" +
+                        columnId;
     }
 
     /**
@@ -76,11 +75,11 @@ public class DateUtils {
     public static String timeStampToMapKey(Timestamp sqlTimeStamp) {
         DateTime dateTime = new DateTime(sqlTimeStamp.getTime());
         return
-            Utils.num2DigitString(dateTime.getMonthOfYear()) +
-            "/" +
-            Utils.num2DigitString(dateTime.getDayOfMonth()) +
-            "-" +
-            Utils.num2DigitString(dateTime.getHourOfDay());
+                Utils.num2DigitString(dateTime.getMonthOfYear()) +
+                        "/" +
+                        Utils.num2DigitString(dateTime.getDayOfMonth()) +
+                        "-" +
+                        Utils.num2DigitString(dateTime.getHourOfDay());
     }
 
     /**

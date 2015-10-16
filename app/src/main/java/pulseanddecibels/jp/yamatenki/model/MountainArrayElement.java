@@ -3,7 +3,7 @@ package pulseanddecibels.jp.yamatenki.model;
 /**
  * Created by Diarmaid Lindsay on 2015/09/28.
  * Copyright Pulse and Decibels 2015
- *
+ * <p/>
  * Representation of a mountain "list" array element from "mountainList" JSON
  */
 public class MountainArrayElement {

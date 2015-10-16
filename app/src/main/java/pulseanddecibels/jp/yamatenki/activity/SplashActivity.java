@@ -31,12 +31,12 @@ import pulseanddecibels.jp.yamatenki.utils.DateUtils;
  */
 public class SplashActivity extends Activity {
 
-    final String PREFS_NAME = "YamaTenkiPrefs";
-
     static {
         //change to Japan Time Zone
         DateUtils.setDefaultTimeZone();
     }
+
+    final String PREFS_NAME = "YamaTenkiPrefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +44,10 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
         goFullScreen();
 
-        if(isFirstTime()) {
+        if (isFirstTime()) {
             new DatabaseSetupTask().execute();
         } else {
-           displayNormalSplash();
+            displayNormalSplash();
         }
     }
 
@@ -95,22 +95,6 @@ public class SplashActivity extends Activity {
         return false;
     }
 
-    private class DatabaseSetupTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            insertSampleData();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void v) {
-            Intent i = new Intent(SplashActivity.this, MainActivity.class);
-            startActivity(i);
-            finish();
-        }
-    }
-
     /**
      * Only for development purposes
      */
@@ -126,17 +110,17 @@ public class SplashActivity extends Activity {
 
         try {
             List<String> prefecturesList = Database.parsePrefectureCSV(this);
-            for(String prefecture : prefecturesList) {
+            for (String prefecture : prefecturesList) {
                 prefectureDao.insert(new Prefecture(null, prefecture));
             }
 
             List<String> areasList = Database.parseAreaCSV(this);
-            for(String area : areasList) {
+            for (String area : areasList) {
                 areaDao.insert(new Area(null, area));
             }
 
             List<MountainListCSVEntry> csvEntries = Database.parseMountainCSV(this);
-            for(MountainListCSVEntry mountainRow : csvEntries) {
+            for (MountainListCSVEntry mountainRow : csvEntries) {
                 List<Area> areas = areaDao.queryBuilder().where(AreaDao.Properties.Name.eq(mountainRow.getArea()))
                         .list();
                 List<Prefecture> prefectures = prefectureDao.queryBuilder().where(PrefectureDao.Properties.Name.eq(mountainRow.getPrefecture()))
@@ -150,6 +134,22 @@ public class SplashActivity extends Activity {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private class DatabaseSetupTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            insertSampleData();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            Intent i = new Intent(SplashActivity.this, MainActivity.class);
+            startActivity(i);
+            finish();
         }
     }
 }

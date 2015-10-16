@@ -16,38 +16,38 @@ import pulseanddecibels.jp.yamatenki.model.CoordinateElement;
 import pulseanddecibels.jp.yamatenki.model.ForecastArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
-import pulseanddecibels.jp.yamatenki.model.MountainListJSON;
+import pulseanddecibels.jp.yamatenki.model.MountainListJSONZ;
 import pulseanddecibels.jp.yamatenki.model.WindAndTemperatureElement;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/28.
  * Copyright Pulse and Decibels 2015
- *
+ * <p/>
  * Parse the JSON Data containing weather forecasts
  */
 public class JSONParser {
-    public static MountainListJSON parseMountainsFromMountainList(String json) {
-        MountainListJSON mountainListJSON = new MountainListJSON();
+    public static MountainListJSONZ parseMountainsFromMountainList(String json) {
+        MountainListJSONZ mountainListJSONZ = new MountainListJSONZ();
         ArrayList<MountainArrayElement> mountains = new ArrayList<>();
 
         try {
             JSONObject jsonRoot = new JSONObject(json);
             JSONArray jsonArray = jsonRoot.optJSONArray("list");
 
-            for(int i = 0; i < jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject mountain = jsonArray.getJSONObject(i);
                 mountains.add(parseMountain(mountain));
             }
 
             String timestamp = jsonRoot.optString("timestamp");
-            mountainListJSON = new MountainListJSON(mountains, timestamp);
+            mountainListJSONZ = new MountainListJSONZ(mountains, timestamp);
 
         } catch (JSONException e) {
             Log.e(JSONParser.class.getSimpleName(), "Error while parsing Mountain List JSON");
             e.printStackTrace();
         }
 
-        return mountainListJSON;
+        return mountainListJSONZ;
     }
 
     @Nullable
@@ -65,7 +65,7 @@ public class JSONParser {
             JSONArray forecasts = jsonRoot.optJSONArray("forecasts");
             Map<String, ForecastArrayElement> shortTermForecastMap = new HashMap<>();
             //It will have 9-16 ForecastArrayElement objects according to the design
-            for(int i = 0; i < forecasts.length(); i++) {
+            for (int i = 0; i < forecasts.length(); i++) {
                 ForecastArrayElement element = parseForecast(forecasts.getJSONObject(i));
                 String key = DateUtils.timeStampToMapKey(element.getDateTime());
                 shortTermForecastMap.put(key, element);
@@ -74,7 +74,7 @@ public class JSONParser {
             JSONArray forecastsDaily = jsonRoot.optJSONArray("forecastsDaily");
             Map<String, ForecastArrayElement> longTermForecastMap = new HashMap<>();
             //It will have 9-16 ForecastArrayElement objects according to the design
-            for(int i = 0; i < forecastsDaily.length(); i++) {
+            for (int i = 0; i < forecastsDaily.length(); i++) {
                 ForecastArrayElement element = parseForecast(forecastsDaily.getJSONObject(i));
                 String key = DateUtils.timeStampToMapKey(element.getDateTime());
                 longTermForecastMap.put(key, element);
@@ -83,7 +83,7 @@ public class JSONParser {
             String referenceCity = jsonRoot.optString("referenceCity");
             JSONArray heights = jsonRoot.optJSONArray("heights");
             List<Integer> heightsList = new ArrayList<>();
-            for(int i = 0; i < heights.length(); i++) {
+            for (int i = 0; i < heights.length(); i++) {
                 heightsList.add(heights.getInt(i));
             }
             String dateTime = jsonRoot.optString("timestamp");
@@ -177,7 +177,7 @@ public class JSONParser {
         List<WindAndTemperatureElement> windAndTemperaturesList = new ArrayList<>();
         JSONArray windAndTemperatures = forecast.optJSONArray("windAndTemperatures");
 
-        for(int j = 0; j < windAndTemperatures.length(); j++) {
+        for (int j = 0; j < windAndTemperatures.length(); j++) {
             JSONObject windAndTemperature = windAndTemperatures.getJSONObject(j);
             int temperature = windAndTemperature.optInt("temperature");
             int windVelocity = windAndTemperature.optInt("windVelocity");
@@ -188,14 +188,14 @@ public class JSONParser {
         float precipitation = (float) forecast.optDouble("precipitation");
 
         int weather = forecast.optInt("weather");
-        if(forecast.has("temperature")) {
+        if (forecast.has("temperature")) {
             Integer temperature = forecast.has("temperature") ? forecast.optInt("temperature") : null;
-            return new ForecastArrayElement(Utils.getTimeStamp(dateTime),mountainIndex,
+            return new ForecastArrayElement(Utils.getTimeStamp(dateTime), mountainIndex,
                     windAndTemperaturesList, weather, temperature, precipitation);
         } else {
             Integer temperatureHigh = forecast.has("temperatureHigh") ? forecast.optInt("temperatureHigh") : null;
             Integer temperatureLow = forecast.has("temperatureLow") ? forecast.optInt("temperatureLow") : null;
-            return new ForecastArrayElement(Utils.getTimeStamp(dateTime),mountainIndex,
+            return new ForecastArrayElement(Utils.getTimeStamp(dateTime), mountainIndex,
                     windAndTemperaturesList, weather, temperatureHigh, temperatureLow, precipitation);
         }
     }

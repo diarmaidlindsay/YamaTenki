@@ -28,8 +28,6 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  */
 public class MountainListAdapter extends BaseAdapter {
 
-    private List mountainList = new ArrayList<>();
-
     final SparseIntArray difficultyArray = new SparseIntArray() {
         {
             append(1, R.drawable.a_difficulty_small);
@@ -37,6 +35,7 @@ public class MountainListAdapter extends BaseAdapter {
             append(3, R.drawable.c_difficulty_small);
         }
     };
+    private List mountainList = new ArrayList<>();
     private Context mContext;
     private LayoutInflater layoutInflater;
 
@@ -50,7 +49,7 @@ public class MountainListAdapter extends BaseAdapter {
 //        String json = JSONDownloader.getMockMountainList(mContext);
 //        //String json = JSONDownloader.getJsonFromServer(); // Future way
 //        //Will be stored in database eventually, in future will get from datasource
-//        MountainListJSON mountainListJSON = JSONParser.parseMountainsFromMountainList(json);
+//        MountainListJSONZ mountainListJSON = JSONParser.parseMountainsFromMountainList(json);
 //        mountainList = mountainListJSON.getMountainArrayElements();
 
         search(""); //display all at first
@@ -121,24 +120,18 @@ public class MountainListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    static class ViewHolderItem {
-        TextView name;
-        ImageView difficulty;
-        TextView height;
-    }
-
     public void search(String searchString) {
         MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();
         QueryBuilder qb = mountainDao.queryBuilder();
 
-        if(searchString.length() > 0) {
+        if (searchString.length() > 0) {
 
-            if(Utils.isKanji(searchString.charAt(0))) {
-                qb.where(MountainDao.Properties.KanjiName.like("%"+searchString+"%"));
+            if (Utils.isKanji(searchString.charAt(0))) {
+                qb.where(MountainDao.Properties.KanjiName.like("%" + searchString + "%"));
             } else if (Utils.isKana(searchString.charAt(0))) {
-                qb.where(MountainDao.Properties.HiraganaName.like("%"+searchString+"%"));
+                qb.where(MountainDao.Properties.HiraganaName.like("%" + searchString + "%"));
             } else {
-                qb.where(MountainDao.Properties.RomajiName.like("%"+searchString+"%"));
+                qb.where(MountainDao.Properties.RomajiName.like("%" + searchString + "%"));
 //                //Had to use raw query instead of GreenDAO because upper(X) function could not be used with API
 //                List<Mountain> romajiMountains = new ArrayList<>();
 //                SQLiteDatabase db = Database.getInstance(mContext).getDatabase();
@@ -167,5 +160,11 @@ public class MountainListAdapter extends BaseAdapter {
     private Mountain cursorToMountain(Cursor cursor) {
         return new Mountain(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4),
                 cursor.getInt(5), cursor.getLong(6), cursor.getLong(7), cursor.getLong(8), cursor.getString(9));
+    }
+
+    static class ViewHolderItem {
+        TextView name;
+        ImageView difficulty;
+        TextView height;
     }
 }

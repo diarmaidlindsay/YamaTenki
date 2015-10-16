@@ -25,6 +25,14 @@ import pulseanddecibels.jp.yamatenki.R;
  */
 public class JSONDownloader {
 
+    private static final Map<Long, Integer> forecastJSONFiles;
+
+    static {
+        forecastJSONFiles = new HashMap<>();
+        forecastJSONFiles.put(1L, R.raw.id0001);
+        forecastJSONFiles.put(2L, R.raw.id0002);
+    }
+
     /**
      * Sample code from StackOverflow.
      * Use a similar method to get the JSON file from our server for the user.
@@ -68,16 +76,12 @@ public class JSONDownloader {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
         StringBuilder stringBuilder = new StringBuilder();
-        try
-        {
-            while (( line = reader.readLine()) != null)
-            {
+        try {
+            while ((line = reader.readLine()) != null) {
                 stringBuilder.append(line);
                 stringBuilder.append('\n');
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             return null;
         }
         return stringBuilder.toString();
@@ -91,18 +95,10 @@ public class JSONDownloader {
         return readJSONFile(inputStream);
     }
 
-    private static final Map<Long, Integer> forecastJSONFiles;
-    static
-    {
-        forecastJSONFiles = new HashMap<>();
-        forecastJSONFiles.put(1L, R.raw.id0001);
-        forecastJSONFiles.put(2L, R.raw.id0002);
-    }
-
     @Nullable
     public static String getMockMountainForecast(Context context, long mountainId) {
         Integer forecastJSONFile = forecastJSONFiles.get(mountainId);
-        if(forecastJSONFile != null) {
+        if (forecastJSONFile != null) {
             InputStream inputStream = context.getResources().openRawResource(forecastJSONFile);
             return readJSONFile(inputStream);
         }

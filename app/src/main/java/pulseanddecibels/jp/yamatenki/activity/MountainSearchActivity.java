@@ -67,8 +67,7 @@ public class MountainSearchActivity extends Activity {
         searchView.setIconifiedByDefault(false);
     }
 
-    private void hideSearchIcon()
-    {
+    private void hideSearchIcon() {
         int searchImageViewId = searchView.getContext().getResources()
                 .getIdentifier("android:id/search_mag_icon", null, null);
         ImageView searchImageView = (ImageView) findViewById(searchImageViewId);
@@ -101,7 +100,7 @@ public class MountainSearchActivity extends Activity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 //if text cleared display all again
-                if(newText.length() == 0) {
+                if (newText.length() == 0) {
                     text = newText;
                     mHandler.removeCallbacks(mFilterTask);
                     mHandler.postDelayed(mFilterTask, 0);
@@ -121,8 +120,7 @@ public class MountainSearchActivity extends Activity {
         };
     }
 
-    public void hideKeyboard()
-    {
+    public void hideKeyboard() {
         InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(searchView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }

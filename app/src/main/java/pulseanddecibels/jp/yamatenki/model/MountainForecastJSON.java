@@ -11,7 +11,7 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
 /**
  * Created by Diarmaid Lindsay on 2015/09/30.
  * Copyright Pulse and Decibels
- *
+ * <p/>
  * Representation of an entire JSON file for a mountain's weather forecast
  */
 public class MountainForecastJSON {
