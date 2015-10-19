@@ -45,5 +45,12 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(getApplicationContext(), MountainSearchActivity.class));
             }
         });
+
+        areaSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), AreaSearchActivity.class));
+            }
+        });
     }
 }

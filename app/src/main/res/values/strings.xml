@@ -22,4 +22,14 @@
     <string name="text_forecast_wind_speed">風（m/s）</string>
     <string name="text_forecast_weather">天気</string>
     <string name="text_forecast_chance_of_rain">降水確率（％）</string>
+    <string name="text_search_area_header">エリアで探す</string>
+    <string name="button_area_hokkaidou">北海道</string>
+    <string name="button_area_touhoku">東北</string>
+    <string name="button_area_hokuriku">北陸</string>
+    <string name="button_area_koushin">関東・甲信</string>
+    <string name="button_area_toukai">東海</string>
+    <string name="button_area_kinki">近畿</string>
+    <string name="button_area_chuugoku">中国</string>
+    <string name="button_area_shikoku">四国</string>
+    <string name="button_area_okinawa">九州・沖縄</string>
 </resources>

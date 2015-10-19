@@ -33,12 +33,19 @@
             </intent-filter>
         </activity>
 
-        <!-- Mountain Detail Activity -->
+        <!-- Mountain Forecast Activity -->
         <activity
             android:name=".activity.MountainForecastActivity"
             android:label="@string/app_name">
 
         </activity>
+
+        <!-- Area Search Activity -->
+        <activity android:name=".activity.AreaSearchActivity"
+            android:label="@string/app_name">
+
+        </activity>
+
     </application>
 
 </manifest>

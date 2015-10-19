@@ -26,8 +26,6 @@
             android:gravity="center">
 
             <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
                 android:contentDescription="@string/button_main_name_search"
                 android:id="@+id/button_main_mountain_name_search"
                 android:src="@drawable/button_search_name"
@@ -35,8 +33,6 @@
                 android:layout_weight="0.65" />
 
             <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
                 android:contentDescription="@string/button_main_20_closest_search"
                 android:id="@+id/button_main_20_closest_search"
                 android:src="@drawable/button_search_close_mountain"
@@ -44,8 +40,6 @@
                 android:layout_weight="0.65" />
 
             <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
                 android:contentDescription="@string/button_main_my_mountain_list"
                 android:id="@+id/button_main_my_mountain_list"
                 android:src="@drawable/button_my_yama_list"
@@ -70,8 +64,6 @@
             android:gravity="center">
 
             <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
                 android:contentDescription="@string/button_main_area_search"
                 android:id="@+id/button_main_area_search"
                 android:src="@drawable/button_search_area"
@@ -79,8 +71,6 @@
                 android:layout_weight="0.65" />
 
             <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
                 android:contentDescription="@string/button_main_height_search"
                 android:id="@+id/button_main_height_search"
                 android:src="@drawable/button_search_height"
@@ -88,8 +78,6 @@
                 android:layout_weight="0.65" />
 
             <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
                 android:contentDescription="@string/button_main_memo"
                 android:id="@+id/button_main_memo"
                 android:src="@drawable/button_my_memo"
@@ -98,8 +86,6 @@
                 android:layout_weight="0.65" />
 
             <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
                 android:contentDescription="@string/button_main_settings"
                 android:id="@+id/button_main_settings"
                 android:src="@drawable/button_settings"
