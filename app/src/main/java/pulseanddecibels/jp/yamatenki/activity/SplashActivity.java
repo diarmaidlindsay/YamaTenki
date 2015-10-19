@@ -126,7 +126,7 @@ public class SplashActivity extends Activity {
                 List<Prefecture> prefectures = prefectureDao.queryBuilder().where(PrefectureDao.Properties.Name.eq(mountainRow.getPrefecture()))
                         .list();
                 Long coordinateId = coordinateDao.insert(new Coordinate(null, mountainRow.getLatitude(), mountainRow.getLongitude()));
-                Long areaId = areas.size() == 1 ? areas.get(0).getId() : 0L; //0L == Unknown 不明
+                Long areaId = areas.size() == 1 ? areas.get(0).getId() : 9L; //9L == Unknown 不明
                 Long prefectureId = prefectures.size() == 1 ? prefectures.get(0).getId() : 0L; //0L == Unknown 不明
                 mountainDao.insert(new Mountain(null, mountainRow.getKanjiName(), mountainRow.getKanjiNameArea(), mountainRow.getHiraganaName(),
                         mountainRow.getRomajiName(), mountainRow.getHeight(), prefectureId, areaId, coordinateId, mountainRow.getClosestTown()

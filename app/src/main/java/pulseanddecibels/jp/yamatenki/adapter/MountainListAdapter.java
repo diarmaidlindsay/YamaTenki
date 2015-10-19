@@ -3,6 +3,7 @@ package pulseanddecibels.jp.yamatenki.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import de.greenrobot.dao.query.QueryBuilder;
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.activity.MountainForecastActivity;
 import pulseanddecibels.jp.yamatenki.database.Database;
+import pulseanddecibels.jp.yamatenki.database.dao.Area;
+import pulseanddecibels.jp.yamatenki.database.dao.AreaDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
@@ -51,8 +54,6 @@ public class MountainListAdapter extends BaseAdapter {
 //        //Will be stored in database eventually, in future will get from datasource
 //        MountainListJSON mountainListJSON = JSONParser.parseMountainsFromMountainList(json);
 //        mountainList = mountainListJSON.getMountainArrayElements();
-
-        search(""); //display all at first
     }
 
     @Override
@@ -120,7 +121,26 @@ public class MountainListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void search(String searchString) {
+    public void searchByArea(String areaName) {
+        AreaDao areaDao = Database.getInstance(mContext).getAreaDao();
+        QueryBuilder qb = areaDao.queryBuilder();
+        qb.where(AreaDao.Properties.Name.eq(areaName));
+
+        List areas = qb.list();
+        if(areas.size() == 1) {
+            long areaId = ((Area)areas.get(0)).getId();
+            MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();
+            qb = mountainDao.queryBuilder();
+            qb.where(MountainDao.Properties.AreaId.eq(areaId));
+
+            mountainList = qb.list();
+            notifyDataSetChanged();
+        } else {
+            Log.e(this.getClass().getSimpleName(), "Couldn't find area with name : "+areaName);
+        }
+    }
+
+    public void searchByName(String searchString) {
         MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();
         QueryBuilder qb = mountainDao.queryBuilder();
 
@@ -132,19 +152,6 @@ public class MountainListAdapter extends BaseAdapter {
                 qb.where(MountainDao.Properties.HiraganaName.like("%" + searchString + "%"));
             } else {
                 qb.where(MountainDao.Properties.RomajiName.like("%" + searchString + "%"));
-//                //Had to use raw query instead of GreenDAO because upper(X) function could not be used with API
-//                List<Mountain> romajiMountains = new ArrayList<>();
-//                SQLiteDatabase db = Database.getInstance(mContext).getDatabase();
-//                Cursor cursor = db.rawQuery("SELECT * FROM " + MountainDao.TABLENAME + " WHERE upper(" + MountainDao.Properties.RomajiName.columnName + ") LIKE '%?%'",
-//                        new String[]{searchString.toUpperCase()});
-//                cursor.moveToFirst();
-//                while(!cursor.isAfterLast()) {
-//                    romajiMountains.add(cursorToMountain(cursor));
-//                    cursor.moveToNext();
-//                }
-//                cursor.close();
-//                mountainList = romajiMountains;
-//                return;
             }
         }
 

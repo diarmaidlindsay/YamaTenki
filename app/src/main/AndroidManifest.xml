@@ -22,7 +22,7 @@
 
         <!-- Mountain Search Activity -->
         <activity
-            android:name=".activity.MountainSearchActivity"
+            android:name=".activity.MountainListActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop">
             <meta-data

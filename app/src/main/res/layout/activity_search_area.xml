@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/yama_background">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_unset"
+        android:id="@+id/text_area_header"
+        style="@style/ScreenTitle" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp">
+
+        <include
+            layout="@layout/fragment_mountain_list"/>
+
+    </LinearLayout>
+
+</LinearLayout>

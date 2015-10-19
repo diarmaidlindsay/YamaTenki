@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
         mountainNameSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MountainSearchActivity.class));
+                startActivity(new Intent(getApplicationContext(), MountainListActivity.class));
             }
         });
 

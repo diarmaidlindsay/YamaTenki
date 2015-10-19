@@ -30,55 +30,7 @@
             android:textColorHint="@android:color/darker_gray"
             android:textAppearance="?android:attr/textAppearanceSmallInverse"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/SmallBrownText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/table_header_name"
-                android:text="@string/text_search_table_header_name"
-                android:clickable="true"
-                android:layout_weight=".60"
-                android:gravity="start"
-                android:paddingTop="10dp"/>
-
-            <TextView
-                style="@style/SmallBrownText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/table_header_difficulty"
-                android:text="@string/text_search_table_header_difficulty"
-                android:clickable="true"
-                android:layout_weight="0.10"
-                android:gravity="center"
-                android:paddingTop="10dp"/>
-
-            <TextView
-                style="@style/SmallBrownText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/table_header_height"
-                android:text="@string/text_search_table_header_height"
-                android:clickable="true"
-                android:layout_weight="0.15"
-                android:gravity="right"
-                android:paddingTop="10dp"/>
-
-        </LinearLayout>
-
-        <View style="@style/Divider"/>
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/list_mountains"
-            android:clickable="false"/>
-
-        <View style="@style/Divider"/>
+        <include layout="@layout/fragment_mountain_list"/>
 
     </LinearLayout>
 
