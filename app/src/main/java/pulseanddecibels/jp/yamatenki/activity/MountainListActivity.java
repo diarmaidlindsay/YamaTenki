@@ -22,7 +22,7 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  * Created by Diarmaid Lindsay on 2015/09/28.
  * Copyright Pulse and Decibels 2015
  */
-public class MountainListActivity extends Activity {
+public class MountainListActivity extends Activity  {
     TextView header;
     SearchView searchView;
     ListView mountainList;
@@ -34,8 +34,12 @@ public class MountainListActivity extends Activity {
         super.onCreate(savedInstanceState);
         Bundle arguments = getIntent().getExtras();
         int areaId = 0;
-        if(arguments != null) {
-            areaId = getIntent().getExtras().getInt("areaButtonId");
+        double latitude = 0;
+        double longitude = 0;
+        if (arguments != null) {
+            areaId = arguments.getInt("areaButtonId");
+            latitude = arguments.getDouble("lat");
+            longitude = arguments.getDouble("long");
         }
 
         mountainListAdapter = new MountainListAdapter(this);
@@ -62,7 +66,14 @@ public class MountainListActivity extends Activity {
             header.setText(String.format(areaTemplate, area));
             mountainListAdapter.searchByArea(area);
 
-        } else {
+        } else if (latitude != 0 && longitude != 0) {
+            //we came here from Main Activity (Closest 20 Mountains)
+            setContentView(R.layout.activity_search_area);
+            header = (TextView) findViewById(R.id.text_area_header);
+            header.setText(R.string.text_closest_mountain_header);
+            mountainListAdapter.searchByClosestMountains(latitude, longitude);
+        }
+        else {
             //we came here from Main Activity (Search by Name)
             setContentView(R.layout.activity_search_name);
             header = (TextView) findViewById(R.id.text_search_header);

@@ -21,8 +21,11 @@ import pulseanddecibels.jp.yamatenki.activity.MountainForecastActivity;
 import pulseanddecibels.jp.yamatenki.database.Database;
 import pulseanddecibels.jp.yamatenki.database.dao.Area;
 import pulseanddecibels.jp.yamatenki.database.dao.AreaDao;
+import pulseanddecibels.jp.yamatenki.database.dao.Coordinate;
+import pulseanddecibels.jp.yamatenki.database.dao.CoordinateDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
+import pulseanddecibels.jp.yamatenki.utils.GeoLocation;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
@@ -157,6 +160,60 @@ public class MountainListAdapter extends BaseAdapter {
 
         mountainList = qb.list();
         notifyDataSetChanged();
+    }
+
+    public void searchByClosestMountains(double latitude, double longitude) {
+        CoordinateDao coordinateDao = Database.getInstance(mContext).getCoordinateDao();
+        MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();
+        List<Coordinate> nearbyMountainCoordinates = new ArrayList<>();
+
+        for(int offset = 1; offset < 7; offset++) {
+            final double minLat = latitude - offset;
+            final double maxLat = latitude + offset;
+            final double minLon = longitude - offset;
+            final double maxLon = longitude + offset;
+
+            nearbyMountainCoordinates = coordinateDao.queryBuilder()
+                    .where(CoordinateDao.Properties.Latitude.between(minLat, maxLat),
+                            CoordinateDao.Properties.Longitude.between(minLon, maxLon))
+                    .list();
+
+            if(nearbyMountainCoordinates.size() >= 20) {
+                break;
+            }
+        }
+
+        if(nearbyMountainCoordinates.size() > 0) {
+            GeoLocation here = GeoLocation.fromDegrees(latitude, longitude);
+            Coordinate[] sortedCoordinates = sortByDistanceFromHere(nearbyMountainCoordinates, here);
+            List<Long> coordinateIds = new ArrayList<>();
+
+            for(int i=0; i < 20; i++) {
+                coordinateIds.add(sortedCoordinates[i].getId());
+            }
+
+            mountainList =
+                    mountainDao.queryBuilder().where(MountainDao.Properties.CoordinateId.in(coordinateIds)).list();
+            notifyDataSetChanged();
+        }
+    }
+
+    public static Coordinate[] sortByDistanceFromHere(List<Coordinate> coordinatesList, GeoLocation here){
+        Coordinate[] coordinates =
+                coordinatesList.toArray(new Coordinate[coordinatesList.size()]);
+        final double earthRadius = 6371.01;
+        Coordinate temp;
+        for (int i = 1; i < coordinates.length; i++) {
+            for(int j = i ; j > 0 ; j--){
+                if(here.distanceTo(GeoLocation.fromCoordinates(coordinates[j]), earthRadius) <
+                        here.distanceTo(GeoLocation.fromCoordinates(coordinates[j-1]), earthRadius)){
+                    temp = coordinates[j];
+                    coordinates[j] = coordinates[j-1];
+                    coordinates[j-1] = temp;
+                }
+            }
+        }
+        return coordinates;
     }
 
     /**

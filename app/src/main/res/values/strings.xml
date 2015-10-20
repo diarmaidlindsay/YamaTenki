@@ -23,6 +23,7 @@
     <string name="text_forecast_weather">天気</string>
     <string name="text_forecast_chance_of_rain">降水確率（％）</string>
     <string name="text_search_area_header">エリアで探す</string>
+    <string name="text_closest_mountain_header">近くの山20選</string>
     <string name="button_area_hokkaidou">北海道</string>
     <string name="button_area_touhoku">東北</string>
     <string name="button_area_hokuriku">北陸</string>
