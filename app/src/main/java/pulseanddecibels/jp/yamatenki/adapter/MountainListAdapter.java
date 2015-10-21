@@ -41,9 +41,12 @@ public class MountainListAdapter extends BaseAdapter {
             append(3, R.drawable.c_difficulty_small);
         }
     };
+    final double EARTH_RADIUS = 6371.01;
+
     private List mountainList = new ArrayList<>();
     private Context mContext;
     private LayoutInflater layoutInflater;
+    private GeoLocation here;
 
     public MountainListAdapter(Context context) {
         this.mContext = context;
@@ -110,7 +113,7 @@ public class MountainListAdapter extends BaseAdapter {
         final long mountainId = mountain.getId();
         final int difficulty = getRandomDifficulty(); //TODO : Lookup from current weather forecast (for now make random)
         viewHolder.difficulty.setImageResource(difficultyArray.get(difficulty));
-        viewHolder.height.setText(String.format("%sm", String.valueOf(mountain.getHeight())));
+            viewHolder.height.setText(String.format("%sm", String.valueOf(mountain.getHeight())));
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +125,26 @@ public class MountainListAdapter extends BaseAdapter {
         });
 
         return convertView;
+    }
+
+    private Coordinate getMountainCoordinants(Mountain mountain) {
+        CoordinateDao coordinateDao = Database.getInstance(mContext).getCoordinateDao();
+        List coordinates =
+                coordinateDao.queryBuilder().where(CoordinateDao.Properties.Id.eq(mountain.getCoordinateId())).list();
+        if(coordinates.size() == 1) {
+            return (Coordinate) coordinates.get(0);
+        }
+        return null;
+    }
+
+    private double getDistanceFromHere(GeoLocation there) {
+        double distance = -1;
+
+        if(here != null) {
+            distance = here.distanceTo(there, EARTH_RADIUS);
+        }
+
+        return distance;
     }
 
     public void searchByArea(String areaName) {
@@ -184,7 +207,7 @@ public class MountainListAdapter extends BaseAdapter {
         }
 
         if(nearbyMountainCoordinates.size() > 0) {
-            GeoLocation here = GeoLocation.fromDegrees(latitude, longitude);
+            here = GeoLocation.fromDegrees(latitude, longitude);
             Coordinate[] sortedCoordinates = sortByDistanceFromHere(nearbyMountainCoordinates, here);
             List<Long> coordinateIds = new ArrayList<>();
 
@@ -198,15 +221,14 @@ public class MountainListAdapter extends BaseAdapter {
         }
     }
 
-    public static Coordinate[] sortByDistanceFromHere(List<Coordinate> coordinatesList, GeoLocation here){
+    public Coordinate[] sortByDistanceFromHere(List<Coordinate> coordinatesList, GeoLocation here){
         Coordinate[] coordinates =
                 coordinatesList.toArray(new Coordinate[coordinatesList.size()]);
-        final double earthRadius = 6371.01;
         Coordinate temp;
         for (int i = 1; i < coordinates.length; i++) {
             for(int j = i ; j > 0 ; j--){
-                if(here.distanceTo(GeoLocation.fromCoordinates(coordinates[j]), earthRadius) <
-                        here.distanceTo(GeoLocation.fromCoordinates(coordinates[j-1]), earthRadius)){
+                if(here.distanceTo(GeoLocation.fromCoordinates(coordinates[j]), EARTH_RADIUS) <
+                        here.distanceTo(GeoLocation.fromCoordinates(coordinates[j-1]), EARTH_RADIUS)){
                     temp = coordinates[j];
                     coordinates[j] = coordinates[j-1];
                     coordinates[j-1] = temp;
