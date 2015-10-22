@@ -27,7 +27,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     TextView header;
     ImageView mountainNameSearchButton;
-    ImageView closeMountainSearchButton;
+    ImageView nearMountainSearchButton;
     ImageView areaSearchButton;
     ImageView heightSearchButton;
     ImageView myMountainListButton;
@@ -45,7 +45,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         header = (TextView) findViewById(R.id.text_main_header);
         header.setTypeface(Utils.getTitleTypeFace(this));
         mountainNameSearchButton = (ImageView) findViewById(R.id.button_main_mountain_name_search);
-        closeMountainSearchButton = (ImageView) findViewById(R.id.button_main_20_closest_search);
+        nearMountainSearchButton = (ImageView) findViewById(R.id.button_main_20_closest_search);
         areaSearchButton = (ImageView) findViewById(R.id.button_main_area_search);
         heightSearchButton = (ImageView) findViewById(R.id.button_main_height_search);
         myMountainListButton = (ImageView) findViewById(R.id.button_main_my_mountain_list);
@@ -55,7 +55,9 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         mountainNameSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MountainListActivity.class));
+                Intent intent = new Intent(getApplicationContext(), MountainListActivity.class);
+                intent.putExtra("searchType", "name");
+                startActivity(intent);
             }
         });
 
@@ -66,7 +68,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             }
         });
 
-        closeMountainSearchButton.setOnClickListener(new View.OnClickListener() {
+        nearMountainSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLastLocation != null) {
@@ -77,6 +79,15 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 } else {
                     Toast.makeText(MainActivity.this, "Couldn't get the current location", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        heightSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MountainListActivity.class);
+                intent.putExtra("searchType", "height"); //indicate we want height search
+                startActivity(intent);
             }
         });
 

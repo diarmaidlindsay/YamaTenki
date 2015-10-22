@@ -113,7 +113,7 @@ public class MountainListAdapter extends BaseAdapter {
         final long mountainId = mountain.getId();
         final int difficulty = getRandomDifficulty(); //TODO : Lookup from current weather forecast (for now make random)
         viewHolder.difficulty.setImageResource(difficultyArray.get(difficulty));
-            viewHolder.height.setText(String.format("%sm", String.valueOf(mountain.getHeight())));
+        viewHolder.height.setText(String.format("%sm", String.valueOf(mountain.getHeight())));
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,6 +219,13 @@ public class MountainListAdapter extends BaseAdapter {
                     mountainDao.queryBuilder().where(MountainDao.Properties.CoordinateId.in(coordinateIds)).list();
             notifyDataSetChanged();
         }
+    }
+
+    public void searchByHeight(int min, int max) {
+        MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();
+        mountainList = mountainDao.queryBuilder()
+                .where(MountainDao.Properties.Height.between(min, max))
+                .list();
     }
 
     public Coordinate[] sortByDistanceFromHere(List<Coordinate> coordinatesList, GeoLocation here){

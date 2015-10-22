@@ -41,13 +41,17 @@
         <activity
             android:name=".activity.MountainForecastActivity"
             android:label="@string/app_name">
-
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pulseanddecibels.jp.yamatenki.activity.MountainListActivity" />
         </activity>
 
         <!-- Area Search Activity -->
         <activity android:name=".activity.AreaSearchActivity"
             android:label="@string/app_name">
-
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pulseanddecibels.jp.yamatenki.activity.MainActivity" />
         </activity>
 
     </application>
