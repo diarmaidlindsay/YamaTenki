@@ -36,4 +36,5 @@
     <string name="button_area_okinawa">九州・沖縄</string>
     <string name="text_search_height_m">m</string>
     <string name="text_search_height_header">標高で探す</string>
+    <string name="error_min_max_height">最低標高は最高標高を超えないでください</string>
 </resources>

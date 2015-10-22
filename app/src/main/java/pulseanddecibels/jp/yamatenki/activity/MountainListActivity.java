@@ -102,7 +102,7 @@ public class MountainListActivity extends Activity  {
             //we came here from Main Activity (Search by Name)
             setContentView(R.layout.activity_search_name);
             header = (TextView) findViewById(R.id.text_search_header);
-            header.setText(getResources().getString(R.string.text_search_height_header));
+            header.setText(getResources().getString(R.string.text_search_name_header));
             SearchView nameSearchView = (SearchView) findViewById(R.id.search_name_searchView);
             setupSearchView(nameSearchView, false);
             nameSearchView.setQueryHint(getResources().getString(R.string.text_search_name_textbox_hint));
