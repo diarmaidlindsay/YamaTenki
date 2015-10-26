@@ -77,7 +77,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                     intent.putExtra("long", mLastLocation.getLongitude());
                     startActivity(intent);
                 } else {
-                    Toast.makeText(MainActivity.this, "Couldn't get the current location", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Waiting for current location", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -115,7 +115,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         if (mLastLocation == null) {
             mLocationRequest = LocationRequest.create();
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            mLocationRequest.setInterval(1000);
+            mLocationRequest.setInterval(30000);
 
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
