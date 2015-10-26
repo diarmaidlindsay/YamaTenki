@@ -112,7 +112,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
 
-        if(mLastLocation == null) {
+        if (mLastLocation == null) {
             mLocationRequest = LocationRequest.create();
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             mLocationRequest.setInterval(1000);

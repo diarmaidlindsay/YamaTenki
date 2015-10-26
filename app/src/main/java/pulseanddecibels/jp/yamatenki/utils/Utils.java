@@ -52,4 +52,8 @@ public class Utils {
         return Character.UnicodeBlock.of(value) == Character.UnicodeBlock.HIRAGANA ||
                 Character.UnicodeBlock.of(value) == Character.UnicodeBlock.KATAKANA;
     }
+
+    public static int getRandomInRange(int MIN, int MAX) {
+            return MIN + (int) (Math.random() * ((MAX - MIN) + 1));
+    }
 }

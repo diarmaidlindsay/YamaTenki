@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
@@ -23,8 +25,10 @@ import pulseanddecibels.jp.yamatenki.database.dao.Area;
 import pulseanddecibels.jp.yamatenki.database.dao.AreaDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Coordinate;
 import pulseanddecibels.jp.yamatenki.database.dao.CoordinateDao;
+import pulseanddecibels.jp.yamatenki.database.dao.Forecast;
 import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
+import pulseanddecibels.jp.yamatenki.enums.MountainListColumn;
 import pulseanddecibels.jp.yamatenki.utils.GeoLocation;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
@@ -42,6 +46,8 @@ public class MountainListAdapter extends BaseAdapter {
         }
     };
     final double EARTH_RADIUS = 6371.01;
+
+    private MountainListColumn currentSorting = MountainListColumn.NAME;
 
     private List mountainList = new ArrayList<>();
     private Context mContext;
@@ -84,7 +90,7 @@ public class MountainListAdapter extends BaseAdapter {
     private int getRandomDifficulty() {
         final int MIN = 1;
         final int MAX = 3;
-        return MIN + (int) (Math.random() * ((MAX - MIN) + 1));
+        return Utils.getRandomInRange(MIN, MAX);
     }
 
     @Override
@@ -131,7 +137,7 @@ public class MountainListAdapter extends BaseAdapter {
         CoordinateDao coordinateDao = Database.getInstance(mContext).getCoordinateDao();
         List coordinates =
                 coordinateDao.queryBuilder().where(CoordinateDao.Properties.Id.eq(mountain.getCoordinateId())).list();
-        if(coordinates.size() == 1) {
+        if (coordinates.size() == 1) {
             return (Coordinate) coordinates.get(0);
         }
         return null;
@@ -140,7 +146,7 @@ public class MountainListAdapter extends BaseAdapter {
     private double getDistanceFromHere(GeoLocation there) {
         double distance = -1;
 
-        if(here != null) {
+        if (here != null) {
             distance = here.distanceTo(there, EARTH_RADIUS);
         }
 
@@ -153,8 +159,8 @@ public class MountainListAdapter extends BaseAdapter {
         qb.where(AreaDao.Properties.Name.eq(areaName));
 
         List areas = qb.list();
-        if(areas.size() == 1) {
-            long areaId = ((Area)areas.get(0)).getId();
+        if (areas.size() == 1) {
+            long areaId = ((Area) areas.get(0)).getId();
             MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();
             qb = mountainDao.queryBuilder();
             qb.where(MountainDao.Properties.AreaId.eq(areaId));
@@ -162,7 +168,7 @@ public class MountainListAdapter extends BaseAdapter {
             mountainList = qb.list();
             notifyDataSetChanged();
         } else {
-            Log.e(this.getClass().getSimpleName(), "Couldn't find area with name : "+areaName);
+            Log.e(this.getClass().getSimpleName(), "Couldn't find area with name : " + areaName);
         }
     }
 
@@ -190,7 +196,7 @@ public class MountainListAdapter extends BaseAdapter {
         MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();
         List<Coordinate> nearbyMountainCoordinates = new ArrayList<>();
 
-        for(int offset = 1; offset < 7; offset++) {
+        for (int offset = 1; offset < 7; offset++) {
             final double minLat = latitude - offset;
             final double maxLat = latitude + offset;
             final double minLon = longitude - offset;
@@ -201,17 +207,17 @@ public class MountainListAdapter extends BaseAdapter {
                             CoordinateDao.Properties.Longitude.between(minLon, maxLon))
                     .list();
 
-            if(nearbyMountainCoordinates.size() >= 20) {
+            if (nearbyMountainCoordinates.size() >= 20) {
                 break;
             }
         }
 
-        if(nearbyMountainCoordinates.size() > 0) {
+        if (nearbyMountainCoordinates.size() > 0) {
             here = GeoLocation.fromDegrees(latitude, longitude);
             Coordinate[] sortedCoordinates = sortByDistanceFromHere(nearbyMountainCoordinates, here);
             List<Long> coordinateIds = new ArrayList<>();
 
-            for(int i=0; i < 20; i++) {
+            for (int i = 0; i < 20; i++) {
                 coordinateIds.add(sortedCoordinates[i].getId());
             }
 
@@ -228,17 +234,17 @@ public class MountainListAdapter extends BaseAdapter {
                 .list();
     }
 
-    public Coordinate[] sortByDistanceFromHere(List<Coordinate> coordinatesList, GeoLocation here){
+    public Coordinate[] sortByDistanceFromHere(List<Coordinate> coordinatesList, GeoLocation here) {
         Coordinate[] coordinates =
                 coordinatesList.toArray(new Coordinate[coordinatesList.size()]);
         Coordinate temp;
         for (int i = 1; i < coordinates.length; i++) {
-            for(int j = i ; j > 0 ; j--){
-                if(here.distanceTo(GeoLocation.fromCoordinates(coordinates[j]), EARTH_RADIUS) <
-                        here.distanceTo(GeoLocation.fromCoordinates(coordinates[j-1]), EARTH_RADIUS)){
+            for (int j = i; j > 0; j--) {
+                if (here.distanceTo(GeoLocation.fromCoordinates(coordinates[j]), EARTH_RADIUS) <
+                        here.distanceTo(GeoLocation.fromCoordinates(coordinates[j - 1]), EARTH_RADIUS)) {
                     temp = coordinates[j];
-                    coordinates[j] = coordinates[j-1];
-                    coordinates[j-1] = temp;
+                    coordinates[j] = coordinates[j - 1];
+                    coordinates[j - 1] = temp;
                 }
             }
         }
@@ -253,6 +259,75 @@ public class MountainListAdapter extends BaseAdapter {
     private Mountain cursorToMountain(Cursor cursor) {
         return new Mountain(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4),
                 cursor.getInt(5), cursor.getLong(6), cursor.getLong(7), cursor.getLong(8), cursor.getString(9));
+    }
+
+    public void sort(MountainListColumn column) {
+        if (currentSorting == column) {
+            Collections.reverse(mountainList);
+        } else {
+            currentSorting = column;
+
+            switch (column) {
+                case NAME:
+                    Collections.sort(mountainList, getNameComparitor());
+                    break;
+                case DIFFICULTY:
+                    Collections.sort(mountainList, getDifficultyComparitor());
+                    break;
+                case HEIGHT:
+                    Collections.sort(mountainList, getHeightComparitor());
+                    break;
+            }
+        }
+
+        notifyDataSetInvalidated();
+    }
+
+    private Comparator<Mountain> getNameComparitor() {
+        return new Comparator<Mountain>() {
+            @Override
+            public int compare(Mountain lhs, Mountain rhs) {
+                return String.CASE_INSENSITIVE_ORDER.compare(lhs.getRomajiName(), rhs.getRomajiName());
+            }
+        };
+    }
+
+    private Comparator<Mountain> getDifficultyComparitor() {
+        return new Comparator<Mountain>() {
+            @Override
+            public int compare(Mountain lhs, Mountain rhs) {
+                Forecast leftForecast = lhs.getLatestForecast();
+                Forecast rightForecast = rhs.getLatestForecast();
+
+                if (leftForecast != null && rightForecast != null) {
+                    int lhsDifficulty = leftForecast.getDifficultyLevel().getIndex();
+                    int rhsDifficulty = rightForecast.getDifficultyLevel().getIndex();
+                    if (lhsDifficulty < rhsDifficulty) {
+                        return -1;
+                    } else if (lhsDifficulty > rhsDifficulty) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+                return 0; // if latestforest == null
+            }
+        };
+    }
+
+    private Comparator<Mountain> getHeightComparitor() {
+        return new Comparator<Mountain>() {
+            @Override
+            public int compare(Mountain lhs, Mountain rhs) {
+                if (lhs.getHeight() < rhs.getHeight()) {
+                    return -1;
+                } else if (lhs.getHeight() > rhs.getHeight()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        };
     }
 
     static class ViewHolderItem {

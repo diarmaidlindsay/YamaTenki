@@ -28,7 +28,7 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Timestamp = new Property(1, Integer.class, "timestamp", false, "TIMESTAMP");
+        public final static Property Timestamp = new Property(1, Long.class, "timestamp", false, "TIMESTAMP");
         public final static Property PeakTemp = new Property(2, Integer.class, "peakTemp", false, "PEAK_TEMP");
         public final static Property PeakVelocity = new Property(3, Integer.class, "peakVelocity", false, "PEAK_VELOCITY");
         public final static Property PeakDirection = new Property(4, Integer.class, "peakDirection", false, "PEAK_DIRECTION");
@@ -37,11 +37,11 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
         public final static Property BaseDirection = new Property(7, Integer.class, "baseDirection", false, "BASE_DIRECTION");
         public final static Property Weather = new Property(8, Integer.class, "weather", false, "WEATHER");
         public final static Property Temperature = new Property(9, Integer.class, "temperature", false, "TEMPERATURE");
-        public final static Property Precipitation = new Property(10, Integer.class, "precipitation", false, "PRECIPITATION");
+        public final static Property Precipitation = new Property(10, Float.class, "precipitation", false, "PRECIPITATION");
         public final static Property TemperatureHigh = new Property(11, Integer.class, "temperatureHigh", false, "TEMPERATURE_HIGH");
         public final static Property TemperatureLow = new Property(12, Integer.class, "temperatureLow", false, "TEMPERATURE_LOW");
         public final static Property MountainId = new Property(13, long.class, "mountainId", false, "MOUNTAIN_ID");
-    };
+    }
 
     private DaoSession daoSession;
 
@@ -70,7 +70,7 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
                 "'BASE_DIRECTION' INTEGER," + // 7: baseDirection
                 "'WEATHER' INTEGER," + // 8: weather
                 "'TEMPERATURE' INTEGER," + // 9: temperature
-                "'PRECIPITATION' INTEGER," + // 10: precipitation
+                "'PRECIPITATION' REAL," + // 10: precipitation
                 "'TEMPERATURE_HIGH' INTEGER," + // 11: temperatureHigh
                 "'TEMPERATURE_LOW' INTEGER," + // 12: temperatureLow
                 "'MOUNTAIN_ID' INTEGER NOT NULL );"); // 13: mountainId
@@ -92,7 +92,7 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
             stmt.bindLong(1, id);
         }
  
-        Integer timestamp = entity.getTimestamp();
+        Long timestamp = entity.getTimestamp();
         if (timestamp != null) {
             stmt.bindLong(2, timestamp);
         }
@@ -137,9 +137,9 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
             stmt.bindLong(10, temperature);
         }
  
-        Integer precipitation = entity.getPrecipitation();
+        Float precipitation = entity.getPrecipitation();
         if (precipitation != null) {
-            stmt.bindLong(11, precipitation);
+            stmt.bindDouble(11, precipitation);
         }
  
         Integer temperatureHigh = entity.getTemperatureHigh();
@@ -171,7 +171,7 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
     public Forecast readEntity(Cursor cursor, int offset) {
         Forecast entity = new Forecast( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1), // timestamp
+            cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // timestamp
             cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // peakTemp
             cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // peakVelocity
             cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4), // peakDirection
@@ -180,7 +180,7 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
             cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7), // baseDirection
             cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8), // weather
             cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9), // temperature
-            cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10), // precipitation
+            cursor.isNull(offset + 10) ? null : cursor.getFloat(offset + 10), // precipitation
             cursor.isNull(offset + 11) ? null : cursor.getInt(offset + 11), // temperatureHigh
             cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12), // temperatureLow
             cursor.getLong(offset + 13) // mountainId
@@ -192,7 +192,7 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
     @Override
     public void readEntity(Cursor cursor, Forecast entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setTimestamp(cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1));
+        entity.setTimestamp(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
         entity.setPeakTemp(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
         entity.setPeakVelocity(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
         entity.setPeakDirection(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));
@@ -201,7 +201,7 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
         entity.setBaseDirection(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));
         entity.setWeather(cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8));
         entity.setTemperature(cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9));
-        entity.setPrecipitation(cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10));
+        entity.setPrecipitation(cursor.isNull(offset + 10) ? null : cursor.getFloat(offset + 10));
         entity.setTemperatureHigh(cursor.isNull(offset + 11) ? null : cursor.getInt(offset + 11));
         entity.setTemperatureLow(cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12));
         entity.setMountainId(cursor.getLong(offset + 13));

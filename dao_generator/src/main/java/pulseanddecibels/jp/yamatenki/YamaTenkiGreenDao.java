@@ -20,7 +20,7 @@ public class YamaTenkiGreenDao {
         Entity prefecture = schema.addEntity("Prefecture");
 
         /**
-        Mountain
+         Mountain
          **/
         mountain.addIdProperty().autoincrement();
         mountain.addStringProperty("kanjiName");
@@ -36,6 +36,7 @@ public class YamaTenkiGreenDao {
         mountain.addToOne(prefecture, prefectureId);
         mountain.addToOne(coordinate, coordinateId);
         mountain.addStringProperty("closestTown");
+        mountain.setHasKeepSections(true);
 
         /**
          Coordinate
@@ -51,7 +52,7 @@ public class YamaTenkiGreenDao {
          Forecast
          **/
         forecast.addIdProperty();
-        forecast.addIntProperty("timestamp");
+        forecast.addLongProperty("timestamp");
         forecast.addIntProperty("peakTemp");
         forecast.addIntProperty("peakVelocity");
         forecast.addIntProperty("peakDirection");
@@ -60,13 +61,14 @@ public class YamaTenkiGreenDao {
         forecast.addIntProperty("baseDirection");
         forecast.addIntProperty("weather");
         forecast.addIntProperty("temperature");
-        forecast.addIntProperty("precipitation");
+        forecast.addFloatProperty("precipitation");
         forecast.addIntProperty("temperatureHigh");
         forecast.addIntProperty("temperatureLow");
         Property mountainIdF = forecast.addLongProperty("mountainId").notNull().getProperty(); //which mountain it belongs to
         //One mountain, Many forecasts
         forecast.addToOne(mountain, mountainIdF);
         mountain.addToMany(forecast, mountainIdF);
+        forecast.setHasKeepSections(true);
 
         /**
          Area

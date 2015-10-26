@@ -47,10 +47,10 @@ public class Database {
         String line;
         String csvSplitBy = ",";
 
-        while((line = br.readLine()) != null) {
+        while ((line = br.readLine()) != null) {
             String[] row = line.split(csvSplitBy, 10);
             //first line is header, we should ignore
-            if(row.length == 10 && Utils.isNumeric(row[4].trim())) {
+            if (row.length == 10 && Utils.isNumeric(row[4].trim())) {
                 Integer height = null;
                 Float latitude = null;
                 Float longitude = null;
@@ -84,7 +84,7 @@ public class Database {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         String line;
 
-        while((line = br.readLine()) != null) {
+        while ((line = br.readLine()) != null) {
             csvEntries.add(line);
         }
 

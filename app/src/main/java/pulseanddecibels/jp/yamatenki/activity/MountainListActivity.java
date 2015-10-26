@@ -18,15 +18,19 @@ import android.widget.Toast;
 
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.adapter.MountainListAdapter;
+import pulseanddecibels.jp.yamatenki.enums.MountainListColumn;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/28.
  * Copyright Pulse and Decibels 2015
  */
-public class MountainListActivity extends Activity  {
+public class MountainListActivity extends Activity {
     TextView header;
     ListView mountainList;
+    TextView tableHeaderName;
+    TextView tableHeaderDifficulty;
+    TextView tableHeaderHeight;
     SearchView minHeightSearchView;
     SearchView maxHeightSearchView;
 
@@ -53,23 +57,42 @@ public class MountainListActivity extends Activity  {
         mountainListAdapter = new MountainListAdapter(this);
 
         //we came here from AreaSearchActivity (Area was chosen)
-        if(areaId != 0) {
+        if (areaId != 0) {
             setContentView(R.layout.activity_search_area);
             header = (TextView) findViewById(R.id.text_search_header);
             String areaTemplate = "%sの山";
             String area;
 
             switch (areaId) {
-                case R.id.button_area_chuugoku : area = "中国"; break;
-                case R.id.button_area_hokkaidou : area = "北海道"; break;
-                case R.id.button_area_hokuriku : area = "北陸"; break;
-                case R.id.button_area_kinki : area = "近畿"; break;
-                case R.id.button_area_koushin : area = "関東・甲信"; break;
-                case R.id.button_area_okinawa : area = "九州・沖縄"; break;
-                case R.id.button_area_touhoku : area = "東北"; break;
-                case R.id.button_area_toukai : area = "東海"; break;
-                case R.id.button_area_shikoku : area = "四国"; break;
-                default: area = "不明";
+                case R.id.button_area_chuugoku:
+                    area = "中国";
+                    break;
+                case R.id.button_area_hokkaidou:
+                    area = "北海道";
+                    break;
+                case R.id.button_area_hokuriku:
+                    area = "北陸";
+                    break;
+                case R.id.button_area_kinki:
+                    area = "近畿";
+                    break;
+                case R.id.button_area_koushin:
+                    area = "関東・甲信";
+                    break;
+                case R.id.button_area_okinawa:
+                    area = "九州・沖縄";
+                    break;
+                case R.id.button_area_touhoku:
+                    area = "東北";
+                    break;
+                case R.id.button_area_toukai:
+                    area = "東海";
+                    break;
+                case R.id.button_area_shikoku:
+                    area = "四国";
+                    break;
+                default:
+                    area = "不明";
             }
             header.setText(String.format(areaTemplate, area));
             mountainListAdapter.searchByArea(area);
@@ -80,7 +103,7 @@ public class MountainListActivity extends Activity  {
             header = (TextView) findViewById(R.id.text_search_header);
             header.setText(getResources().getString(R.string.text_closest_mountain_header));
             mountainListAdapter.searchByClosestMountains(latitude, longitude);
-        } else if(searchType != null && searchType.equals("height")) {
+        } else if (searchType != null && searchType.equals("height")) {
             //we came here from Main Activity (Search by Height)
             setContentView(R.layout.activity_search_height);
             header = (TextView) findViewById(R.id.text_search_header);
@@ -97,8 +120,7 @@ public class MountainListActivity extends Activity  {
             minHeightSearchView.setQuery("" + MIN_HEIGHT, false); //set default values
             maxHeightSearchView.setQuery("" + MAX_HEIGHT, false); //set default values
             minHeightSearchView.requestFocus();
-        }
-        else if (searchType != null && searchType.equals("name")) {
+        } else if (searchType != null && searchType.equals("name")) {
             //we came here from Main Activity (Search by Name)
             setContentView(R.layout.activity_search_name);
             header = (TextView) findViewById(R.id.text_search_header);
@@ -113,6 +135,12 @@ public class MountainListActivity extends Activity  {
         LinearLayout mountainListContainer = (LinearLayout) findViewById(R.id.mountain_list_container);
         mountainList = (ListView) mountainListContainer.findViewById(R.id.list_mountains);
         mountainList.setAdapter(mountainListAdapter);
+        tableHeaderName = (TextView) mountainListContainer.findViewById(R.id.table_header_name);
+        tableHeaderName.setOnClickListener(getNameHeaderOnClickListener());
+        tableHeaderDifficulty = (TextView) mountainListContainer.findViewById(R.id.table_header_difficulty);
+        tableHeaderDifficulty.setOnClickListener(getDifficultyHeaderOnClickListener());
+        tableHeaderHeight = (TextView) mountainListContainer.findViewById(R.id.table_header_height);
+        tableHeaderHeight.setOnClickListener(getHeightHeaderOnClickListener());
         header.setTypeface(Utils.getTitleTypeFace(this));
     }
 
@@ -132,7 +160,7 @@ public class MountainListActivity extends Activity  {
      * Optionally hide the X icon too
      *
      * @param searchView - Search view to hide the widgets of
-     * @param hideXIcon - Whether or not to hide the X icon which clears the searchview
+     * @param hideXIcon  - Whether or not to hide the X icon which clears the searchview
      */
     private void hideSearchPlateWidgets(SearchView searchView, boolean hideXIcon) {
         int searchPlateId = searchView.getContext().getResources()
@@ -140,7 +168,7 @@ public class MountainListActivity extends Activity  {
         View searchPlateView = searchView.findViewById(searchPlateId);
         if (searchPlateView != null) {
             searchPlateView.setBackgroundColor(Color.WHITE);
-            if(hideXIcon) {
+            if (hideXIcon) {
                 int xButtonId = searchPlateView.getContext().getResources()
                         .getIdentifier("android:id/search_close_btn", null, null);
                 ImageView xButton = (ImageView) searchView.findViewById(xButtonId);
@@ -172,14 +200,14 @@ public class MountainListActivity extends Activity  {
 
                     int minHeight = MIN_HEIGHT;
                     int maxHeight = MAX_HEIGHT;
-                    if(!minHeightString.equals("")) {
+                    if (!minHeightString.equals("")) {
                         minHeight = Integer.parseInt(minHeightString);
                     }
-                    if(!maxHeightString.equals("")) {
+                    if (!maxHeightString.equals("")) {
                         maxHeight = Integer.parseInt(maxHeightString);
                     }
 
-                    if(minHeight > maxHeight) {
+                    if (minHeight > maxHeight) {
                         Toast.makeText(MountainListActivity.this, "The minimum should be less than the maximum", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -249,6 +277,33 @@ public class MountainListActivity extends Activity  {
             @Override
             public void onClick(View v) {
                 searchView.onActionViewExpanded();
+            }
+        };
+    }
+
+    private View.OnClickListener getNameHeaderOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mountainListAdapter.sort(MountainListColumn.NAME);
+            }
+        };
+    }
+
+    private View.OnClickListener getDifficultyHeaderOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mountainListAdapter.sort(MountainListColumn.DIFFICULTY);
+            }
+        };
+    }
+
+    private View.OnClickListener getHeightHeaderOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mountainListAdapter.sort(MountainListColumn.HEIGHT);
             }
         };
     }

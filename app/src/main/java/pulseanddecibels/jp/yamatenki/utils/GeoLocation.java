@@ -10,10 +10,10 @@ import pulseanddecibels.jp.yamatenki.database.dao.DaoSession;
 /**
  * <p>Represents a point on the surface of a sphere. (The Earth is almost
  * spherical.)</p>
- *
+ * <p/>
  * <p>To create an instance, call one of the static methods fromDegrees() or
  * fromRadians().</p>
- *
+ * <p/>
  * <p>This code was originally published at
  * <a href="http://JanMatuschek.de/LatitudeLongitudeBoundingCoordinates#Java">
  * http://JanMatuschek.de/LatitudeLongitudeBoundingCoordinates#Java</a>.</p>
@@ -34,11 +34,11 @@ public class GeoLocation {
     private static final double MIN_LON = Math.toRadians(-180d); // -PI
     private static final double MAX_LON = Math.toRadians(180d);  //  PI
 
-    private GeoLocation () {
+    private GeoLocation() {
     }
 
     /**
-     * @param latitude the latitude, in degrees.
+     * @param latitude  the latitude, in degrees.
      * @param longitude the longitude, in degrees.
      */
     public static GeoLocation fromDegrees(double latitude, double longitude) {
@@ -52,7 +52,7 @@ public class GeoLocation {
     }
 
     /**
-     * @param latitude the latitude, in radians.
+     * @param latitude  the latitude, in radians.
      * @param longitude the longitude, in radians.
      */
     public static GeoLocation fromRadians(double latitude, double longitude) {
@@ -112,9 +112,10 @@ public class GeoLocation {
     /**
      * Computes the great circle distance between this GeoLocation instance
      * and the location argument.
+     *
      * @param radius the radius of the sphere, e.g. the average radius for a
-     * spherical approximation of the figure of the Earth is approximately
-     * 6371.01 kilometers.
+     *               spherical approximation of the figure of the Earth is approximately
+     *               6371.01 kilometers.
      * @return the distance, measured in the same unit as the radius
      * argument.
      */
@@ -132,12 +133,13 @@ public class GeoLocation {
      * <p>For more information about the formulae used in this method visit
      * <a href="http://JanMatuschek.de/LatitudeLongitudeBoundingCoordinates">
      * http://JanMatuschek.de/LatitudeLongitudeBoundingCoordinates</a>.</p>
+     *
      * @param distance the distance from the point represented by this
-     * GeoLocation instance. Must me measured in the same unit as the radius
-     * argument.
-     * @param radius the radius of the sphere, e.g. the average radius for a
-     * spherical approximation of the figure of the Earth is approximately
-     * 6371.01 kilometers.
+     *                 GeoLocation instance. Must me measured in the same unit as the radius
+     *                 argument.
+     * @param radius   the radius of the sphere, e.g. the average radius for a
+     *                 spherical approximation of the figure of the Earth is approximately
+     *                 6371.01 kilometers.
      * @return an array of two GeoLocation objects such that:<ul>
      * <li>The latitude of any point within the specified distance is greater
      * or equal to the latitude of the first array element and smaller or
@@ -211,9 +213,9 @@ public class GeoLocation {
         params.add(location.getLongitudeInRadians());
         params.add(distance / radius);
 
-        return coordinateDao.queryRawCreateListArgs("WHERE ("+LAT+" >= ? AND "+LAT+" <= ?) AND ("+LON+" >= ? " +
-                (meridian180WithinDistance ? "OR" : "AND") + " "+LON+" <= ?) AND " +
-                "acos(sin(?) * sin("+LAT+") + cos(?) * cos("+LAT+") * cos("+LON+" - ?)) <= ?", params).list();
+        return coordinateDao.queryRawCreateListArgs("WHERE (" + LAT + " >= ? AND " + LAT + " <= ?) AND (" + LON + " >= ? " +
+                (meridian180WithinDistance ? "OR" : "AND") + " " + LON + " <= ?) AND " +
+                "acos(sin(?) * sin(" + LAT + ") + cos(?) * cos(" + LAT + ") * cos(" + LON + " - ?)) <= ?", params).list();
     }
 
 
