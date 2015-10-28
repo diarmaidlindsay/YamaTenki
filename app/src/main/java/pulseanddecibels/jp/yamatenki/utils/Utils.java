@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -55,5 +56,13 @@ public class Utils {
 
     public static int getRandomInRange(int MIN, int MAX) {
             return MIN + (int) (Math.random() * ((MAX - MIN) + 1));
+    }
+
+    public static long[] toLongArray(List<Long> list)  {
+        long[] ret = new long[list.size()];
+        int i = 0;
+        for (Long e : list)
+            ret[i++] = e;
+        return ret;
     }
 }

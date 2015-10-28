@@ -10,7 +10,7 @@
     <string name="image_main_deer">Picture of a deer</string>
     <string name="text_main_header">山サーチ</string>
     <string name="text_search_name_header">山の名前で探す</string>
-    <string name="text_search_name_textbox_hint">漢字一文字やひらがなからでも検索できます。</string>
+    <string name="text_search_textbox_hint">漢字やひらがな検索</string>
     <string name="text_search_name_search_button">検索</string>
     <string name="text_search_table_header_name">名前</string>
     <string name="text_search_table_header_difficulty">現在の登山指数</string>
@@ -37,4 +37,7 @@
     <string name="text_search_height_m">m</string>
     <string name="text_search_height_header">標高で探す</string>
     <string name="error_min_max_height">最低標高は最高標高を超えないでください</string>
+    <string name="text_my_mountain_list_header">My 山リスト</string>
+    <string name="button_add_my_mountain">My 山リストに登録</string>
+    <string name="button_remove_my_mountain">My 山リストに登録解除</string>
 </resources>

@@ -3,6 +3,7 @@ package pulseanddecibels.jp.yamatenki.activity;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +25,17 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
 /**
  * Created by Diarmaid Lindsay on 2015/09/28.
  * Copyright Pulse and Decibels 2015
+ *
+ * Android can only have 1 searchable Activity.
+ * So all search functionality is contained in this Activity.
+ * This includes...
+ *
+ * Search by Name
+ * Search by Height
+ * Search by Area
+ * Closest 20 Mountains
+ * My Mountain List
+ * My Mountain Memos
  */
 public class MountainListActivity extends Activity {
     TextView header;
@@ -33,6 +45,7 @@ public class MountainListActivity extends Activity {
     TextView tableHeaderHeight;
     SearchView minHeightSearchView;
     SearchView maxHeightSearchView;
+    SearchView myMountainSearchView;
 
     MountainListAdapter mountainListAdapter;
 
@@ -61,39 +74,7 @@ public class MountainListActivity extends Activity {
             setContentView(R.layout.activity_search_area);
             header = (TextView) findViewById(R.id.text_search_header);
             String areaTemplate = "%sの山";
-            String area;
-
-            switch (areaId) {
-                case R.id.button_area_chuugoku:
-                    area = "中国";
-                    break;
-                case R.id.button_area_hokkaidou:
-                    area = "北海道";
-                    break;
-                case R.id.button_area_hokuriku:
-                    area = "北陸";
-                    break;
-                case R.id.button_area_kinki:
-                    area = "近畿";
-                    break;
-                case R.id.button_area_koushin:
-                    area = "関東・甲信";
-                    break;
-                case R.id.button_area_okinawa:
-                    area = "九州・沖縄";
-                    break;
-                case R.id.button_area_touhoku:
-                    area = "東北";
-                    break;
-                case R.id.button_area_toukai:
-                    area = "東海";
-                    break;
-                case R.id.button_area_shikoku:
-                    area = "四国";
-                    break;
-                default:
-                    area = "不明";
-            }
+            String area = getAreaForButtonId(areaId);
             header.setText(String.format(areaTemplate, area));
             mountainListAdapter.searchByArea(area);
 
@@ -127,9 +108,19 @@ public class MountainListActivity extends Activity {
             header.setText(getResources().getString(R.string.text_search_name_header));
             SearchView nameSearchView = (SearchView) findViewById(R.id.search_name_searchView);
             setupSearchView(nameSearchView, false);
-            nameSearchView.setQueryHint(getResources().getString(R.string.text_search_name_textbox_hint));
+            nameSearchView.setQueryHint(getResources().getString(R.string.text_search_textbox_hint));
             nameSearchView.setOnQueryTextListener(getNameTextListener(nameSearchView));
             mountainListAdapter.searchByName(""); //on launch display all
+        } else if (searchType != null && searchType.equals("myMountain")) {
+            //we came here from Main Activity (My Mountain List)
+            setContentView(R.layout.activity_my_mountain_list);
+            header = (TextView) findViewById(R.id.text_search_header);
+            header.setText(R.string.text_my_mountain_list_header);
+            myMountainSearchView = (SearchView) findViewById(R.id.search_my_mountain_searchView);
+            setupSearchView(myMountainSearchView, false);
+            myMountainSearchView.setQueryHint(getResources().getString(R.string.text_search_textbox_hint));
+            myMountainSearchView.setOnQueryTextListener(getMyMountainTextListener());
+            mountainListAdapter.searchByMyMountainName("");
         }
 
         LinearLayout mountainListContainer = (LinearLayout) findViewById(R.id.mountain_list_container);
@@ -142,6 +133,22 @@ public class MountainListActivity extends Activity {
         tableHeaderHeight = (TextView) mountainListContainer.findViewById(R.id.table_header_height);
         tableHeaderHeight.setOnClickListener(getHeightHeaderOnClickListener());
         header.setTypeface(Utils.getTitleTypeFace(this));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK) {
+            if(requestCode == 100) {
+                //a mountain was removed from my mountain list so we should resubmit the search
+                if(myMountainSearchView != null) {
+                    long mountainId = data.getLongExtra("changedMountain", 0L);
+                    if(mountainId != 0L) {
+                        mountainListAdapter.searchByMyMountainName(myMountainSearchView.getQuery().toString());
+                    }
+                }
+            }
+        }
     }
 
     private void setupSearchView(SearchView searchView, boolean hideXIcon) {
@@ -272,6 +279,42 @@ public class MountainListActivity extends Activity {
         };
     }
 
+    private SearchView.OnQueryTextListener getMyMountainTextListener() {
+        return new SearchView.OnQueryTextListener() {
+            private String text;
+            Runnable mFilterTask = new Runnable() {
+
+                @Override
+                public void run() {
+                    mountainListAdapter.searchByMyMountainName(text);
+                }
+            };
+            private Handler mHandler = new Handler();
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                text = query;
+                mHandler.removeCallbacks(mFilterTask);
+                mHandler.postDelayed(mFilterTask, 0);
+                hideKeyboard(myMountainSearchView);
+                mountainList.requestFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //if text cleared display all again
+                if (newText.length() == 0) {
+                    text = newText;
+                    mHandler.removeCallbacks(mFilterTask);
+                    mHandler.postDelayed(mFilterTask, 0);
+                    mountainList.requestFocus();
+                }
+                return true;
+            }
+        };
+    }
+
     private View.OnClickListener getSearchViewOnClickListener(final SearchView searchView) {
         return new View.OnClickListener() {
             @Override
@@ -311,5 +354,42 @@ public class MountainListActivity extends Activity {
     public void hideKeyboard(SearchView searchView) {
         InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(searchView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    private String getAreaForButtonId(int areaId) {
+        String area;
+        switch (areaId) {
+            case R.id.button_area_chuugoku:
+                area = "中国";
+                break;
+            case R.id.button_area_hokkaidou:
+                area = "北海道";
+                break;
+            case R.id.button_area_hokuriku:
+                area = "北陸";
+                break;
+            case R.id.button_area_kinki:
+                area = "近畿";
+                break;
+            case R.id.button_area_koushin:
+                area = "関東・甲信";
+                break;
+            case R.id.button_area_okinawa:
+                area = "九州・沖縄";
+                break;
+            case R.id.button_area_touhoku:
+                area = "東北";
+                break;
+            case R.id.button_area_toukai:
+                area = "東海";
+                break;
+            case R.id.button_area_shikoku:
+                area = "四国";
+                break;
+            default:
+                area = "不明";
+        }
+
+        return area;
     }
 }

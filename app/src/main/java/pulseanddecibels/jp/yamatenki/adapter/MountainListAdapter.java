@@ -1,5 +1,6 @@
 package pulseanddecibels.jp.yamatenki.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -28,6 +29,8 @@ import pulseanddecibels.jp.yamatenki.database.dao.CoordinateDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Forecast;
 import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
+import pulseanddecibels.jp.yamatenki.database.dao.MyMountain;
+import pulseanddecibels.jp.yamatenki.database.dao.MyMountainDao;
 import pulseanddecibels.jp.yamatenki.enums.MountainListColumn;
 import pulseanddecibels.jp.yamatenki.utils.GeoLocation;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
@@ -53,6 +56,7 @@ public class MountainListAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater layoutInflater;
     private GeoLocation here;
+    String searchString; //in case we have to resubmit the query after update in child activity
 
     public MountainListAdapter(Context context) {
         this.mContext = context;
@@ -126,7 +130,7 @@ public class MountainListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MountainForecastActivity.class);
                 intent.putExtra("mountainId", mountainId);
-                mContext.startActivity(intent);
+                ((Activity)mContext).startActivityForResult(intent, 100);
             }
         });
 
@@ -173,6 +177,7 @@ public class MountainListAdapter extends BaseAdapter {
     }
 
     public void searchByName(String searchString) {
+        this.searchString = searchString;
         MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();
         QueryBuilder qb = mountainDao.queryBuilder();
 
@@ -189,6 +194,37 @@ public class MountainListAdapter extends BaseAdapter {
 
         mountainList = qb.list();
         notifyDataSetChanged();
+    }
+
+    public void searchByMyMountainName(String searchString) {
+        this.searchString = searchString;
+        MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();
+        MyMountainDao myMountainDao = Database.getInstance(mContext).getMyMountainDao();
+
+        List<Long> myMountainIds = new ArrayList<>();
+
+        for(MyMountain mountain : myMountainDao.queryBuilder().list()) {
+            myMountainIds.add(mountain.getMountainId());
+        }
+
+        QueryBuilder qb = mountainDao.queryBuilder();
+
+        if (searchString.length() > 0) {
+
+            if (Utils.isKanji(searchString.charAt(0))) {
+                qb.where(MountainDao.Properties.KanjiName.like("%" + searchString + "%"));
+            } else if (Utils.isKana(searchString.charAt(0))) {
+                qb.where(MountainDao.Properties.HiraganaName.like("%" + searchString + "%"));
+            } else {
+                qb.where(MountainDao.Properties.RomajiName.like("%" + searchString + "%"));
+            }
+        }
+
+        qb.where(MountainDao.Properties.Id.in(myMountainIds));
+
+        mountainList = qb.list();
+        notifyDataSetChanged();
+
     }
 
     public void searchByClosestMountains(double latitude, double longitude) {

@@ -91,6 +91,15 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             }
         });
 
+        myMountainListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MountainListActivity.class);
+                intent.putExtra("searchType", "myMountain"); //indicate we want my mountain list
+                startActivity(intent);
+            }
+        });
+
         connectToGooglePlayService();
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();

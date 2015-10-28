@@ -1,9 +1,12 @@
 package pulseanddecibels.jp.yamatenki.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.SparseIntArray;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -16,6 +19,10 @@ import java.util.List;
 import java.util.Map;
 
 import pulseanddecibels.jp.yamatenki.R;
+import pulseanddecibels.jp.yamatenki.database.Database;
+import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
+import pulseanddecibels.jp.yamatenki.database.dao.MyMountain;
+import pulseanddecibels.jp.yamatenki.database.dao.MyMountainDao;
 import pulseanddecibels.jp.yamatenki.model.ForecastArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
@@ -56,6 +63,7 @@ public class MountainForecastActivity extends Activity {
     TextView title;
     ImageView currentDifficultyImage;
     ScrollView mountainForecastScrollView;
+    Button addMyMountainButton;
     long mountainId;
     List<ForecastScrollViewElement> scrollViewElements = new ArrayList<>();
 
@@ -66,10 +74,17 @@ public class MountainForecastActivity extends Activity {
 
         Bundle arguments = getIntent().getExtras();
         mountainId = arguments.getLong("mountainId"); //used to retrieve correct JSON file
+        MountainDao mountainDao = Database.getInstance(this).getMountainDao();
+        mountainDao.queryBuilder().where(MountainDao.Properties.Id.eq(mountainId)).unique();
 
         title = (TextView) findViewById(R.id.text_forecast_header);
         title.setTypeface(Utils.getTitleTypeFace(this));
         currentDifficultyImage = (ImageView) findViewById(R.id.mountain_forecast_current_difficulty);
+        addMyMountainButton = (Button) findViewById(R.id.button_add_my_mountain);
+        addMyMountainButton.setOnClickListener(getAddMyMountainListener());
+        addMyMountainButton.setText(getMyMountainForMountainId() == null ?
+                getResources().getString(R.string.button_add_my_mountain) :
+                getResources().getString(R.string.button_remove_my_mountain));
 
         initialiseWidgets();
         populateWidgets(JSONParser.parseMountainForecastFromFile(
@@ -90,6 +105,40 @@ public class MountainForecastActivity extends Activity {
         +5Forecast
         +6Forecast
          */
+    }
+
+    /**
+     * Return any entries from the MyMountains table
+     */
+    private MyMountain getMyMountainForMountainId() {
+        MyMountainDao myMountainDao = Database.getInstance(MountainForecastActivity.this).getMyMountainDao();
+        return myMountainDao.queryBuilder().where(MyMountainDao.Properties.MountainId.eq(mountainId)).unique();
+    }
+
+    /**
+     * When the user deletes, the button becomes an add button.
+     */
+    private View.OnClickListener getAddMyMountainListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyMountainDao myMountainDao = Database.getInstance(MountainForecastActivity.this).getMyMountainDao();
+                MyMountain myMountain = getMyMountainForMountainId();
+
+                //if the mountain is in the my mountain table, disable the add button
+                if (myMountain != null) {
+                    myMountainDao.delete(myMountain);
+                    addMyMountainButton.setText(getResources().getString(R.string.button_add_my_mountain));
+                } else {
+                    myMountainDao.insert(new MyMountain(null, mountainId));
+                    addMyMountainButton.setText(getResources().getString(R.string.button_remove_my_mountain));
+                }
+
+                Intent intent = getIntent();
+                intent.putExtra("changedMountain", mountainId);
+                setResult(RESULT_OK, intent);
+            }
+        };
     }
 
     private void populateWidgets(MountainForecastJSON forecasts) {
