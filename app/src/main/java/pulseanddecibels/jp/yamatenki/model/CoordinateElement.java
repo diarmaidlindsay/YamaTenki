@@ -7,11 +7,19 @@ package pulseanddecibels.jp.yamatenki.model;
  * Representation of a "coordinate" object found in JSON
  */
 public class CoordinateElement {
-    float latitude;
-    float longitude;
+    double latitude;
+    double longitude;
 
-    public CoordinateElement(long latitude, long longitude) {
+    public CoordinateElement(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
     }
 }

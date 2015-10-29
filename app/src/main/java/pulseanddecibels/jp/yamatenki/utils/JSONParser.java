@@ -99,78 +99,25 @@ public class JSONParser {
         return mountainForecastJSON;
     }
 
-    /*
-     * Sample json :
-     *
-        "yid" : "ID0001",
-		"title" : "富士山富士宮口５合目",
-		"kana" : "ふじさんふじみやぐちごごうめ",
-		"coordinate" : {
-			"lat" : 40.6935133,
-			"lng" : 140.9367265
-		},
-		"area" : 4,
-		"height" : 2318,
-		"currentMountainIndex" : 1
-     */
     private static MountainArrayElement parseMountain(JSONObject mountain) throws JSONException {
         String yid = mountain.optString("yid");
         String title = mountain.optString("title");
+        String titleExt = mountain.optString("titleExt");
+        String titleEnglish = mountain.optString("titleEnglish");
         String kana = mountain.optString("kana");
         JSONObject coordinateObject = mountain.getJSONObject("coordinate");
-        long latitude = coordinateObject.optLong("lat");
-        long longitude = coordinateObject.optLong("lng");
+        double latitude = coordinateObject.optDouble("lat");
+        double longitude = coordinateObject.optDouble("lng");
         CoordinateElement coordinate = new CoordinateElement(latitude, longitude);
+        String prefecture = mountain.optString("prefecture");
         int area = mountain.optInt("area");
         int height = mountain.optInt("height");
         int currentMountainIndex = mountain.optInt("currentMountainIndex");
 
-        return new MountainArrayElement(yid, title, kana, coordinate, area, height, currentMountainIndex);
+        return new MountainArrayElement(yid, title, titleExt, titleEnglish, kana, coordinate, prefecture,
+                area, height, currentMountainIndex);
     }
 
-    /*
-     * Sample json :
-        // (long term forecast type)
-        "dateTime" : "2015-09-18T06:00:00.+09:00",
-        "mountainIndex" : 1,
-        "windAndTemperatures" : [
-            {
-                "temperature" : 7,
-                "windVelocity" : 12,
-                "windDirection" : 1
-            },
-            {
-                "temperature" : 13,
-                "windVelocity" : 9,
-                "windDirection" : 2
-            }
-        ],
-        "weather" : 1,
-        "temperature" : 22,
-        "precipitation" : 0
-
-        //or
-        // (short term forecast type)
-
-        "dateTime" : "2015-09-20T00:00:00.+09:00",
-        "mountainIndex" : 1,
-        "windAndTemperatures" : [
-            {
-                "temperature" : 7,
-                "windVelocity" : 6,
-                "windDirection" : 2
-            },
-            {
-                "temperature" : 12,
-                "windVelocity" : 1,
-                "windDirection" : 0
-            }
-        ],
-        "weather" : 0,
-        "temperatureHigh" : 28,
-        "temperatureLow" : 19,
-        "precipitation" : 10
-     */
     private static ForecastArrayElement parseForecast(JSONObject forecast) throws JSONException {
         String dateTime = forecast.optString("dateTime");
         int mountainIndex = forecast.optInt("mountainIndex");

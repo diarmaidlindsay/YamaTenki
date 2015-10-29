@@ -14,8 +14,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 
 import pulseanddecibels.jp.yamatenki.R;
 
@@ -24,14 +22,6 @@ import pulseanddecibels.jp.yamatenki.R;
  * Copyright Pulse and Decibels 2015
  */
 public class JSONDownloader {
-
-    private static final Map<Long, Integer> forecastJSONFiles;
-
-    static {
-        forecastJSONFiles = new HashMap<>();
-        forecastJSONFiles.put(1L, R.raw.id0001);
-        forecastJSONFiles.put(2L, R.raw.id0002);
-    }
 
     /**
      * Sample code from StackOverflow.
@@ -96,9 +86,9 @@ public class JSONDownloader {
     }
 
     @Nullable
-    public static String getMockMountainForecast(Context context, long mountainId) {
-        Integer forecastJSONFile = forecastJSONFiles.get(mountainId);
-        if (forecastJSONFile != null) {
+    public static String getMockMountainForecast(Context context, String yid) {
+        Integer forecastJSONFile = context.getResources().getIdentifier(yid, "raw", context.getPackageName());
+        if (forecastJSONFile != 0) {
             InputStream inputStream = context.getResources().openRawResource(forecastJSONFile);
             return readJSONFile(inputStream);
         }

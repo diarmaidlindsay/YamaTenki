@@ -18,15 +18,16 @@ import de.greenrobot.dao.DaoException;
 public class Mountain {
 
     private Long id;
-    private String kanjiName;
-    private String kanjiNameArea;
-    private String hiraganaName;
-    private String romajiName;
-    private Integer height;
+    private String yid;
+    private String title;
+    private String titleExt;
+    private String titleEnglish;
+    private String kana;
+    private long coordinateId;
     private long prefectureId;
     private long areaId;
-    private long coordinateId;
-    private String closestTown;
+    private Integer height;
+    private Integer currentMountainIndex;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -55,17 +56,18 @@ public class Mountain {
         this.id = id;
     }
 
-    public Mountain(Long id, String kanjiName, String kanjiNameArea, String hiraganaName, String romajiName, Integer height, long prefectureId, long areaId, long coordinateId, String closestTown) {
+    public Mountain(Long id, String yid, String title, String titleExt, String titleEnglish, String kana, long coordinateId, long prefectureId, long areaId, Integer height, Integer currentMountainIndex) {
         this.id = id;
-        this.kanjiName = kanjiName;
-        this.kanjiNameArea = kanjiNameArea;
-        this.hiraganaName = hiraganaName;
-        this.romajiName = romajiName;
-        this.height = height;
+        this.yid = yid;
+        this.title = title;
+        this.titleExt = titleExt;
+        this.titleEnglish = titleEnglish;
+        this.kana = kana;
+        this.coordinateId = coordinateId;
         this.prefectureId = prefectureId;
         this.areaId = areaId;
-        this.coordinateId = coordinateId;
-        this.closestTown = closestTown;
+        this.height = height;
+        this.currentMountainIndex = currentMountainIndex;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -82,44 +84,52 @@ public class Mountain {
         this.id = id;
     }
 
-    public String getKanjiName() {
-        return kanjiName;
+    public String getYid() {
+        return yid;
     }
 
-    public void setKanjiName(String kanjiName) {
-        this.kanjiName = kanjiName;
+    public void setYid(String yid) {
+        this.yid = yid;
     }
 
-    public String getKanjiNameArea() {
-        return kanjiNameArea;
+    public String getTitle() {
+        return title;
     }
 
-    public void setKanjiNameArea(String kanjiNameArea) {
-        this.kanjiNameArea = kanjiNameArea;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getHiraganaName() {
-        return hiraganaName;
+    public String getTitleExt() {
+        return titleExt;
     }
 
-    public void setHiraganaName(String hiraganaName) {
-        this.hiraganaName = hiraganaName;
+    public void setTitleExt(String titleExt) {
+        this.titleExt = titleExt;
     }
 
-    public String getRomajiName() {
-        return romajiName;
+    public String getTitleEnglish() {
+        return titleEnglish;
     }
 
-    public void setRomajiName(String romajiName) {
-        this.romajiName = romajiName;
+    public void setTitleEnglish(String titleEnglish) {
+        this.titleEnglish = titleEnglish;
     }
 
-    public Integer getHeight() {
-        return height;
+    public String getKana() {
+        return kana;
     }
 
-    public void setHeight(Integer height) {
-        this.height = height;
+    public void setKana(String kana) {
+        this.kana = kana;
+    }
+
+    public long getCoordinateId() {
+        return coordinateId;
+    }
+
+    public void setCoordinateId(long coordinateId) {
+        this.coordinateId = coordinateId;
     }
 
     public long getPrefectureId() {
@@ -138,20 +148,20 @@ public class Mountain {
         this.areaId = areaId;
     }
 
-    public long getCoordinateId() {
-        return coordinateId;
+    public Integer getHeight() {
+        return height;
     }
 
-    public void setCoordinateId(long coordinateId) {
-        this.coordinateId = coordinateId;
+    public void setHeight(Integer height) {
+        this.height = height;
     }
 
-    public String getClosestTown() {
-        return closestTown;
+    public Integer getCurrentMountainIndex() {
+        return currentMountainIndex;
     }
 
-    public void setClosestTown(String closestTown) {
-        this.closestTown = closestTown;
+    public void setCurrentMountainIndex(Integer currentMountainIndex) {
+        this.currentMountainIndex = currentMountainIndex;
     }
 
     /** To-one relationship, resolved on first access. */

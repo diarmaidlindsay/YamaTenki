@@ -24,28 +24,27 @@ public class YamaTenkiGreenDao {
          Mountain
          **/
         mountain.addIdProperty().autoincrement();
-        mountain.addStringProperty("kanjiName");
-        mountain.addStringProperty("kanjiNameArea");
-        mountain.addStringProperty("hiraganaName");
-        mountain.addStringProperty("romajiName");
-        mountain.addIntProperty("height");
+        mountain.addStringProperty("yid");
+        mountain.addStringProperty("title");
+        mountain.addStringProperty("titleExt");
+        mountain.addStringProperty("titleEnglish");
+        mountain.addStringProperty("kana");
+        Property coordinateId = mountain.addLongProperty("coordinateId").notNull().getProperty();
         Property prefectureId = mountain.addLongProperty("prefectureId").notNull().getProperty();
         Property areaId = mountain.addLongProperty("areaId").notNull().getProperty();
-        Property coordinateId = mountain.addLongProperty("coordinateId").notNull().getProperty();
+        mountain.addIntProperty("height");
+        mountain.addIntProperty("currentMountainIndex");
         //one mountain to one area
         mountain.addToOne(area, areaId);
         mountain.addToOne(prefecture, prefectureId);
         mountain.addToOne(coordinate, coordinateId);
-        mountain.addStringProperty("closestTown");
         mountain.setHasKeepSections(true);
 
         /**
          Coordinate
          **/
         coordinate.addIdProperty();
-//        Property mountainIdC = coordinate.addLongProperty("mountainId").notNull().getProperty();
         //one mountain to one coordinate
-//        coordinate.addToOne(mountain, mountainIdC);
         coordinate.addFloatProperty("latitude");
         coordinate.addFloatProperty("longitude");
 

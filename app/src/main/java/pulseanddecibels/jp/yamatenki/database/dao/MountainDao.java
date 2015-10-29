@@ -26,16 +26,17 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property KanjiName = new Property(1, String.class, "kanjiName", false, "KANJI_NAME");
-        public final static Property KanjiNameArea = new Property(2, String.class, "kanjiNameArea", false, "KANJI_NAME_AREA");
-        public final static Property HiraganaName = new Property(3, String.class, "hiraganaName", false, "HIRAGANA_NAME");
-        public final static Property RomajiName = new Property(4, String.class, "romajiName", false, "ROMAJI_NAME");
-        public final static Property Height = new Property(5, Integer.class, "height", false, "HEIGHT");
-        public final static Property PrefectureId = new Property(6, long.class, "prefectureId", false, "PREFECTURE_ID");
-        public final static Property AreaId = new Property(7, long.class, "areaId", false, "AREA_ID");
-        public final static Property CoordinateId = new Property(8, long.class, "coordinateId", false, "COORDINATE_ID");
-        public final static Property ClosestTown = new Property(9, String.class, "closestTown", false, "CLOSEST_TOWN");
-    };
+        public final static Property Yid = new Property(1, String.class, "yid", false, "YID");
+        public final static Property Title = new Property(2, String.class, "title", false, "TITLE");
+        public final static Property TitleExt = new Property(3, String.class, "titleExt", false, "TITLE_EXT");
+        public final static Property TitleEnglish = new Property(4, String.class, "titleEnglish", false, "TITLE_ENGLISH");
+        public final static Property Kana = new Property(5, String.class, "kana", false, "KANA");
+        public final static Property CoordinateId = new Property(6, long.class, "coordinateId", false, "COORDINATE_ID");
+        public final static Property PrefectureId = new Property(7, long.class, "prefectureId", false, "PREFECTURE_ID");
+        public final static Property AreaId = new Property(8, long.class, "areaId", false, "AREA_ID");
+        public final static Property Height = new Property(9, Integer.class, "height", false, "HEIGHT");
+        public final static Property CurrentMountainIndex = new Property(10, Integer.class, "currentMountainIndex", false, "CURRENT_MOUNTAIN_INDEX");
+    }
 
     private DaoSession daoSession;
 
@@ -54,15 +55,16 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'MOUNTAIN' (" + //
                 "'_id' INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
-                "'KANJI_NAME' TEXT," + // 1: kanjiName
-                "'KANJI_NAME_AREA' TEXT," + // 2: kanjiNameArea
-                "'HIRAGANA_NAME' TEXT," + // 3: hiraganaName
-                "'ROMAJI_NAME' TEXT," + // 4: romajiName
-                "'HEIGHT' INTEGER," + // 5: height
-                "'PREFECTURE_ID' INTEGER NOT NULL ," + // 6: prefectureId
-                "'AREA_ID' INTEGER NOT NULL ," + // 7: areaId
-                "'COORDINATE_ID' INTEGER NOT NULL ," + // 8: coordinateId
-                "'CLOSEST_TOWN' TEXT);"); // 9: closestTown
+                "'YID' TEXT," + // 1: yid
+                "'TITLE' TEXT," + // 2: title
+                "'TITLE_EXT' TEXT," + // 3: titleExt
+                "'TITLE_ENGLISH' TEXT," + // 4: titleEnglish
+                "'KANA' TEXT," + // 5: kana
+                "'COORDINATE_ID' INTEGER NOT NULL ," + // 6: coordinateId
+                "'PREFECTURE_ID' INTEGER NOT NULL ," + // 7: prefectureId
+                "'AREA_ID' INTEGER NOT NULL ," + // 8: areaId
+                "'HEIGHT' INTEGER," + // 9: height
+                "'CURRENT_MOUNTAIN_INDEX' INTEGER);"); // 10: currentMountainIndex
     }
 
     /** Drops the underlying database table. */
@@ -81,37 +83,42 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
             stmt.bindLong(1, id);
         }
  
-        String kanjiName = entity.getKanjiName();
-        if (kanjiName != null) {
-            stmt.bindString(2, kanjiName);
+        String yid = entity.getYid();
+        if (yid != null) {
+            stmt.bindString(2, yid);
         }
  
-        String kanjiNameArea = entity.getKanjiNameArea();
-        if (kanjiNameArea != null) {
-            stmt.bindString(3, kanjiNameArea);
+        String title = entity.getTitle();
+        if (title != null) {
+            stmt.bindString(3, title);
         }
  
-        String hiraganaName = entity.getHiraganaName();
-        if (hiraganaName != null) {
-            stmt.bindString(4, hiraganaName);
+        String titleExt = entity.getTitleExt();
+        if (titleExt != null) {
+            stmt.bindString(4, titleExt);
         }
  
-        String romajiName = entity.getRomajiName();
-        if (romajiName != null) {
-            stmt.bindString(5, romajiName);
+        String titleEnglish = entity.getTitleEnglish();
+        if (titleEnglish != null) {
+            stmt.bindString(5, titleEnglish);
         }
+ 
+        String kana = entity.getKana();
+        if (kana != null) {
+            stmt.bindString(6, kana);
+        }
+        stmt.bindLong(7, entity.getCoordinateId());
+        stmt.bindLong(8, entity.getPrefectureId());
+        stmt.bindLong(9, entity.getAreaId());
  
         Integer height = entity.getHeight();
         if (height != null) {
-            stmt.bindLong(6, height);
+            stmt.bindLong(10, height);
         }
-        stmt.bindLong(7, entity.getPrefectureId());
-        stmt.bindLong(8, entity.getAreaId());
-        stmt.bindLong(9, entity.getCoordinateId());
  
-        String closestTown = entity.getClosestTown();
-        if (closestTown != null) {
-            stmt.bindString(10, closestTown);
+        Integer currentMountainIndex = entity.getCurrentMountainIndex();
+        if (currentMountainIndex != null) {
+            stmt.bindLong(11, currentMountainIndex);
         }
     }
 
@@ -132,15 +139,16 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
     public Mountain readEntity(Cursor cursor, int offset) {
         Mountain entity = new Mountain( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // kanjiName
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // kanjiNameArea
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // hiraganaName
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // romajiName
-            cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5), // height
-            cursor.getLong(offset + 6), // prefectureId
-            cursor.getLong(offset + 7), // areaId
-            cursor.getLong(offset + 8), // coordinateId
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9) // closestTown
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // yid
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // title
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // titleExt
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // titleEnglish
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // kana
+            cursor.getLong(offset + 6), // coordinateId
+            cursor.getLong(offset + 7), // prefectureId
+            cursor.getLong(offset + 8), // areaId
+            cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9), // height
+            cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10) // currentMountainIndex
         );
         return entity;
     }
@@ -149,15 +157,16 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
     @Override
     public void readEntity(Cursor cursor, Mountain entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setKanjiName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setKanjiNameArea(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setHiraganaName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setRomajiName(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setHeight(cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5));
-        entity.setPrefectureId(cursor.getLong(offset + 6));
-        entity.setAreaId(cursor.getLong(offset + 7));
-        entity.setCoordinateId(cursor.getLong(offset + 8));
-        entity.setClosestTown(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setYid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setTitle(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setTitleExt(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setTitleEnglish(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setKana(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setCoordinateId(cursor.getLong(offset + 6));
+        entity.setPrefectureId(cursor.getLong(offset + 7));
+        entity.setAreaId(cursor.getLong(offset + 8));
+        entity.setHeight(cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9));
+        entity.setCurrentMountainIndex(cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10));
      }
     
     /** @inheritdoc */

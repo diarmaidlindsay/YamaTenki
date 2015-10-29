@@ -3,7 +3,6 @@ package pulseanddecibels.jp.yamatenki.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -119,7 +118,7 @@ public class MountainListAdapter extends BaseAdapter {
             convertView.setBackgroundColor(mContext.getResources().getColor(R.color.yama_background));
         }
         Mountain mountain = (Mountain) getItem(position);
-        viewHolder.name.setText(mountain.getKanjiName());
+        viewHolder.name.setText(mountain.getTitle());
         final long mountainId = mountain.getId();
         final int difficulty = getRandomDifficulty(); //TODO : Lookup from current weather forecast (for now make random)
         viewHolder.difficulty.setImageResource(difficultyArray.get(difficulty));
@@ -184,11 +183,11 @@ public class MountainListAdapter extends BaseAdapter {
         if (searchString.length() > 0) {
 
             if (Utils.isKanji(searchString.charAt(0))) {
-                qb.where(MountainDao.Properties.KanjiName.like("%" + searchString + "%"));
+                qb.where(MountainDao.Properties.Title.like("%" + searchString + "%"));
             } else if (Utils.isKana(searchString.charAt(0))) {
-                qb.where(MountainDao.Properties.HiraganaName.like("%" + searchString + "%"));
+                qb.where(MountainDao.Properties.Kana.like("%" + searchString + "%"));
             } else {
-                qb.where(MountainDao.Properties.RomajiName.like("%" + searchString + "%"));
+                qb.where(MountainDao.Properties.TitleEnglish.like("%" + searchString + "%"));
             }
         }
 
@@ -212,11 +211,11 @@ public class MountainListAdapter extends BaseAdapter {
         if (searchString.length() > 0) {
 
             if (Utils.isKanji(searchString.charAt(0))) {
-                qb.where(MountainDao.Properties.KanjiName.like("%" + searchString + "%"));
+                qb.where(MountainDao.Properties.Title.like("%" + searchString + "%"));
             } else if (Utils.isKana(searchString.charAt(0))) {
-                qb.where(MountainDao.Properties.HiraganaName.like("%" + searchString + "%"));
+                qb.where(MountainDao.Properties.Kana.like("%" + searchString + "%"));
             } else {
-                qb.where(MountainDao.Properties.RomajiName.like("%" + searchString + "%"));
+                qb.where(MountainDao.Properties.TitleEnglish.like("%" + searchString + "%"));
             }
         }
 
@@ -287,16 +286,6 @@ public class MountainListAdapter extends BaseAdapter {
         return coordinates;
     }
 
-    /**
-     * Long id, String kanjiName, String kanjiNameArea,
-     * String hiraganaName, String romajiName, Integer height, long prefectureId,
-     * long areaId, long coordinateId, String closestTown
-     */
-    private Mountain cursorToMountain(Cursor cursor) {
-        return new Mountain(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4),
-                cursor.getInt(5), cursor.getLong(6), cursor.getLong(7), cursor.getLong(8), cursor.getString(9));
-    }
-
     public void sort(MountainListColumn column) {
         if (currentSorting == column) {
             Collections.reverse(mountainList);
@@ -323,7 +312,7 @@ public class MountainListAdapter extends BaseAdapter {
         return new Comparator<Mountain>() {
             @Override
             public int compare(Mountain lhs, Mountain rhs) {
-                return String.CASE_INSENSITIVE_ORDER.compare(lhs.getRomajiName(), rhs.getRomajiName());
+                return String.CASE_INSENSITIVE_ORDER.compare(lhs.getTitleEnglish(), rhs.getTitleEnglish());
             }
         };
     }

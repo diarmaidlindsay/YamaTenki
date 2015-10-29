@@ -22,7 +22,7 @@ import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Prefecture;
 import pulseanddecibels.jp.yamatenki.database.dao.PrefectureDao;
-import pulseanddecibels.jp.yamatenki.model.MountainListCSVEntry;
+import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
 import pulseanddecibels.jp.yamatenki.utils.DateUtils;
 
 /**
@@ -119,18 +119,18 @@ public class SplashActivity extends Activity {
                 areaDao.insert(new Area(null, area));
             }
 
-            List<MountainListCSVEntry> csvEntries = Database.parseMountainCSV(this);
-            for (MountainListCSVEntry mountainRow : csvEntries) {
-                List<Area> areas = areaDao.queryBuilder().where(AreaDao.Properties.Name.eq(mountainRow.getArea()))
+            List<MountainArrayElement> jsonEntries = Database.parseMountainJSON(this);
+            for(MountainArrayElement element : jsonEntries) {
+                List<Area> areas = areaDao.queryBuilder().where(AreaDao.Properties.Id.eq(element.getArea()))
                         .list();
-                List<Prefecture> prefectures = prefectureDao.queryBuilder().where(PrefectureDao.Properties.Name.eq(mountainRow.getPrefecture()))
+                List<Prefecture> prefectures = prefectureDao.queryBuilder().where(PrefectureDao.Properties.Name.eq(element.getPrefecture()))
                         .list();
-                Long coordinateId = coordinateDao.insert(new Coordinate(null, mountainRow.getLatitude(), mountainRow.getLongitude()));
+                Long coordinateId = coordinateDao.insert(new Coordinate(null, (float)element.getCoordinate().getLatitude(), (float)element.getCoordinate().getLongitude()));
                 Long areaId = areas.size() == 1 ? areas.get(0).getId() : 9L; //9L == Unknown 不明
-                Long prefectureId = prefectures.size() == 1 ? prefectures.get(0).getId() : 0L; //0L == Unknown 不明
-                mountainDao.insert(new Mountain(null, mountainRow.getKanjiName(), mountainRow.getKanjiNameArea(), mountainRow.getHiraganaName(),
-                        mountainRow.getRomajiName(), mountainRow.getHeight(), prefectureId, areaId, coordinateId, mountainRow.getClosestTown()
-                ));
+                Long prefectureId = prefectures.size() == 1 ? prefectures.get(0).getId() : 47L; //47L == Unknown 不明
+                mountainDao.insert(new Mountain(null, element.getYid(), element.getTitle(), element.getTitleExt(), element.getTitleEnglish(), element.getKana(),
+                                coordinateId, prefectureId, areaId, element.getHeight(), element.getCurrentMountainIndex())
+                );
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -9,17 +9,23 @@ package pulseanddecibels.jp.yamatenki.model;
 public class MountainArrayElement {
     String yid;
     String title;
+    String titleExt;
+    String titleEnglish;
     String kana;
     CoordinateElement coordinate;
+    String prefecture;
     int area;
     int height;
     int currentMountainIndex;
 
-    public MountainArrayElement(String yid, String title, String kana, CoordinateElement coordinate, int area, int height, int currentMountainIndex) {
+    public MountainArrayElement(String yid, String title, String titleExt, String titleEnglish, String kana, CoordinateElement coordinate, String prefecture, int area, int height, int currentMountainIndex) {
         this.yid = yid;
         this.title = title;
+        this.titleExt = titleExt;
+        this.titleEnglish = titleEnglish;
         this.kana = kana;
         this.coordinate = coordinate;
+        this.prefecture = prefecture;
         this.area = area;
         this.height = height;
         this.currentMountainIndex = currentMountainIndex;
@@ -33,12 +39,24 @@ public class MountainArrayElement {
         return title;
     }
 
+    public String getTitleExt() {
+        return titleExt;
+    }
+
+    public String getTitleEnglish() {
+        return titleEnglish;
+    }
+
     public String getKana() {
         return kana;
     }
 
     public CoordinateElement getCoordinate() {
         return coordinate;
+    }
+
+    public String getPrefecture() {
+        return prefecture;
     }
 
     public int getArea() {

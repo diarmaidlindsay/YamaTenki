@@ -12,7 +12,11 @@ import java.util.List;
 
 import pulseanddecibels.jp.yamatenki.database.dao.DaoMaster;
 import pulseanddecibels.jp.yamatenki.database.dao.DaoSession;
+import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainListCSVEntry;
+import pulseanddecibels.jp.yamatenki.model.MountainListJSON;
+import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
+import pulseanddecibels.jp.yamatenki.utils.JSONParser;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
@@ -67,6 +71,12 @@ public class Database {
         }
 
         return csvEntries;
+    }
+
+    public static List<MountainArrayElement> parseMountainJSON(Context context) throws IOException {
+        MountainListJSON mountainList = JSONParser.parseMountainsFromMountainList(JSONDownloader.getMockMountainList(context));
+
+        return mountainList.getMountainArrayElements();
     }
 
     public static List<String> parsePrefectureCSV(Context context) throws IOException {

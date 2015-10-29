@@ -74,14 +74,14 @@ public class MountainForecastActivity extends Activity {
         setContentView(R.layout.activity_forecast);
 
         Bundle arguments = getIntent().getExtras();
-        mountainId = arguments.getLong("mountainId"); //used to retrieve correct JSON file
+        mountainId = arguments.getLong("mountainId");
         MountainDao mountainDao = Database.getInstance(this).getMountainDao();
         Mountain mountain =
                 mountainDao.queryBuilder().where(MountainDao.Properties.Id.eq(mountainId)).unique();
 
         title = (TextView) findViewById(R.id.text_forecast_header);
         title.setTypeface(Utils.getTitleTypeFace(this));
-        title.setText(mountain.getKanjiName());
+        title.setText(mountain.getTitle());
         currentDifficultyImage = (ImageView) findViewById(R.id.mountain_forecast_current_difficulty);
         addMyMountainButton = (Button) findViewById(R.id.button_add_my_mountain);
         addMyMountainButton.setOnClickListener(getAddMyMountainListener());
@@ -91,7 +91,7 @@ public class MountainForecastActivity extends Activity {
         currentDifficultyImage.setImageResource(DIFFICULTY_BIG_IMAGES.get(getRandomDifficulty()));
         initialiseWidgets();
         populateWidgets(JSONParser.parseMountainForecastFromFile(
-                JSONDownloader.getMockMountainForecast(this, mountainId)));
+                JSONDownloader.getMockMountainForecast(this, mountain.getYid())));
     }
 
     private void initialiseWidgets() {
