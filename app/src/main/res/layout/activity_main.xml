@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,90 +13,70 @@
         android:text="@string/text_main_header"
         style="@style/ScreenTitle"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_below="@id/text_main_header">
+    <ImageView
+        android:contentDescription="@string/button_main_name_search"
+        android:id="@+id/button_main_mountain_name_search"
+        android:src="@drawable/button_search_name"
+        style="@style/MainButtonLeft"
+        android:layout_below="@+id/text_main_header"/>
 
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:layout_weight="0.5"
-            android:gravity="center">
+    <ImageView
+        android:contentDescription="@string/button_main_20_closest_search"
+        android:id="@+id/button_main_20_closest_search"
+        android:src="@drawable/button_search_close_mountain"
+        style="@style/MainButtonLeft"
+        android:layout_below="@id/button_main_mountain_name_search"/>
 
-            <ImageView
-                android:contentDescription="@string/button_main_name_search"
-                android:id="@+id/button_main_mountain_name_search"
-                android:src="@drawable/button_search_name"
-                style="@style/MainScreenButtonLeft"
-                android:layout_weight="0.65" />
+    <ImageView
+        android:contentDescription="@string/button_main_my_mountain_list"
+        android:id="@+id/button_main_my_mountain_list"
+        android:src="@drawable/button_my_yama_list"
+        style="@style/MainButtonLeft"
+        android:layout_below="@id/button_main_20_closest_search"/>
 
-            <ImageView
-                android:contentDescription="@string/button_main_20_closest_search"
-                android:id="@+id/button_main_20_closest_search"
-                android:src="@drawable/button_search_close_mountain"
-                style="@style/MainScreenButtonLeft"
-                android:layout_weight="0.65" />
+    <ImageView
+        android:contentDescription="@string/button_main_tool_list"
+        android:id="@+id/button_main_tool_list"
+        android:src="@drawable/button_tool_list"
+        style="@style/MainButtonLeft"
+        android:layout_below="@id/button_main_my_mountain_list"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp" />
 
-            <ImageView
-                android:contentDescription="@string/button_main_my_mountain_list"
-                android:id="@+id/button_main_my_mountain_list"
-                android:src="@drawable/button_my_yama_list"
-                style="@style/MainScreenButtonLeft"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="0.65" />
+    <ImageView
+        android:contentDescription="@string/button_main_area_search"
+        android:id="@+id/button_main_area_search"
+        android:src="@drawable/button_search_area"
+        style="@style/MainButtonRight"
+        android:layout_below="@+id/text_main_header"
+        android:layout_toRightOf="@id/button_main_mountain_name_search"
+        android:layout_toEndOf="@+id/button_main_mountain_name_search"/>
 
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/image_main_deer"
-                android:src="@drawable/deer"
-                android:layout_weight="0.20"/>
+    <ImageView
+        android:contentDescription="@string/button_main_height_search"
+        android:id="@+id/button_main_height_search"
+        android:src="@drawable/button_search_height"
+        style="@style/MainButtonRight"
+        android:layout_below="@+id/button_main_area_search"
+        android:layout_toRightOf="@id/button_main_20_closest_search"
+        android:layout_toEndOf="@+id/button_main_20_closest_search"/>
 
-        </LinearLayout>
+    <ImageView
+        android:contentDescription="@string/button_main_memo"
+        android:id="@+id/button_main_memo"
+        android:src="@drawable/button_my_memo"
+        style="@style/MainButtonRight"
+        android:layout_below="@id/button_main_height_search"
+        android:layout_toRightOf="@id/button_main_my_mountain_list"
+        android:layout_toEndOf="@id/button_main_my_mountain_list"/>
 
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:layout_weight="0.5"
-            android:gravity="center">
+    <ImageView
+        android:contentDescription="@string/button_main_settings"
+        android:id="@+id/button_main_settings"
+        android:src="@drawable/button_settings"
+        style="@style/MainButtonRight"
+        android:layout_below="@id/button_main_memo"
+        android:layout_toRightOf="@+id/button_main_tool_list"
+        android:layout_toEndOf="@+id/button_main_tool_list" />
 
-            <ImageView
-                android:contentDescription="@string/button_main_area_search"
-                android:id="@+id/button_main_area_search"
-                android:src="@drawable/button_search_area"
-                style="@style/MainScreenButtonRight"
-                android:layout_weight="0.65" />
-
-            <ImageView
-                android:contentDescription="@string/button_main_height_search"
-                android:id="@+id/button_main_height_search"
-                android:src="@drawable/button_search_height"
-                style="@style/MainScreenButtonRight"
-                android:layout_weight="0.65" />
-
-            <ImageView
-                android:contentDescription="@string/button_main_memo"
-                android:id="@+id/button_main_memo"
-                android:src="@drawable/button_my_memo"
-                style="@style/MainScreenButtonRight"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="0.65" />
-
-            <ImageView
-                android:contentDescription="@string/button_main_settings"
-                android:id="@+id/button_main_settings"
-                android:src="@drawable/button_settings"
-                android:layout_weight="0.20"
-                style="@style/MainScreenButtonRight"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="0dp" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</RelativeLayout>
+</android.support.percent.PercentRelativeLayout>

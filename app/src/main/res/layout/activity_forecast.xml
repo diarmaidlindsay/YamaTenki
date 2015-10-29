@@ -29,7 +29,7 @@
             android:layout_gravity="center"
             android:contentDescription="@string/text_search_table_header_difficulty"
             android:id="@+id/mountain_forecast_current_difficulty"
-            android:src="@drawable/a_difficulty_big"/>
+            android:src="@drawable/difficulty_large_a"/>
 
         <TextView
             style="@style/SmallBrownText"

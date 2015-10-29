@@ -52,7 +52,7 @@ public class SplashActivity extends Activity {
     }
 
     private void displayNormalSplash() {
-        final int SPLASH_TIME_OUT = 2000;
+        final int SPLASH_TIME_OUT = 3000;
 
         new Handler().postDelayed(new Runnable() {
 

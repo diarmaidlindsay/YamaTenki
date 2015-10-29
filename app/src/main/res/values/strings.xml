@@ -7,7 +7,7 @@
     <string name="button_main_my_mountain_list">My Mountain List</string>
     <string name="button_main_memo">Climbing Diary</string>
     <string name="button_main_settings">Settings</string>
-    <string name="image_main_deer">Picture of a deer</string>
+    <string name="button_main_tool_list">Checklist</string>
     <string name="text_main_header">山サーチ</string>
     <string name="text_search_name_header">山の名前で探す</string>
     <string name="text_search_textbox_hint">漢字やひらがな検索</string>

@@ -43,9 +43,9 @@ public class MountainListAdapter extends BaseAdapter {
 
     final SparseIntArray difficultyArray = new SparseIntArray() {
         {
-            append(1, R.drawable.a_difficulty_small);
-            append(2, R.drawable.b_difficulty_small);
-            append(3, R.drawable.c_difficulty_small);
+            append(1, R.drawable.difficulty_small_a);
+            append(2, R.drawable.difficulty_small_b);
+            append(3, R.drawable.difficulty_small_c);
         }
     };
     final double EARTH_RADIUS = 6371.01;

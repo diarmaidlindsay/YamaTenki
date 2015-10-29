@@ -20,6 +20,7 @@ import java.util.Map;
 
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.database.Database;
+import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
 import pulseanddecibels.jp.yamatenki.database.dao.MyMountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MyMountainDao;
@@ -39,25 +40,25 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
 public class MountainForecastActivity extends Activity {
     final SparseIntArray DIFFICULTY_SMALL_IMAGES = new SparseIntArray() {
         {
-            append(1, R.drawable.a_difficulty_small);
-            append(2, R.drawable.b_difficulty_small);
-            append(3, R.drawable.c_difficulty_small);
+            append(1, R.drawable.difficulty_small_a);
+            append(2, R.drawable.difficulty_small_b);
+            append(3, R.drawable.difficulty_small_c);
         }
     };
     final SparseIntArray DIFFICULTY_BIG_IMAGES = new SparseIntArray() {
         {
-            append(1, R.drawable.a_difficulty_big);
-            append(2, R.drawable.a_difficulty_big);
-            append(3, R.drawable.a_difficulty_big);
+            append(1, R.drawable.difficulty_large_a);
+            append(2, R.drawable.difficulty_large_b);
+            append(3, R.drawable.difficulty_large_c);
         }
     };
     final SparseIntArray WEATHER_IMAGES = new SparseIntArray() {
         {
-            append(1, R.drawable.a_difficulty_small);
-            append(2, R.drawable.b_difficulty_small);
-            append(3, R.drawable.c_difficulty_small);
-            append(4, R.drawable.a_difficulty_small);
-            append(5, R.drawable.b_difficulty_small);
+            append(1, R.drawable.difficulty_small_a);
+            append(2, R.drawable.difficulty_small_a);
+            append(3, R.drawable.difficulty_small_a);
+            append(4, R.drawable.difficulty_small_a);
+            append(5, R.drawable.difficulty_small_a);
         }
     };
     TextView title;
@@ -75,17 +76,19 @@ public class MountainForecastActivity extends Activity {
         Bundle arguments = getIntent().getExtras();
         mountainId = arguments.getLong("mountainId"); //used to retrieve correct JSON file
         MountainDao mountainDao = Database.getInstance(this).getMountainDao();
-        mountainDao.queryBuilder().where(MountainDao.Properties.Id.eq(mountainId)).unique();
+        Mountain mountain =
+                mountainDao.queryBuilder().where(MountainDao.Properties.Id.eq(mountainId)).unique();
 
         title = (TextView) findViewById(R.id.text_forecast_header);
         title.setTypeface(Utils.getTitleTypeFace(this));
+        title.setText(mountain.getKanjiName());
         currentDifficultyImage = (ImageView) findViewById(R.id.mountain_forecast_current_difficulty);
         addMyMountainButton = (Button) findViewById(R.id.button_add_my_mountain);
         addMyMountainButton.setOnClickListener(getAddMyMountainListener());
         addMyMountainButton.setText(getMyMountainForMountainId() == null ?
                 getResources().getString(R.string.button_add_my_mountain) :
                 getResources().getString(R.string.button_remove_my_mountain));
-
+        currentDifficultyImage.setImageResource(DIFFICULTY_BIG_IMAGES.get(getRandomDifficulty()));
         initialiseWidgets();
         populateWidgets(JSONParser.parseMountainForecastFromFile(
                 JSONDownloader.getMockMountainForecast(this, mountainId)));
@@ -105,6 +108,12 @@ public class MountainForecastActivity extends Activity {
         +5Forecast
         +6Forecast
          */
+    }
+
+    private int getRandomDifficulty() {
+        final int MIN = 1;
+        final int MAX = 3;
+        return Utils.getRandomInRange(MIN, MAX);
     }
 
     /**
