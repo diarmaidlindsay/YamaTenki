@@ -38,11 +38,11 @@ public class ForecastArrayElement {
     }
 
     public String getTemperature() { //what is this for?
-        return String.format("%.1f", temperature);
+        return ""+ (int) temperature;
     }
 
     public String getPrecipitation() {
-        return String.format("%.1f", precipitation);
+        return "" + (int) precipitation;
     }
 
     public int getMountainStatus() {
@@ -50,6 +50,6 @@ public class ForecastArrayElement {
     }
 
     public String getTotalCloudCover() {
-        return "" + totalCloudCover;
+        return "" + totalCloudCover / 10;
     }
 }

@@ -193,7 +193,7 @@ public class MountainForecastActivity extends Activity {
                 if (forecastArrayElement != null) {
                     List<WindAndTemperatureElement> windAndTemperatureElements =
                             forecastArrayElement.getWindAndTemperatures();
-
+                    //again depending on the amount of heights, we will display a different amount of rows...
                     if(heights.size() == 3 || heights.size() == 2 || heights.size() == 1) {
                         forecastColumn.getLowHeightTemperature().setText(windAndTemperatureElements.get(0).getTemperature());
                         forecastColumn.getLowHeightWind().setText(windAndTemperatureElements.get(0).getWindVelocity());
@@ -208,8 +208,7 @@ public class MountainForecastActivity extends Activity {
                         forecastColumn.getHighHeightWind().setText(windAndTemperatureElements.get(2).getWindVelocity());
                     }
 
-                    forecastColumn.getDifficulty().setImageResource(DIFFICULTY_SMALL_IMAGES.get(getRandomDifficulty()));
-//                    forecastColumn.getDifficulty().setImageResource(DIFFICULTY_SMALL_IMAGES.get(forecastArrayElement.getMountainStatus()));
+                    forecastColumn.getDifficulty().setImageResource(DIFFICULTY_SMALL_IMAGES.get(forecastArrayElement.getMountainStatus()));
                     forecastColumn.getRainLevel().setText(forecastArrayElement.getPrecipitation());
                     forecastColumn.getCloudCover().setText(forecastArrayElement.getTotalCloudCover());
                 } else {
