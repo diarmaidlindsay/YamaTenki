@@ -2,6 +2,7 @@ package pulseanddecibels.jp.yamatenki.utils;
 
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.util.SparseArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,33 +64,24 @@ public class JSONParser {
             MountainArrayElement mountain = parseMountain(mountainObject);
 
             JSONArray forecasts = jsonRoot.optJSONArray("forecasts");
-            Map<String, ForecastArrayElement> shortTermForecastMap = new HashMap<>();
-            //It will have 9-16 ForecastArrayElement objects according to the design
+            Map<String, ForecastArrayElement> forecastMap = new HashMap<>();
             for (int i = 0; i < forecasts.length(); i++) {
                 ForecastArrayElement element = parseForecast(forecasts.getJSONObject(i));
                 String key = DateUtils.timeStampToMapKey(element.getDateTime());
-                shortTermForecastMap.put(key, element);
-            }
-
-            JSONArray forecastsDaily = jsonRoot.optJSONArray("forecastsDaily");
-            Map<String, ForecastArrayElement> longTermForecastMap = new HashMap<>();
-            //It will have 9-16 ForecastArrayElement objects according to the design
-            for (int i = 0; i < forecastsDaily.length(); i++) {
-                ForecastArrayElement element = parseForecast(forecastsDaily.getJSONObject(i));
-                String key = DateUtils.timeStampToMapKey(element.getDateTime());
-                longTermForecastMap.put(key, element);
+                forecastMap.put(key, element);
             }
 
             String referenceCity = jsonRoot.optString("referenceCity");
             JSONArray heights = jsonRoot.optJSONArray("heights");
-            List<Integer> heightsList = new ArrayList<>();
+            SparseArray<Integer> heightsMap = new SparseArray<>();
             for (int i = 0; i < heights.length(); i++) {
-                heightsList.add(heights.getInt(i));
+                JSONObject heightJSONObject = heights.getJSONObject(i);
+                heightsMap.append(heightJSONObject.optInt("height"), heightJSONObject.optInt("pressure"));
             }
             String dateTime = jsonRoot.optString("timestamp");
 
-            mountainForecastJSON = new MountainForecastJSON(mountain, shortTermForecastMap, longTermForecastMap,
-                    referenceCity, heightsList, dateTime);
+            mountainForecastJSON = new MountainForecastJSON(mountain, forecastMap,
+                    referenceCity, heightsMap, dateTime);
 
         } catch (JSONException e) {
             Log.e(JSONParser.class.getSimpleName(), "Error while parsing Mountain Forecast JSON");
@@ -112,7 +104,7 @@ public class JSONParser {
         String prefecture = mountain.optString("prefecture");
         int area = mountain.optInt("area");
         int height = mountain.optInt("height");
-        int currentMountainIndex = mountain.optInt("currentMountainIndex");
+        int currentMountainIndex = mountain.optInt("currentMountainStatus");
 
         return new MountainArrayElement(yid, title, titleExt, titleEnglish, kana, coordinate, prefecture,
                 area, height, currentMountainIndex);
@@ -120,7 +112,7 @@ public class JSONParser {
 
     private static ForecastArrayElement parseForecast(JSONObject forecast) throws JSONException {
         String dateTime = forecast.optString("dateTime");
-        int mountainIndex = forecast.optInt("mountainIndex");
+        int mountainStatus = forecast.optInt("mountainStatus");
         List<WindAndTemperatureElement> windAndTemperaturesList = new ArrayList<>();
         JSONArray windAndTemperatures = forecast.optJSONArray("windAndTemperatures");
 
@@ -133,17 +125,9 @@ public class JSONParser {
         }
 
         float precipitation = (float) forecast.optDouble("precipitation");
-
-        int weather = forecast.optInt("weather");
-        if (forecast.has("temperature")) {
-            Integer temperature = forecast.has("temperature") ? forecast.optInt("temperature") : null;
-            return new ForecastArrayElement(Utils.getTimeStamp(dateTime), mountainIndex,
-                    windAndTemperaturesList, weather, temperature, precipitation);
-        } else {
-            Integer temperatureHigh = forecast.has("temperatureHigh") ? forecast.optInt("temperatureHigh") : null;
-            Integer temperatureLow = forecast.has("temperatureLow") ? forecast.optInt("temperatureLow") : null;
-            return new ForecastArrayElement(Utils.getTimeStamp(dateTime), mountainIndex,
-                    windAndTemperaturesList, weather, temperatureHigh, temperatureLow, precipitation);
-        }
+        Integer temperature = forecast.has("temperature") ? forecast.optInt("temperature") : null;
+        int totalCloudCover = forecast.optInt("totalCloudCover");
+        return new ForecastArrayElement(Utils.getTimeStamp(dateTime), mountainStatus,
+                windAndTemperaturesList, temperature, precipitation, totalCloudCover);
     }
 }

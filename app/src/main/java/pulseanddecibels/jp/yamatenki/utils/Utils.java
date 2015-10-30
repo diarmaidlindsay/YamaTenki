@@ -20,7 +20,7 @@ public class Utils {
         //http://developer.android.com/reference/java/text/SimpleDateFormat.html
         Timestamp timestamp = null;
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.ZZZZZ", Locale.JAPAN);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ", Locale.JAPAN);
             Date date = dateFormat.parse(timeStampString);
             timestamp = new Timestamp(date.getTime());
         } catch (ParseException e) {

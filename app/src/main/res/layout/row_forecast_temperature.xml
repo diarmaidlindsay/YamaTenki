@@ -22,8 +22,5 @@
         <TextView
             style="@style/ForecastTableText"
             android:id="@+id/forecast_temp_09"/>
-        <TextView
-            style="@style/ForecastTableText"
-            android:id="@+id/forecast_temp_12"/>
     </LinearLayout>
 </TableRow>

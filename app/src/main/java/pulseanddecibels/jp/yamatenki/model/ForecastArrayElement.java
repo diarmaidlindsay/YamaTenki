@@ -14,62 +14,42 @@ import java.util.List;
  */
 public class ForecastArrayElement {
     Timestamp dateTime;
-    int mountainIndex;
+    int mountainStatus;
     List<WindAndTemperatureElement> windAndTemperatures;
-    int weather;
-    Integer temperatureHigh; //Integer because null should be allowed
-    Integer temperatureLow;
-    Integer temperature;
-    float precipitation;
+    double temperature;
+    double precipitation;
+    int totalCloudCover;
 
-    public ForecastArrayElement(Timestamp dateTime, int mountainIndex, List<WindAndTemperatureElement> windAndTemperatures, int weather, Integer temperatureHigh, Integer temperatureLow, float precipitation) {
+    public ForecastArrayElement(Timestamp dateTime, int mountainStatus, List<WindAndTemperatureElement> windAndTemperatures, Integer temperature, float precipitation, int totalCloudCover) {
         this.dateTime = dateTime;
-        this.mountainIndex = mountainIndex;
+        this.mountainStatus = mountainStatus;
         this.windAndTemperatures = windAndTemperatures;
-        this.weather = weather;
-        this.temperatureHigh = temperatureHigh;
-        this.temperatureLow = temperatureLow;
-        this.precipitation = precipitation;
-    }
-
-    public ForecastArrayElement(Timestamp dateTime, int mountainIndex, List<WindAndTemperatureElement> windAndTemperatures, int weather, Integer temperature, float precipitation) {
-        this.dateTime = dateTime;
-        this.mountainIndex = mountainIndex;
-        this.windAndTemperatures = windAndTemperatures;
-        this.weather = weather;
         this.temperature = temperature;
         this.precipitation = precipitation;
+        this.totalCloudCover = totalCloudCover;
     }
 
     public Timestamp getDateTime() {
         return dateTime;
     }
 
-    public int getMountainIndex() {
-        return mountainIndex;
-    }
-
     public List<WindAndTemperatureElement> getWindAndTemperatures() {
         return windAndTemperatures;
     }
 
-    public int getWeather() {
-        return weather;
-    }
-
-    public String getTemperatureHigh() {
-        return "" + temperatureHigh;
-    }
-
-    public String getTemperatureLow() {
-        return "" + temperatureLow;
-    }
-
-    public String getTemperature() {
-        return "" + temperature;
+    public String getTemperature() { //what is this for?
+        return String.format("%.1f", temperature);
     }
 
     public String getPrecipitation() {
-        return "" + precipitation;
+        return String.format("%.1f", precipitation);
+    }
+
+    public int getMountainStatus() {
+        return mountainStatus;
+    }
+
+    public String getTotalCloudCover() {
+        return "" + totalCloudCover;
     }
 }

@@ -1,9 +1,9 @@
 package pulseanddecibels.jp.yamatenki.model;
 
+import android.util.SparseArray;
+
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import pulseanddecibels.jp.yamatenki.utils.Utils;
@@ -16,22 +16,19 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  */
 public class MountainForecastJSON {
     MountainArrayElement mountainArrayElement;
-    Map<String, ForecastArrayElement> forecasts; //today and tomorrow, 3 hour intervals, 9-16 min/max
-    Map<String, ForecastArrayElement> forecastsDaily; //day after tomorrow and onwards
+    Map<String, ForecastArrayElement> forecasts;
     String referenceCity;
-    List<Integer> heights;
+    SparseArray<Integer> heights;
     String timestamp;
 
     public MountainForecastJSON() {
         forecasts = new HashMap<>();
-        forecastsDaily = new HashMap<>();
-        heights = new ArrayList<>();
+        heights = new SparseArray<>();
     }
 
-    public MountainForecastJSON(MountainArrayElement mountainArrayElement, Map<String, ForecastArrayElement> forecasts, Map<String, ForecastArrayElement> forecastsDaily, String referenceCity, List<Integer> heights, String timestamp) {
+    public MountainForecastJSON(MountainArrayElement mountainArrayElement, Map<String, ForecastArrayElement> forecasts, String referenceCity, SparseArray<Integer> heights, String timestamp) {
         this.mountainArrayElement = mountainArrayElement;
         this.forecasts = forecasts;
-        this.forecastsDaily = forecastsDaily;
         this.referenceCity = referenceCity;
         this.heights = heights;
         this.timestamp = timestamp;
@@ -45,20 +42,12 @@ public class MountainForecastJSON {
         return forecasts;
     }
 
-    public Map<String, ForecastArrayElement> getForecastsDaily() {
-        return forecastsDaily;
-    }
-
     public String getReferenceCity() {
         return referenceCity;
     }
 
-    public int getPeakHeight() {
-        return heights.get(0);
-    }
-
-    public int getBaseHeight() {
-        return heights.get(1);
+    public SparseArray<Integer> getHeights() {
+        return heights;
     }
 
     public Timestamp getTimestamp() {

@@ -5,22 +5,22 @@ package pulseanddecibels.jp.yamatenki.model;
  * Copyright Pulse and Decibels 2015
  */
 public class WindAndTemperatureElement {
-    int temperature;
-    int windVelocity;
+    double temperature;
+    double windVelocity;
     int windDirection;
 
-    public WindAndTemperatureElement(int temperature, int windVelocity, int windDirection) {
+    public WindAndTemperatureElement(double temperature, double windVelocity, int windDirection) {
         this.temperature = temperature;
         this.windVelocity = windVelocity;
         this.windDirection = windDirection;
     }
 
     public String getTemperature() {
-        return "" + temperature;
+        return String.format("%.1f", temperature);
     }
 
     public String getWindVelocity() {
-        return "" + windVelocity;
+        return String.format("%.1f", windVelocity);
     }
 
     public int getWindDirection() {

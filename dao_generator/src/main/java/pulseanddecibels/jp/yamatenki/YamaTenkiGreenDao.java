@@ -33,7 +33,6 @@ public class YamaTenkiGreenDao {
         Property prefectureId = mountain.addLongProperty("prefectureId").notNull().getProperty();
         Property areaId = mountain.addLongProperty("areaId").notNull().getProperty();
         mountain.addIntProperty("height");
-        mountain.addIntProperty("currentMountainIndex");
         //one mountain to one area
         mountain.addToOne(area, areaId);
         mountain.addToOne(prefecture, prefectureId);

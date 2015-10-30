@@ -16,9 +16,9 @@ public class MountainArrayElement {
     String prefecture;
     int area;
     int height;
-    int currentMountainIndex;
+    int currentMountainStatus;
 
-    public MountainArrayElement(String yid, String title, String titleExt, String titleEnglish, String kana, CoordinateElement coordinate, String prefecture, int area, int height, int currentMountainIndex) {
+    public MountainArrayElement(String yid, String title, String titleExt, String titleEnglish, String kana, CoordinateElement coordinate, String prefecture, int area, int height, int currentMountainStatus) {
         this.yid = yid;
         this.title = title;
         this.titleExt = titleExt;
@@ -28,7 +28,7 @@ public class MountainArrayElement {
         this.prefecture = prefecture;
         this.area = area;
         this.height = height;
-        this.currentMountainIndex = currentMountainIndex;
+        this.currentMountainStatus = currentMountainStatus;
     }
 
     public String getYid() {
@@ -67,7 +67,7 @@ public class MountainArrayElement {
         return height;
     }
 
-    public int getCurrentMountainIndex() {
-        return currentMountainIndex;
+    public int getCurrentMountainStatus() {
+        return currentMountainStatus;
     }
 }

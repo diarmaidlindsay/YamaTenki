@@ -129,7 +129,7 @@ public class SplashActivity extends Activity {
                 Long areaId = areas.size() == 1 ? areas.get(0).getId() : 9L; //9L == Unknown 不明
                 Long prefectureId = prefectures.size() == 1 ? prefectures.get(0).getId() : 47L; //47L == Unknown 不明
                 mountainDao.insert(new Mountain(null, element.getYid(), element.getTitle(), element.getTitleExt(), element.getTitleEnglish(), element.getKana(),
-                                coordinateId, prefectureId, areaId, element.getHeight(), element.getCurrentMountainIndex())
+                                coordinateId, prefectureId, areaId, element.getHeight(), element.getCurrentMountainStatus())
                 );
             }
         } catch (IOException e) {

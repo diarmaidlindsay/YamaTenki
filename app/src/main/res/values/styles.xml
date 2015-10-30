@@ -62,10 +62,6 @@
         <item name="android:layout_height">fill_parent</item>
         <item name="android:layout_width">0dp</item>
     </style>
-    <style name="ForecastTableLeftSideColumnGray" parent="ForecastTableLeftSideColumn">
-        <item name="android:background">@android:color/darker_gray</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
     <style name="ForecastTableText">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/yama_brown</item>

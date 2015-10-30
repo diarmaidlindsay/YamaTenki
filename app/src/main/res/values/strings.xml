@@ -17,11 +17,11 @@
     <string name="text_search_table_header_height">標高</string>
     <string name="text_unset">NA</string>
     <string name="text_forecast_table_time">時間</string>
-    <string name="text_forecast_table_difficulty">登山指数</string>
+    <string name="text_forecast_table_difficulty">山行指数</string>
     <string name="text_forecast_atmospheric_temperature">気温（°C）</string>
     <string name="text_forecast_wind_speed">風（m/s）</string>
-    <string name="text_forecast_weather">天気</string>
-    <string name="text_forecast_chance_of_rain">降水確率（％）</string>
+    <string name="text_forecast_rain_level">積算降水量 (mm)</string>
+    <string name="text_forecast_cloud_cover">雲量</string>
     <string name="text_search_area_header">エリアで探す</string>
     <string name="text_search_height_range">~</string>
     <string name="text_closest_mountain_header">近くの山20選</string>

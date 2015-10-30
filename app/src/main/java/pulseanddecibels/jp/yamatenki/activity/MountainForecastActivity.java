@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.widget.Button;
@@ -52,15 +53,6 @@ public class MountainForecastActivity extends Activity {
             append(3, R.drawable.difficulty_large_c);
         }
     };
-    final SparseIntArray WEATHER_IMAGES = new SparseIntArray() {
-        {
-            append(1, R.drawable.difficulty_small_a);
-            append(2, R.drawable.difficulty_small_a);
-            append(3, R.drawable.difficulty_small_a);
-            append(4, R.drawable.difficulty_small_a);
-            append(5, R.drawable.difficulty_small_a);
-        }
-    };
     TextView title;
     ImageView currentDifficultyImage;
     ScrollView mountainForecastScrollView;
@@ -88,7 +80,6 @@ public class MountainForecastActivity extends Activity {
         addMyMountainButton.setText(getMyMountainForMountainId() == null ?
                 getResources().getString(R.string.button_add_my_mountain) :
                 getResources().getString(R.string.button_remove_my_mountain));
-        currentDifficultyImage.setImageResource(DIFFICULTY_BIG_IMAGES.get(getRandomDifficulty()));
         initialiseWidgets();
         populateWidgets(JSONParser.parseMountainForecastFromFile(
                 JSONDownloader.getMockMountainForecast(this, mountain.getYid())));
@@ -158,83 +149,156 @@ public class MountainForecastActivity extends Activity {
         //set forecast page's title
         title.setText(mountainInfo.getTitle());
         //set forecast page's big difficulty image
-        currentDifficultyImage.setImageResource(DIFFICULTY_BIG_IMAGES.get(mountainInfo.getCurrentMountainIndex()));
+        currentDifficultyImage.setImageResource(DIFFICULTY_BIG_IMAGES.get(getRandomDifficulty()));
 
-        Map<String, ForecastArrayElement> shortForecast = forecasts.getForecasts(); // short term (detailed)
-        Map<String, ForecastArrayElement> longForecast = forecasts.getForecastsDaily(); // long term (rough)
-
-
+        Map<String, ForecastArrayElement> forecastMap = forecasts.getForecasts();
+        //TEMPORARY until we get realtime forecasts
+        ForecastArrayElement[] forecastArray = forecastMap.values().toArray(new ForecastArrayElement[forecastMap.values().size()]);
+        //iterate through... today morning, today afternoon, tomorrow morning, tomorrow afternoon... etc
         for (int i = 0; i < scrollViewElements.size(); i++) {
             ForecastScrollViewElement scrollViewElement = scrollViewElements.get(i);
             //set ScrollViewElement header
             scrollViewElement.getHeader().setText(DateUtils.getFormattedHeader(i));
-            //set ScrollViewElement peak height and pressure
+
+            //now depending on the amount of heights, we will display a different amount of rows...
+            SparseArray<Integer> heights = forecasts.getHeights();
             String heightPressureTemplate = "高度 %s m付近（%shPa )";
-            String peakHeightPressure = String.format(heightPressureTemplate, forecasts.getPeakHeight(), 0);
-            scrollViewElement.getPeakHeightPressure().setText(peakHeightPressure);
-            //set ScrollViewElement base height and pressure
-            String baseHeightPressure = String.format(heightPressureTemplate, forecasts.getBaseHeight(), 0);
-            scrollViewElement.getBaseHeightPressure().setText(baseHeightPressure);
-            //set ScrollViewElement reference city
-            scrollViewElement.getReferenceCity().setText(String.format("%sの気象情報", forecasts.getReferenceCity()));
+            if(heights.size() == 3 || heights.size() == 2 || heights.size() == 1) {
+                int height = heights.keyAt(0);
+                String lowHeightPressure = String.format(heightPressureTemplate, height, heights.get(height));
+                scrollViewElement.getLowHeightPressure().setText(lowHeightPressure);
+            }
+            if(heights.size() == 3 || heights.size() == 2) {
+                int height = heights.keyAt(1);
+                String midHeightPressure = String.format(heightPressureTemplate, height, heights.get(height));
+                scrollViewElement.getMidHeightPressure().setText(midHeightPressure);
+                scrollViewElement.showMidHeightRow(true);
+            }
+            if(heights.size() == 3) {
+                int height = heights.keyAt(2);
+                String highHeightPressure = String.format(heightPressureTemplate, height, heights.get(height));
+                scrollViewElement.getHighHeightPressure().setText(highHeightPressure);
+                scrollViewElement.showHighHeightRow(true);
+            }
+
+            int j = 0; //TEMPORARY until we get realtime forecasts
 
             for (ForecastColumn forecastColumn : scrollViewElement.getColumns()) {
                 //find if there is a matching forecast available from json. If not, whole column is grey.
                 String key = DateUtils.timeToMapKey(i, forecastColumn.getColumnId());
-                ForecastArrayElement forecastArrayElement = shortForecast.get(key);
+//                ForecastArrayElement forecastArrayElement = forecastMap.get(key); //when we get realtime forecasts
+                ForecastArrayElement forecastArrayElement = forecastArray[j]; //TEMPORARY until we get realtime forecasts
                 forecastColumn.getTime().setText(forecastColumn.getColumnId());
+
                 if (forecastArrayElement != null) {
                     List<WindAndTemperatureElement> windAndTemperatureElements =
                             forecastArrayElement.getWindAndTemperatures();
-                    forecastColumn.getDifficulty().setImageResource(DIFFICULTY_SMALL_IMAGES.get(forecastArrayElement.getWeather()));
-                    forecastColumn.getPeakTemperature().setText(windAndTemperatureElements.get(0).getTemperature());
-                    forecastColumn.getPeakWind().setText(windAndTemperatureElements.get(0).getWindVelocity());
-                    forecastColumn.getBaseTemperature().setText(windAndTemperatureElements.get(1).getTemperature());
-                    forecastColumn.getBaseWind().setText(windAndTemperatureElements.get(1).getWindVelocity());
-                    forecastColumn.getCityWeather().setImageResource(WEATHER_IMAGES.get(forecastArrayElement.getWeather()));
-                    forecastColumn.getCityTemperature().setText(forecastArrayElement.getTemperature());
-                    forecastColumn.getCityRainChance().setText(forecastArrayElement.getPrecipitation());
+
+                    if(heights.size() == 3 || heights.size() == 2 || heights.size() == 1) {
+                        forecastColumn.getLowHeightTemperature().setText(windAndTemperatureElements.get(0).getTemperature());
+                        forecastColumn.getLowHeightWind().setText(windAndTemperatureElements.get(0).getWindVelocity());
+
+                    }
+                    if(heights.size() == 3 || heights.size() == 2) {
+                        forecastColumn.getMidHeightTemperature().setText(windAndTemperatureElements.get(1).getTemperature());
+                        forecastColumn.getMidHeightWind().setText(windAndTemperatureElements.get(1).getWindVelocity());
+                    }
+                    if(heights.size() == 3) {
+                        forecastColumn.getHighHeightTemperature().setText(windAndTemperatureElements.get(2).getTemperature());
+                        forecastColumn.getHighHeightWind().setText(windAndTemperatureElements.get(2).getWindVelocity());
+                    }
+
+                    forecastColumn.getDifficulty().setImageResource(DIFFICULTY_SMALL_IMAGES.get(getRandomDifficulty()));
+//                    forecastColumn.getDifficulty().setImageResource(DIFFICULTY_SMALL_IMAGES.get(forecastArrayElement.getMountainStatus()));
+                    forecastColumn.getRainLevel().setText(forecastArrayElement.getPrecipitation());
+                    forecastColumn.getCloudCover().setText(forecastArrayElement.getTotalCloudCover());
                 } else {
                     //set grey background and blank
                     forecastColumn.getDifficulty().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getPeakTemperature().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getPeakWind().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getBaseTemperature().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getBaseWind().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getCityWeather().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getCityTemperature().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getCityRainChance().setBackgroundColor(Color.GRAY);
+                    forecastColumn.getLowHeightTemperature().setBackgroundColor(Color.GRAY);
+                    forecastColumn.getLowHeightWind().setBackgroundColor(Color.GRAY);
+                    forecastColumn.getMidHeightTemperature().setBackgroundColor(Color.GRAY);
+                    forecastColumn.getMidHeightWind().setBackgroundColor(Color.GRAY);
+                    forecastColumn.getHighHeightTemperature().setBackgroundColor(Color.GRAY);
+                    forecastColumn.getHighHeightWind().setBackgroundColor(Color.GRAY);
+                    forecastColumn.getRainLevel().setBackgroundColor(Color.GRAY);
+                    forecastColumn.getCloudCover().setBackgroundColor(Color.GRAY);
                 }
+                j++; //TEMPORARY until we get realtime forecasts
             }
         }
     }
 
     // For now this is used for "Today" and "Tomorrow", ie, short term forecasts
     private class ForecastScrollViewElement {
-        private final String[] TIME_INCREMENTS = {"00", "03", "06", "09", "12"}; // column headers
+        private final String[] TIME_INCREMENTS = {"00", "03", "06", "09"}; // column headers
         private TextView header;
         private List<ForecastColumn> columns = new ArrayList<>();
-        private TextView peakHeightPressure;
-        private TextView baseHeightPressure;
-        private TextView referenceCity;
+        private TextView lowHeightPressure; //1000m
+        private TextView midHeightPressure; //2000m
+        private TextView highHeightPressure; //3000m
+
+        private TableRow lowHeightPressureRow;
+        private TableRow midHeightPressureRow;
+        private TableRow highHeightPressureRow;
+
+        private TableRow lowTempRow;
+        private TableRow lowWindRow;
+        private TableRow midTempRow;
+        private TableRow midWindRow;
+        private TableRow highTempRow;
+        private TableRow highWindRow;
 
         public ForecastScrollViewElement(LinearLayout forecast) {
             header = (TextView) forecast.findViewById(R.id.forecast_header);
             TableLayout forecastTable = (TableLayout) forecast.findViewById(R.id.forecast_table);
 
-            TableRow peakWindAM = (TableRow) forecastTable.findViewById(R.id.forecast_peak_row_wind_AM);
-            TableRow peakTempAM = (TableRow) forecastTable.findViewById(R.id.forecast_peak_row_temperature_AM);
-            TableRow peakHeightAM = (TableRow) forecastTable.findViewById(R.id.forecast_peak_row_height_AM);
-            TableRow baseWindAM = (TableRow) forecastTable.findViewById(R.id.forecast_base_row_wind_AM);
-            TableRow baseTempAM = (TableRow) forecastTable.findViewById(R.id.forecast_base_row_temperature_AM);
-            TableRow baseHeightAM = (TableRow) forecastTable.findViewById(R.id.forecast_base_row_height_AM);
+            lowTempRow = (TableRow) forecastTable.findViewById(R.id.forecast_low_row_temperature);
+            lowWindRow = (TableRow) forecastTable.findViewById(R.id.forecast_low_row_wind);
+
+            midTempRow = (TableRow) forecastTable.findViewById(R.id.forecast_mid_row_temperature);
+            midWindRow = (TableRow) forecastTable.findViewById(R.id.forecast_mid_row_wind);
+
+            highTempRow = (TableRow) forecastTable.findViewById(R.id.forecast_high_row_temperature);
+            highWindRow = (TableRow) forecastTable.findViewById(R.id.forecast_high_row_wind);
 
             for (String time : TIME_INCREMENTS) {
-                columns.add(new ForecastColumn(forecastTable, peakWindAM, peakTempAM, baseWindAM, baseTempAM, time));
+                columns.add(new ForecastColumn(forecastTable, lowTempRow, lowWindRow, midTempRow, midWindRow, highTempRow, highWindRow, time));
             }
-            peakHeightPressure = (TextView) peakHeightAM.findViewById(R.id.forecast_height_pressure);
-            baseHeightPressure = (TextView) baseHeightAM.findViewById(R.id.forecast_height_pressure);
-            referenceCity = (TextView) forecast.findViewById(R.id.forecast_closest_city_weather_info_AM);
+
+            lowHeightPressureRow = (TableRow) forecastTable.findViewById(R.id.forecast_low_row_height);
+            lowHeightPressure = (TextView) lowHeightPressureRow.findViewById(R.id.forecast_height_pressure);
+            midHeightPressureRow = (TableRow) forecastTable.findViewById(R.id.forecast_mid_row_height);
+            midHeightPressure = (TextView) midHeightPressureRow.findViewById(R.id.forecast_height_pressure);
+            highHeightPressureRow = (TableRow) forecastTable.findViewById(R.id.forecast_high_row_height);
+            highHeightPressure = (TextView) highHeightPressureRow.findViewById(R.id.forecast_height_pressure);
+
+            showMidHeightRow(false); //hide by default (assume small mountain)
+            showHighHeightRow(false); //hide by default (assume small mountain)
+        }
+
+        public void showMidHeightRow(boolean show) {
+            int visibility;
+            if(show) {
+                visibility = View.VISIBLE;
+            } else {
+                visibility = View.GONE;
+            }
+            midTempRow.setVisibility(visibility);
+            midWindRow.setVisibility(visibility);
+            midHeightPressureRow.setVisibility(visibility);
+        }
+
+        public void showHighHeightRow(boolean show) {
+            int visibility;
+            if(show) {
+                visibility = View.VISIBLE;
+            } else {
+                visibility = View.GONE;
+            }
+            highTempRow.setVisibility(visibility);
+            highWindRow.setVisibility(visibility);
+            highHeightPressureRow.setVisibility(visibility);
         }
 
         public TextView getHeader() {
@@ -245,16 +309,16 @@ public class MountainForecastActivity extends Activity {
             return columns;
         }
 
-        public TextView getPeakHeightPressure() {
-            return peakHeightPressure;
+        public TextView getLowHeightPressure() {
+            return lowHeightPressure;
         }
 
-        public TextView getBaseHeightPressure() {
-            return baseHeightPressure;
+        public TextView getMidHeightPressure() {
+            return midHeightPressure;
         }
 
-        public TextView getReferenceCity() {
-            return referenceCity;
+        public TextView getHighHeightPressure() {
+            return highHeightPressure;
         }
     }
 
@@ -262,25 +326,27 @@ public class MountainForecastActivity extends Activity {
         private String columnId;
         private TextView time;
         private ImageView difficulty;
-        private TextView peakTemperature;
-        private TextView peakWind;
-        private TextView baseTemperature;
-        private TextView baseWind;
-        private ImageView cityWeather;
-        private TextView cityTemperature;
-        private TextView cityRainChance;
+        private TextView lowHeightTemperature;
+        private TextView lowHeightWind;
+        private TextView midHeightTemperature;
+        private TextView midHeightWind;
+        private TextView highHeightTemperature;
+        private TextView highHeightWind;
+        private TextView rainLevel;
+        private TextView cloudCover;
 
-        public ForecastColumn(TableLayout forecastTable, TableRow peakWindRow, TableRow peakTempRow, TableRow baseWindRow, TableRow baseTempRow, String columnId) {
+        public ForecastColumn(TableLayout forecastTable, TableRow lowTemp, TableRow lowWind, TableRow midTemp, TableRow midWind, TableRow highTemp, TableRow highWind, String columnId) {
             this.columnId = columnId;
             time = (TextView) forecastTable.findViewById(getResources().getIdentifier("forecast_time_" + columnId, "id", getPackageName()));
             difficulty = (ImageView) forecastTable.findViewById(getResources().getIdentifier("forecast_difficulty_" + columnId, "id", getPackageName()));
-            peakTemperature = (TextView) peakTempRow.findViewById(getResources().getIdentifier("forecast_temp_" + columnId, "id", getPackageName()));
-            peakWind = (TextView) peakWindRow.findViewById(getResources().getIdentifier("forecast_wind_" + columnId, "id", getPackageName()));
-            baseTemperature = (TextView) baseTempRow.findViewById(getResources().getIdentifier("forecast_temp_" + columnId, "id", getPackageName()));
-            baseWind = (TextView) baseWindRow.findViewById(getResources().getIdentifier("forecast_wind_" + columnId, "id", getPackageName()));
-            cityWeather = (ImageView) forecastTable.findViewById(getResources().getIdentifier("forecast_picture_weather_" + columnId, "id", getPackageName()));
-            cityTemperature = (TextView) forecastTable.findViewById(getResources().getIdentifier("forecast_atmospheric_temp_" + columnId, "id", getPackageName()));
-            cityRainChance = (TextView) forecastTable.findViewById(getResources().getIdentifier("forecast_rain_chance_" + columnId, "id", getPackageName()));
+            lowHeightTemperature = (TextView) lowTemp.findViewById(getResources().getIdentifier("forecast_temp_" + columnId, "id", getPackageName()));
+            lowHeightWind = (TextView) lowWind.findViewById(getResources().getIdentifier("forecast_wind_" + columnId, "id", getPackageName()));
+            midHeightTemperature = (TextView) midTemp.findViewById(getResources().getIdentifier("forecast_temp_" + columnId, "id", getPackageName()));
+            midHeightWind = (TextView) midWind.findViewById(getResources().getIdentifier("forecast_wind_" + columnId, "id", getPackageName()));
+            highHeightTemperature = (TextView) highTemp.findViewById(getResources().getIdentifier("forecast_temp_" + columnId, "id", getPackageName()));
+            highHeightWind = (TextView) highWind.findViewById(getResources().getIdentifier("forecast_wind_" + columnId, "id", getPackageName()));
+            rainLevel = (TextView) forecastTable.findViewById(getResources().getIdentifier("forecast_rain_level_" + columnId, "id", getPackageName()));
+            cloudCover = (TextView) forecastTable.findViewById(getResources().getIdentifier("forecast_cloud_cover_" + columnId, "id", getPackageName()));
         }
 
         public String getColumnId() {
@@ -295,32 +361,36 @@ public class MountainForecastActivity extends Activity {
             return difficulty;
         }
 
-        public TextView getPeakTemperature() {
-            return peakTemperature;
+        public TextView getLowHeightTemperature() {
+            return lowHeightTemperature;
         }
 
-        public TextView getPeakWind() {
-            return peakWind;
+        public TextView getLowHeightWind() {
+            return lowHeightWind;
         }
 
-        public TextView getBaseTemperature() {
-            return baseTemperature;
+        public TextView getMidHeightTemperature() {
+            return midHeightTemperature;
         }
 
-        public TextView getBaseWind() {
-            return baseWind;
+        public TextView getMidHeightWind() {
+            return midHeightWind;
         }
 
-        public ImageView getCityWeather() {
-            return cityWeather;
+        public TextView getHighHeightTemperature() {
+            return highHeightTemperature;
         }
 
-        public TextView getCityTemperature() {
-            return cityTemperature;
+        public TextView getHighHeightWind() {
+            return highHeightWind;
         }
 
-        public TextView getCityRainChance() {
-            return cityRainChance;
+        public TextView getRainLevel() {
+            return rainLevel;
+        }
+
+        public TextView getCloudCover() {
+            return cloudCover;
         }
     }
 }
