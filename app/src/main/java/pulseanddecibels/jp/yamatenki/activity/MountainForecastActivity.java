@@ -195,17 +195,26 @@ public class MountainForecastActivity extends Activity {
                             forecastArrayElement.getWindAndTemperatures();
                     //again depending on the amount of heights, we will display a different amount of rows...
                     if(heights.size() == 3 || heights.size() == 2 || heights.size() == 1) {
+                        int direction = getDirectionFromDegrees(windAndTemperatureElements.get(0).getWindDirection());
+                        int velocity = windAndTemperatureElements.get(0).getWindVelocity();
                         forecastColumn.getLowHeightTemperature().setText(windAndTemperatureElements.get(0).getTemperature());
-                        forecastColumn.getLowHeightWind().setText(windAndTemperatureElements.get(0).getWindVelocity());
+                        forecastColumn.getLowHeightWindDirection().setImageResource(getWindImage(direction, velocity));
+                        forecastColumn.getLowHeightWind().setText(windAndTemperatureElements.get(0).getWindVelocityString());
 
                     }
                     if(heights.size() == 3 || heights.size() == 2) {
+                        int direction = getDirectionFromDegrees(windAndTemperatureElements.get(1).getWindDirection());
+                        int velocity = windAndTemperatureElements.get(1).getWindVelocity();
                         forecastColumn.getMidHeightTemperature().setText(windAndTemperatureElements.get(1).getTemperature());
-                        forecastColumn.getMidHeightWind().setText(windAndTemperatureElements.get(1).getWindVelocity());
+                        forecastColumn.getMidHeightWindDirection().setImageResource(getWindImage(direction, velocity));
+                        forecastColumn.getMidHeightWind().setText(windAndTemperatureElements.get(1).getWindVelocityString());
                     }
                     if(heights.size() == 3) {
+                        int direction = getDirectionFromDegrees(windAndTemperatureElements.get(2).getWindDirection());
+                        int velocity = windAndTemperatureElements.get(2).getWindVelocity();
                         forecastColumn.getHighHeightTemperature().setText(windAndTemperatureElements.get(2).getTemperature());
-                        forecastColumn.getHighHeightWind().setText(windAndTemperatureElements.get(2).getWindVelocity());
+                        forecastColumn.getHighHeightWindDirection().setImageResource(getWindImage(direction, velocity));
+                        forecastColumn.getHighHeightWind().setText(windAndTemperatureElements.get(2).getWindVelocityString());
                     }
 
                     forecastColumn.getDifficulty().setImageResource(DIFFICULTY_SMALL_IMAGES.get(forecastArrayElement.getMountainStatus()));
@@ -226,6 +235,74 @@ public class MountainForecastActivity extends Activity {
                 j++; //TEMPORARY until we get realtime forecasts
             }
         }
+    }
+
+    private int getWindImage(int direction, int velocity) {
+        final SparseIntArray GREEN_ARROWS = new SparseIntArray() {
+            {
+                append(1, R.drawable.arrow_green01);
+                append(2, R.drawable.arrow_green02);
+                append(3, R.drawable.arrow_green03);
+                append(4, R.drawable.arrow_green04);
+                append(5, R.drawable.arrow_green05);
+                append(6, R.drawable.arrow_green06);
+                append(7, R.drawable.arrow_green07);
+                append(8, R.drawable.arrow_green08);
+            }
+        };
+        final SparseIntArray BLUE_ARROWS = new SparseIntArray() {
+            {
+                append(1, R.drawable.arrow_blue01);
+                append(2, R.drawable.arrow_blue02);
+                append(3, R.drawable.arrow_blue03);
+                append(4, R.drawable.arrow_blue04);
+                append(5, R.drawable.arrow_blue05);
+                append(6, R.drawable.arrow_blue06);
+                append(7, R.drawable.arrow_blue07);
+                append(8, R.drawable.arrow_blue08);
+            }
+        };
+        final SparseIntArray RED_ARROWS = new SparseIntArray() {
+            {
+                append(1, R.drawable.arrow_red01);
+                append(2, R.drawable.arrow_red02);
+                append(3, R.drawable.arrow_red03);
+                append(4, R.drawable.arrow_red04);
+                append(5, R.drawable.arrow_red05);
+                append(6, R.drawable.arrow_red06);
+                append(7, R.drawable.arrow_red07);
+                append(8, R.drawable.arrow_red08);
+            }
+        };
+
+        if(velocity < 7) {
+            return GREEN_ARROWS.get(direction);
+        } else if (velocity < 15) {
+            return BLUE_ARROWS.get(direction);
+        } else {
+            return RED_ARROWS.get(direction);
+        }
+    }
+
+    private int getDirectionFromDegrees(int degrees) {
+        if(((degrees >= 337.5) && (degrees <= 360)) || (degrees >= 0 & degrees < 22.5)) {
+            return 1;
+        } else if (degrees >= 22.5 && degrees < 67.5) {
+            return 2;
+        } else if (degrees >= 67.5 && degrees < 112.5) {
+            return 3;
+        } else if (degrees >= 112.5 && degrees < 157.5) {
+            return 4;
+        } else if (degrees >= 157.5 && degrees < 202.5) {
+            return 5;
+        } else if (degrees >= 202.5 && degrees < 247.5) {
+            return 6;
+        } else if (degrees >= 247.5 && degrees < 292.5) {
+            return 7;
+        } else if (degrees >= 292.5 && degrees < 337.5) {
+            return 8;
+        }
+        return 0;
     }
 
     // For now this is used for "Today" and "Tomorrow", ie, short term forecasts
@@ -327,10 +404,13 @@ public class MountainForecastActivity extends Activity {
         private ImageView difficulty;
         private TextView lowHeightTemperature;
         private TextView lowHeightWind;
+        private ImageView lowHeightWindDirection;
         private TextView midHeightTemperature;
         private TextView midHeightWind;
+        private ImageView midHeightWindDirection;
         private TextView highHeightTemperature;
         private TextView highHeightWind;
+        private ImageView highHeightWindDirection;
         private TextView rainLevel;
         private TextView cloudCover;
 
@@ -339,10 +419,13 @@ public class MountainForecastActivity extends Activity {
             time = (TextView) forecastTable.findViewById(getResources().getIdentifier("forecast_time_" + columnId, "id", getPackageName()));
             difficulty = (ImageView) forecastTable.findViewById(getResources().getIdentifier("forecast_difficulty_" + columnId, "id", getPackageName()));
             lowHeightTemperature = (TextView) lowTemp.findViewById(getResources().getIdentifier("forecast_temp_" + columnId, "id", getPackageName()));
+            lowHeightWindDirection = (ImageView) lowWind.findViewById(getResources().getIdentifier("forecast_wind_direction_" + columnId, "id", getPackageName()));
             lowHeightWind = (TextView) lowWind.findViewById(getResources().getIdentifier("forecast_wind_" + columnId, "id", getPackageName()));
             midHeightTemperature = (TextView) midTemp.findViewById(getResources().getIdentifier("forecast_temp_" + columnId, "id", getPackageName()));
+            midHeightWindDirection = (ImageView) midWind.findViewById(getResources().getIdentifier("forecast_wind_direction_" + columnId, "id", getPackageName()));
             midHeightWind = (TextView) midWind.findViewById(getResources().getIdentifier("forecast_wind_" + columnId, "id", getPackageName()));
             highHeightTemperature = (TextView) highTemp.findViewById(getResources().getIdentifier("forecast_temp_" + columnId, "id", getPackageName()));
+            highHeightWindDirection = (ImageView) highWind.findViewById(getResources().getIdentifier("forecast_wind_direction_" + columnId, "id", getPackageName()));
             highHeightWind = (TextView) highWind.findViewById(getResources().getIdentifier("forecast_wind_" + columnId, "id", getPackageName()));
             rainLevel = (TextView) forecastTable.findViewById(getResources().getIdentifier("forecast_rain_level_" + columnId, "id", getPackageName()));
             cloudCover = (TextView) forecastTable.findViewById(getResources().getIdentifier("forecast_cloud_cover_" + columnId, "id", getPackageName()));
@@ -390,6 +473,18 @@ public class MountainForecastActivity extends Activity {
 
         public TextView getCloudCover() {
             return cloudCover;
+        }
+
+        public ImageView getLowHeightWindDirection() {
+            return lowHeightWindDirection;
+        }
+
+        public ImageView getMidHeightWindDirection() {
+            return midHeightWindDirection;
+        }
+
+        public ImageView getHighHeightWindDirection() {
+            return highHeightWindDirection;
         }
     }
 }

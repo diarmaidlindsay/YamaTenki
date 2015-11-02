@@ -10,17 +10,33 @@
         <TextView
             style="@style/ForecastTableLeftSideColumn"
             android:text="@string/text_forecast_wind_speed"/>
+        <ImageView
+            style="@style/ForecastTableSmallImage"
+            android:id="@+id/forecast_wind_direction_00"/>
         <TextView
             style="@style/ForecastTableText"
+            android:layout_weight="0.10"
             android:id="@+id/forecast_wind_00"/>
+        <ImageView
+            style="@style/ForecastTableSmallImage"
+            android:id="@+id/forecast_wind_direction_03"/>
         <TextView
             style="@style/ForecastTableText"
+            android:layout_weight="0.10"
             android:id="@+id/forecast_wind_03"/>
+        <ImageView
+            style="@style/ForecastTableSmallImage"
+            android:id="@+id/forecast_wind_direction_06"/>
         <TextView
             style="@style/ForecastTableText"
+            android:layout_weight="0.10"
             android:id="@+id/forecast_wind_06"/>
+        <ImageView
+            style="@style/ForecastTableSmallImage"
+            android:id="@+id/forecast_wind_direction_09"/>
         <TextView
             style="@style/ForecastTableText"
+            android:layout_weight="0.10"
             android:id="@+id/forecast_wind_09"/>
     </LinearLayout>
 </TableRow>

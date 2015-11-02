@@ -19,8 +19,12 @@ public class WindAndTemperatureElement {
         return "" + (int) temperature;
     }
 
-    public String getWindVelocity() {
+    public String getWindVelocityString() {
         return "" + (int) windVelocity;
+    }
+
+    public int getWindVelocity() {
+        return (int) windVelocity;
     }
 
     public int getWindDirection() {
