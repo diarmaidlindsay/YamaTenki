@@ -14,42 +14,42 @@
 
     <ImageView
         android:id="@+id/button_area_hokkaidou"
-        style="@style/AreaButton"
+        style="@style/AreaButtonLeft"
         android:contentDescription="@string/button_area_hokkaidou"
         android:src="@drawable/button_area_hokkaidou"
         android:layout_below="@id/text_search_header" />
 
     <ImageView
         android:id="@+id/button_area_hokuriku"
-        style="@style/AreaButton"
+        style="@style/AreaButtonLeft"
         android:contentDescription="@string/button_area_hokuriku"
         android:src="@drawable/button_area_hokuriku"
         android:layout_below="@id/button_area_hokkaidou" />
 
     <ImageView
         android:id="@+id/button_area_toukai"
-        style="@style/AreaButton"
+        style="@style/AreaButtonLeft"
         android:contentDescription="@string/button_area_toukai"
         android:src="@drawable/button_area_toukai"
         android:layout_below="@id/button_area_hokuriku" />
 
     <ImageView
         android:id="@+id/button_area_chuugoku"
-        style="@style/AreaButton"
+        style="@style/AreaButtonLeft"
         android:contentDescription="@string/button_area_chuugoku"
         android:src="@drawable/button_area_chuugoku"
         android:layout_below="@id/button_area_toukai" />
 
     <ImageView
         android:id="@+id/button_area_okinawa"
-        style="@style/AreaButton"
+        style="@style/AreaButtonLeft"
         android:contentDescription="@string/button_area_okinawa"
         android:src="@drawable/button_area_okinawa"
         android:layout_below="@id/button_area_chuugoku"/>
 
     <ImageView
         android:id="@+id/button_area_touhoku"
-        style="@style/AreaButton"
+        style="@style/AreaButtonRight"
         android:contentDescription="@string/button_area_touhoku"
         android:src="@drawable/button_area_touhoku"
         android:layout_below="@id/text_search_header"
@@ -58,7 +58,7 @@
 
     <ImageView
         android:id="@+id/button_area_koushin"
-        style="@style/AreaButton"
+        style="@style/AreaButtonRight"
         android:contentDescription="@string/button_area_koushin"
         android:src="@drawable/button_area_koushin"
         android:layout_below="@id/button_area_touhoku"
@@ -67,7 +67,7 @@
 
     <ImageView
         android:id="@+id/button_area_kinki"
-        style="@style/AreaButton"
+        style="@style/AreaButtonRight"
         android:contentDescription="@string/button_area_kinki"
         android:src="@drawable/button_area_kinki"
         android:layout_below="@id/button_area_koushin"
@@ -76,7 +76,7 @@
 
     <ImageView
         android:id="@+id/button_area_shikoku"
-        style="@style/AreaButton"
+        style="@style/AreaButtonRight"
         android:contentDescription="@string/button_area_shikoku"
         android:src="@drawable/button_area_shikoku"
         android:layout_below="@id/button_area_kinki"
