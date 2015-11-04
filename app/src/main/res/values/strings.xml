@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">YamaTenki</string>
-    <string name="button_main_20_closest_search">20 Close Mountain Search</string>
-    <string name="button_main_name_search">Search by Mountain Name</string>
-    <string name="button_main_area_search">Search by Area</string>
-    <string name="button_main_height_search">Search by Mountain Height</string>
-    <string name="button_main_my_mountain_list">My Mountain List</string>
-    <string name="button_main_memo">Climbing Diary</string>
-    <string name="button_main_settings">Settings</string>
-    <string name="button_main_tool_list">Checklist</string>
+    <string name="button_main_20_closest_search">近くの山\n20選</string>
+    <string name="button_main_name_search">名前\nで探す</string>
+    <string name="button_main_area_search">エリア\nで探す</string>
+    <string name="button_main_height_search">標高\nで探す</string>
+    <string name="button_main_my_mountain_list">Ｍｙ山\nリスト</string>
+    <string name="button_main_memo">登った山\nメモ</string>
+    <string name="button_main_settings">詳細設定</string>
+    <string name="button_main_tool_list">持ち物</string>
     <string name="text_main_header">山サーチ</string>
     <string name="text_search_name_header">山の名前で探す</string>
     <string name="text_search_textbox_hint">漢字やひらがな検索</string>
@@ -37,8 +37,8 @@
     <string name="text_search_height_m">m</string>
     <string name="text_search_height_header">標高で探す</string>
     <string name="error_min_max_height">最低標高は最高標高を超えないでください</string>
-    <string name="text_my_mountain_list_header">My 山リスト</string>
-    <string name="button_add_my_mountain">My山リスト&#10;に登録</string>
-    <string name="button_remove_my_mountain">My山リスト&#10;に登録解除</string>
-    <string name="button_add_memo">登った山メモ&#10;に登録</string>
+    <string name="text_my_mountain_list_header">Ｍｙ山リスト</string>
+    <string name="button_add_my_mountain">Ｍｙ山リスト\nに登録</string>
+    <string name="button_remove_my_mountain">Ｍｙ山リスト\nに登録解除</string>
+    <string name="button_add_memo">登った山メモ\nに登録</string>
 </resources>

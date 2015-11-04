@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,13 +26,14 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     TextView header;
-    ImageView mountainNameSearchButton;
-    ImageView nearMountainSearchButton;
-    ImageView areaSearchButton;
-    ImageView heightSearchButton;
-    ImageView myMountainListButton;
-    ImageView myMemoButton;
-    ImageView settingsButton;
+    Button mountainNameSearchButton;
+    Button nearMountainSearchButton;
+    Button areaSearchButton;
+    Button heightSearchButton;
+    Button myMountainListButton;
+    Button myMemoButton;
+    Button settingsButton;
+    Button checklistButton;
 
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
@@ -44,13 +45,22 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         setContentView(R.layout.activity_main);
         header = (TextView) findViewById(R.id.text_main_header);
         header.setTypeface(Utils.getHannariTypeFace(this));
-        mountainNameSearchButton = (ImageView) findViewById(R.id.button_main_mountain_name_search);
-        nearMountainSearchButton = (ImageView) findViewById(R.id.button_main_20_closest_search);
-        areaSearchButton = (ImageView) findViewById(R.id.button_main_area_search);
-        heightSearchButton = (ImageView) findViewById(R.id.button_main_height_search);
-        myMountainListButton = (ImageView) findViewById(R.id.button_main_my_mountain_list);
-        myMemoButton = (ImageView) findViewById(R.id.button_main_memo);
-        settingsButton = (ImageView) findViewById(R.id.button_main_settings);
+        mountainNameSearchButton = (Button) findViewById(R.id.button_main_mountain_name_search);
+        mountainNameSearchButton.setTypeface(Utils.getHannariTypeFace(this));
+        nearMountainSearchButton = (Button) findViewById(R.id.button_main_20_closest_search);
+        nearMountainSearchButton.setTypeface(Utils.getHannariTypeFace(this));
+        areaSearchButton = (Button) findViewById(R.id.button_main_area_search);
+        areaSearchButton.setTypeface(Utils.getHannariTypeFace(this));
+        heightSearchButton = (Button) findViewById(R.id.button_main_height_search);
+        heightSearchButton.setTypeface(Utils.getHannariTypeFace(this));
+        myMountainListButton = (Button) findViewById(R.id.button_main_my_mountain_list);
+        myMountainListButton.setTypeface(Utils.getHannariTypeFace(this));
+        myMemoButton = (Button) findViewById(R.id.button_main_memo);
+        myMemoButton.setTypeface(Utils.getHannariTypeFace(this));
+        settingsButton = (Button) findViewById(R.id.button_main_settings);
+        settingsButton.setTypeface(Utils.getHannariTypeFace(this));
+        checklistButton = (Button) findViewById(R.id.button_main_tool_list);
+        checklistButton.setTypeface(Utils.getHannariTypeFace(this));
 
         mountainNameSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override

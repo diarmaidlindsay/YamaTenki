@@ -23,7 +23,7 @@
         android:id="@+id/button_area_hokuriku"
         style="@style/AreaButtonLeft"
         android:text="@string/button_area_hokuriku"
-        android:background="@drawable/round_button_gray"
+        android:background="@drawable/round_button_light_gray"
         android:layout_below="@id/button_area_hokkaidou" />
 
     <Button

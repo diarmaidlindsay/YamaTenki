@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.percent.PercentRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,69 +15,73 @@
         style="@style/ScreenTitle"/>
 
     <Button
-        android:contentDescription="@string/button_main_name_search"
+        android:text="@string/button_main_name_search"
         android:id="@+id/button_main_mountain_name_search"
-        android:src="@drawable/button_search_name"
         style="@style/MainButtonLeft"
+        android:background="@drawable/round_button_green"
         android:layout_below="@+id/text_main_header"/>
 
     <Button
-        android:contentDescription="@string/button_main_20_closest_search"
+        android:text="@string/button_main_20_closest_search"
         android:id="@+id/button_main_20_closest_search"
-        android:src="@drawable/button_search_close_mountain"
         style="@style/MainButtonLeft"
+        android:background="@drawable/round_button_yellow"
         android:layout_below="@id/button_main_mountain_name_search"/>
 
     <Button
-        android:contentDescription="@string/button_main_my_mountain_list"
+        android:text="@string/button_main_my_mountain_list"
         android:id="@+id/button_main_my_mountain_list"
-        android:src="@drawable/button_my_yama_list"
         style="@style/MainButtonLeft"
+        android:background="@drawable/round_button_orange"
         android:layout_below="@id/button_main_20_closest_search"/>
 
     <Button
-        android:contentDescription="@string/button_main_tool_list"
+        android:text="@string/button_main_tool_list"
         android:id="@+id/button_main_tool_list"
-        android:src="@drawable/button_tool_list"
         style="@style/MainButtonLeft"
+        android:background="@drawable/round_button_gray"
         android:layout_below="@id/button_main_my_mountain_list"
         android:paddingTop="0dp"
-        android:paddingBottom="0dp" />
+        android:paddingBottom="0dp"
+        app:layout_heightPercent="9%"
+        android:layout_marginBottom="20dp"/>
 
     <Button
-        android:contentDescription="@string/button_main_area_search"
+        android:text="@string/button_main_area_search"
         android:id="@+id/button_main_area_search"
-        android:src="@drawable/button_search_area"
         style="@style/MainButtonRight"
+        android:background="@drawable/round_button_light_blue"
         android:layout_below="@+id/text_main_header"
         android:layout_toRightOf="@id/button_main_mountain_name_search"
         android:layout_toEndOf="@+id/button_main_mountain_name_search"/>
 
     <Button
-        android:contentDescription="@string/button_main_height_search"
+        android:text="@string/button_main_height_search"
         android:id="@+id/button_main_height_search"
-        android:src="@drawable/button_search_height"
         style="@style/MainButtonRight"
+        android:background="@drawable/round_button_purple"
         android:layout_below="@+id/button_main_area_search"
         android:layout_toRightOf="@id/button_main_20_closest_search"
         android:layout_toEndOf="@+id/button_main_20_closest_search"/>
 
     <Button
-        android:contentDescription="@string/button_main_memo"
+        android:text="@string/button_main_memo"
         android:id="@+id/button_main_memo"
-        android:src="@drawable/button_my_memo"
         style="@style/MainButtonRight"
+        android:background="@drawable/round_button_brown"
         android:layout_below="@id/button_main_height_search"
         android:layout_toRightOf="@id/button_main_my_mountain_list"
         android:layout_toEndOf="@id/button_main_my_mountain_list"/>
 
     <Button
-        android:contentDescription="@string/button_main_settings"
+        android:text="@string/button_main_settings"
         android:id="@+id/button_main_settings"
-        android:src="@drawable/button_settings"
         style="@style/MainButtonRight"
+        android:background="@drawable/round_button_light_gray"
         android:layout_below="@id/button_main_memo"
         android:layout_toRightOf="@+id/button_main_tool_list"
-        android:layout_toEndOf="@+id/button_main_tool_list" />
+        android:layout_toEndOf="@+id/button_main_tool_list"
+        app:layout_heightPercent="9%"
+        android:layout_marginBottom="20dp"/>
 
 </android.support.percent.PercentRelativeLayout>
