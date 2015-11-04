@@ -7,9 +7,30 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-        <TextView
-            style="@style/ForecastTableLeftSideColumn"
-            android:text="@string/text_forecast_wind_speed"/>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.30"
+            android:background="@color/table_bg_alt">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_forecast_wind_speed"
+                android:textColor="@color/yama_brown"
+                android:layout_centerInParent="true"
+                android:id="@+id/textView"/>
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/question_mark"
+                android:layout_marginLeft="0dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
         <ImageView
             style="@style/ForecastTableSmallImage"
             android:id="@+id/forecast_wind_direction_00"/>

@@ -57,6 +57,7 @@ public class MountainForecastActivity extends Activity {
     ImageView currentDifficultyImage;
     ScrollView mountainForecastScrollView;
     Button addMyMountainButton;
+    Button addMemoButton;
     long mountainId;
     List<ForecastScrollViewElement> scrollViewElements = new ArrayList<>();
 
@@ -72,14 +73,19 @@ public class MountainForecastActivity extends Activity {
                 mountainDao.queryBuilder().where(MountainDao.Properties.Id.eq(mountainId)).unique();
 
         title = (TextView) findViewById(R.id.text_forecast_header);
-        title.setTypeface(Utils.getTitleTypeFace(this));
+        title.setTypeface(Utils.getHannariTypeFace(this));
         title.setText(mountain.getTitle());
         currentDifficultyImage = (ImageView) findViewById(R.id.mountain_forecast_current_difficulty);
+        TextView currentDifficultyText = (TextView) findViewById(R.id.mountain_forecast_current_difficulty_text);
+        currentDifficultyText.setTypeface(Utils.getHannariTypeFace(this));
         addMyMountainButton = (Button) findViewById(R.id.button_add_my_mountain);
         addMyMountainButton.setOnClickListener(getAddMyMountainListener());
         addMyMountainButton.setText(getMyMountainForMountainId() == null ?
                 getResources().getString(R.string.button_add_my_mountain) :
                 getResources().getString(R.string.button_remove_my_mountain));
+        addMyMountainButton.setTypeface(Utils.getHannariTypeFace(this));
+        addMemoButton = (Button) findViewById(R.id.button_add_memo);
+        addMemoButton.setTypeface(Utils.getHannariTypeFace(this));
         initialiseWidgets();
         populateWidgets(JSONParser.parseMountainForecastFromFile(
                 JSONDownloader.getMockMountainForecast(this, mountain.getYid())));

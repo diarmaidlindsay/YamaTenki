@@ -43,7 +43,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         header = (TextView) findViewById(R.id.text_main_header);
-        header.setTypeface(Utils.getTitleTypeFace(this));
+        header.setTypeface(Utils.getHannariTypeFace(this));
         mountainNameSearchButton = (ImageView) findViewById(R.id.button_main_mountain_name_search);
         nearMountainSearchButton = (ImageView) findViewById(R.id.button_main_20_closest_search);
         areaSearchButton = (ImageView) findViewById(R.id.button_main_area_search);

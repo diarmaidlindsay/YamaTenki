@@ -132,7 +132,7 @@ public class MountainListActivity extends Activity {
         tableHeaderDifficulty.setOnClickListener(getDifficultyHeaderOnClickListener());
         tableHeaderHeight = (TextView) mountainListContainer.findViewById(R.id.table_header_height);
         tableHeaderHeight.setOnClickListener(getHeightHeaderOnClickListener());
-        header.setTypeface(Utils.getTitleTypeFace(this));
+        header.setTypeface(Utils.getHannariTypeFace(this));
     }
 
     @Override

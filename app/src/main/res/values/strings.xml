@@ -38,7 +38,7 @@
     <string name="text_search_height_header">標高で探す</string>
     <string name="error_min_max_height">最低標高は最高標高を超えないでください</string>
     <string name="text_my_mountain_list_header">My 山リスト</string>
-    <string name="button_add_my_mountain">My 山リスト&#10;に登録</string>
-    <string name="button_remove_my_mountain">My 山リスト&#10;に登録解除</string>
+    <string name="button_add_my_mountain">My山リスト&#10;に登録</string>
+    <string name="button_remove_my_mountain">My山リスト&#10;に登録解除</string>
     <string name="button_add_memo">登った山メモ&#10;に登録</string>
 </resources>

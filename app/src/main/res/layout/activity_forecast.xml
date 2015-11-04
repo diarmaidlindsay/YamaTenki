@@ -34,7 +34,7 @@
             android:src="@drawable/difficulty_large_a"/>
 
         <TextView
-            style="@style/SmallBrownText"
+            style="@style/MediumBrownText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"
@@ -51,6 +51,7 @@
             android:background="@drawable/round_red_button"
             android:textColor="@android:color/white"
             android:textSize="20sp"
+            android:textStyle="bold"
             android:id="@+id/button_add_my_mountain"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -70,13 +71,15 @@
             android:background="@drawable/round_brown_button"
             android:textColor="@android:color/white"
             android:textSize="20sp"
+            android:textStyle="bold"
             android:id="@+id/button_add_memo"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/mountain_forecast_current_difficulty_text"
             android:layout_toRightOf="@id/button_add_my_mountain"
             android:layout_toEndOf="@id/button_add_my_mountain"
-            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             app:layout_widthPercent="40%"

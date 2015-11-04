@@ -32,7 +32,7 @@ public class Utils {
         return timestamp;
     }
 
-    public static Typeface getTitleTypeFace(Context context) {
+    public static Typeface getHannariTypeFace(Context context) {
         return Typeface.createFromAsset(context.getAssets(), "fonts/Hannari.otf");
     }
 

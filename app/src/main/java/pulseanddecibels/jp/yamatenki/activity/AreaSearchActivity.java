@@ -22,7 +22,7 @@ public class AreaSearchActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_area);
         header = (TextView) findViewById(R.id.text_search_header);
-        header.setTypeface(Utils.getTitleTypeFace(this));
+        header.setTypeface(Utils.getHannariTypeFace(this));
 
         initButton(R.id.button_area_hokkaidou);
         initButton(R.id.button_area_hokuriku);
