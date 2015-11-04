@@ -115,8 +115,9 @@ public class SplashActivity extends Activity {
             }
 
             List<String> areasList = Database.parseAreaCSV(this);
-            for (String area : areasList) {
-                areaDao.insert(new Area(null, area));
+            //start from zero to match the specifications (0 = 北海道, etc)
+            for (int i=0; i < areasList.size(); i++) {
+                areaDao.insert(new Area((long)i, areasList.get(i)));
             }
 
             List<MountainArrayElement> jsonEntries = Database.parseMountainJSON(this);
