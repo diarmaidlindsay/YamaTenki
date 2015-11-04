@@ -11,12 +11,15 @@
         <item name="android:layout_margin">10dp</item>
     </style>
     <style name="MenuButton">
-        <item name="layout_widthPercent">50%</item>
+        <item name="layout_widthPercent">38%</item>
         <item name="layout_heightPercent">24%</item>
-        <item name="android:paddingTop">10dp</item>
-        <item name="android:paddingBottom">10dp</item>
-        <item name="android:paddingLeft">30dp</item>
-        <item name="android:paddingRight">30dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginLeft">30dp</item>
+        <item name="android:layout_marginRight">30dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
     </style>
     <style name="MainButtonLeft" parent="MenuButton">
         <item name="android:paddingRight">20dp</item>
@@ -25,12 +28,12 @@
         <item name="android:paddingLeft">20dp</item>
     </style>
     <style name="AreaButtonLeft" parent="MenuButton">
-        <item name="layout_heightPercent">16%</item>
-        <item name="android:paddingRight">20dp</item>
+        <item name="layout_heightPercent">14%</item>
+        <item name="android:layout_marginRight">20dp</item>
     </style>
     <style name="AreaButtonRight" parent="MenuButton">
-        <item name="layout_heightPercent">16%</item>
-        <item name="android:paddingLeft">20dp</item>
+        <item name="layout_heightPercent">14%</item>
+        <item name="android:layout_marginLeft">20dp</item>
     </style>
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>

@@ -13,28 +13,28 @@
         android:text="@string/text_main_header"
         style="@style/ScreenTitle"/>
 
-    <ImageView
+    <Button
         android:contentDescription="@string/button_main_name_search"
         android:id="@+id/button_main_mountain_name_search"
         android:src="@drawable/button_search_name"
         style="@style/MainButtonLeft"
         android:layout_below="@+id/text_main_header"/>
 
-    <ImageView
+    <Button
         android:contentDescription="@string/button_main_20_closest_search"
         android:id="@+id/button_main_20_closest_search"
         android:src="@drawable/button_search_close_mountain"
         style="@style/MainButtonLeft"
         android:layout_below="@id/button_main_mountain_name_search"/>
 
-    <ImageView
+    <Button
         android:contentDescription="@string/button_main_my_mountain_list"
         android:id="@+id/button_main_my_mountain_list"
         android:src="@drawable/button_my_yama_list"
         style="@style/MainButtonLeft"
         android:layout_below="@id/button_main_20_closest_search"/>
 
-    <ImageView
+    <Button
         android:contentDescription="@string/button_main_tool_list"
         android:id="@+id/button_main_tool_list"
         android:src="@drawable/button_tool_list"
@@ -43,7 +43,7 @@
         android:paddingTop="0dp"
         android:paddingBottom="0dp" />
 
-    <ImageView
+    <Button
         android:contentDescription="@string/button_main_area_search"
         android:id="@+id/button_main_area_search"
         android:src="@drawable/button_search_area"
@@ -52,7 +52,7 @@
         android:layout_toRightOf="@id/button_main_mountain_name_search"
         android:layout_toEndOf="@+id/button_main_mountain_name_search"/>
 
-    <ImageView
+    <Button
         android:contentDescription="@string/button_main_height_search"
         android:id="@+id/button_main_height_search"
         android:src="@drawable/button_search_height"
@@ -61,7 +61,7 @@
         android:layout_toRightOf="@id/button_main_20_closest_search"
         android:layout_toEndOf="@+id/button_main_20_closest_search"/>
 
-    <ImageView
+    <Button
         android:contentDescription="@string/button_main_memo"
         android:id="@+id/button_main_memo"
         android:src="@drawable/button_my_memo"
@@ -70,7 +70,7 @@
         android:layout_toRightOf="@id/button_main_my_mountain_list"
         android:layout_toEndOf="@id/button_main_my_mountain_list"/>
 
-    <ImageView
+    <Button
         android:contentDescription="@string/button_main_settings"
         android:id="@+id/button_main_settings"
         android:src="@drawable/button_settings"

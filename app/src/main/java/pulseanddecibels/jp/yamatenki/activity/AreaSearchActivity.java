@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 
 import pulseanddecibels.jp.yamatenki.R;
@@ -36,8 +36,9 @@ public class AreaSearchActivity extends Activity {
     }
 
     private void initButton(int id) {
-        ImageView imageView = (ImageView) findViewById(id);
-        imageView.setOnClickListener(getOnClickListener(id));
+        Button button = (Button) findViewById(id);
+        button.setTypeface(Utils.getHannariTypeFace(this));
+        button.setOnClickListener(getOnClickListener(id));
     }
 
     private View.OnClickListener getOnClickListener(final int buttonId) {
