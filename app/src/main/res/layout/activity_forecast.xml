@@ -88,7 +88,7 @@
             android:layout_marginBottom="10dp"/>
 
         <include
-            android:id="@+id/today_forecast"
+            android:id="@+id/today_am_forecast"
             android:layout_below="@id/button_add_my_mountain"
             layout="@layout/scroll_item_forecast"
             android:layout_width="fill_parent"
@@ -96,8 +96,24 @@
             />
 
         <include
-            android:id="@+id/tomorrow_forecast"
-            android:layout_below="@id/today_forecast"
+            android:id="@+id/today_pm_forecast"
+            android:layout_below="@id/today_am_forecast"
+            layout="@layout/scroll_item_forecast"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <include
+            android:id="@+id/tomorrow_am_forecast"
+            android:layout_below="@id/today_pm_forecast"
+            layout="@layout/scroll_item_forecast"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <include
+            android:id="@+id/tomorrow_pm_forecast"
+            android:layout_below="@id/tomorrow_am_forecast"
             layout="@layout/scroll_item_forecast"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

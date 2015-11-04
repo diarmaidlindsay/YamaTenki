@@ -93,11 +93,15 @@ public class MountainForecastActivity extends Activity {
 
     private void initialiseWidgets() {
         mountainForecastScrollView = (ScrollView) findViewById(R.id.scroll_forecasts);
-        LinearLayout todayForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.today_forecast);
-        LinearLayout tomorrowForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_forecast);
+        LinearLayout todayAMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.today_am_forecast);
+        LinearLayout todayPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.today_pm_forecast);
+        LinearLayout tomorrowAMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_am_forecast);
+        LinearLayout tomorrowPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_pm_forecast);
         //add in correct order because index matters for looking up date
-        scrollViewElements.add(new ForecastScrollViewElement(todayForecast));
-        scrollViewElements.add(new ForecastScrollViewElement(tomorrowForecast));
+        scrollViewElements.add(new ForecastScrollViewElement(todayAMForecast));
+        scrollViewElements.add(new ForecastScrollViewElement(todayPMForecast));
+        scrollViewElements.add(new ForecastScrollViewElement(tomorrowAMForecast));
+        scrollViewElements.add(new ForecastScrollViewElement(tomorrowPMForecast));
         /*
         +2Forecast
         +3Forecast
@@ -193,7 +197,8 @@ public class MountainForecastActivity extends Activity {
                 //find if there is a matching forecast available from json. If not, whole column is grey.
                 String key = DateUtils.timeToMapKey(i, forecastColumn.getColumnId());
 //                ForecastArrayElement forecastArrayElement = forecastMap.get(key); //when we get realtime forecasts
-                ForecastArrayElement forecastArrayElement = forecastArray[j]; //TEMPORARY until we get realtime forecasts
+                int forecastIndex = j + (i*4); //TEMPORARY until we get realtime forecasts
+                ForecastArrayElement forecastArrayElement = forecastArray[forecastIndex]; //TEMPORARY until we get realtime forecasts
                 forecastColumn.getTime().setText(forecastColumn.getColumnId());
 
                 if (forecastArrayElement != null) {
