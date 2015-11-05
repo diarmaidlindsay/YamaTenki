@@ -110,15 +110,10 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             }
         });
 
-        connectToGooglePlayService();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        } else {
-            Toast.makeText(this, "Couldn't connect to Google Play Service", Toast.LENGTH_SHORT).show();
-        }
+        buildGoogleApiClient();
     }
 
-    private void connectToGooglePlayService() {
+    private void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(MainActivity.this)
                 .addConnectionCallbacks(MainActivity.this)
                 .addOnConnectionFailedListener(MainActivity.this)
@@ -143,6 +138,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     @Override
     public void onConnectionSuspended(int i) {
         Toast.makeText(this, "Google Play Service Connection Suspended...", Toast.LENGTH_SHORT).show();
+        mGoogleApiClient.connect();
     }
 
     @Override
@@ -154,5 +150,39 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     public void onLocationChanged(Location location) {
         mLastLocation = location;
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        } else {
+            Toast.makeText(this, "Couldn't connect to Google Play Service", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mGoogleApiClient != null && mGoogleApiClient.isConnected() && mLastLocation == null) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        if(mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
+        super.onStop();
     }
 }
