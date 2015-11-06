@@ -1,9 +1,10 @@
 package pulseanddecibels.jp.yamatenki.activity;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.text.format.DateFormat;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -83,8 +84,35 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
 
         weather = (EditText) findViewById(R.id.memo_weather);
         rating = (EditText) findViewById(R.id.memo_rating);
+        rating.setOnClickListener(getRatingOnClickListener());
         rating.setKeyListener(null);
         memo = (EditText) findViewById(R.id.memo_memo);
+    }
+
+    private View.OnClickListener getRatingOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(MemoDetailActivity.this);
+                dialog.setContentView(R.layout.dialog_rating);
+                dialog.show();
+                dialog.setTitle("評価選択");
+                for(int i=1; i < 11; i++) {
+                    Button button = (Button) dialog.findViewById(getResources().getIdentifier("button" + i, "id", getPackageName()));
+                    if(button != null) {
+                        final String value = Integer.toString(i);
+                        button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                rating.setText(value);
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                }
+
+            }
+        };
     }
 
     @Override
@@ -120,8 +148,7 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
         final DateTime now = new DateTime();
         RadialTimePickerDialogFragment timePickerDialog = RadialTimePickerDialogFragment
-                .newInstance(MemoDetailActivity.this, now.getHourOfDay(), now.getMinuteOfHour(),
-                        DateFormat.is24HourFormat(MemoDetailActivity.this));
+                .newInstance(MemoDetailActivity.this, now.getHourOfDay(), now.getMinuteOfHour(), true);
         if(from) {
             fromDateHolder = new DateHolder(year, monthOfYear + 1, dayOfMonth);
             timePickerDialog.show(getSupportFragmentManager(), "timeFrom");
