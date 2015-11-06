@@ -319,24 +319,6 @@ public class Mountain {
         }
         return null;
     }
-
-    public Forecast getMockForecast(long mountainId) {
-        Long id = 1L;
-        Long timestamp = new DateTime().getMillis();
-        Integer peakTemp = 0;
-        Integer peakVelocity = 0;
-        Integer peakDirection = 0;
-        Integer baseTemp = 0;
-        Integer baseVelocity = 0;
-        Integer baseDirection = 0;
-        Integer weather = 0;
-        Integer temperature = 0;
-        Float precipitation = 0.0F;
-        Integer temperatureHigh = 0;
-        Integer temperatureLow = 0;
-
-        return new Forecast(id, timestamp, peakTemp, peakVelocity, peakDirection, baseTemp, baseVelocity, baseDirection, weather, temperature, precipitation, temperatureHigh, temperatureLow, mountainId);
-    }
     // KEEP METHODS END
 
 }

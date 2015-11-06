@@ -41,4 +41,14 @@
     <string name="button_add_my_mountain">Ｍｙ山リスト\nに登録</string>
     <string name="button_remove_my_mountain">Ｍｙ山リスト\nに登録解除</string>
     <string name="button_add_memo">登った山メモ\nに登録</string>
+    <string name="text_memo_header">登った山メモ</string>
+    <string name="text_memo_time">日時：</string>
+    <string name="text_memo_from">から</string>
+    <string name="text_memo_until">まで</string>
+    <string name="text_memo_weather">天候：</string>
+    <string name="text_memo_rating">評価：</string>
+    <string name="text_memo_memo">メモ：</string>
+    <string name="text_memo_ten_points">/10点</string>
+    <string name="text_memo_hint">山の特徴、感想、出来事など。</string>
+    <string name="button_confirm">決定</string>
 </resources>

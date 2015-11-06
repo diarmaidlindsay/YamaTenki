@@ -86,6 +86,7 @@ public class MountainForecastActivity extends Activity {
         addMyMountainButton.setTypeface(Utils.getHannariTypeFace(this));
         addMemoButton = (Button) findViewById(R.id.button_add_memo);
         addMemoButton.setTypeface(Utils.getHannariTypeFace(this));
+        addMemoButton.setOnClickListener(getAddMemoListener());
         initialiseWidgets();
         populateWidgets(JSONParser.parseMountainForecastFromFile(
                 JSONDownloader.getMockMountainForecast(this, mountain.getYid())));
@@ -147,6 +148,17 @@ public class MountainForecastActivity extends Activity {
                 Intent intent = getIntent();
                 intent.putExtra("changedMountain", mountainId);
                 setResult(RESULT_OK, intent);
+            }
+        };
+    }
+
+    private View.OnClickListener getAddMemoListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MemoDetailActivity.class);
+                intent.putExtra("mountainId", mountainId);
+                startActivity(intent);
             }
         };
     }

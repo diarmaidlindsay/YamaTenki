@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "pulseanddecibels.jp.yamatenki"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -27,5 +27,5 @@ dependencies {
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
     compile 'net.danlew:android.joda:2.8.2'
     compile 'de.greenrobot:greendao:2.0.0'
-
+    compile 'com.github.flavienlaurent.datetimepicker:library:0.0.2'
 }
