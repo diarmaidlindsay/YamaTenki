@@ -2,13 +2,13 @@ package pulseanddecibels.jp.yamatenki.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.fourmob.datetimepicker.date.DatePickerDialog;
-import com.sleepbot.datetimepicker.time.RadialPickerLayout;
-import com.sleepbot.datetimepicker.time.TimePickerDialog;
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
+import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 
 import org.joda.time.DateTime;
 
@@ -22,7 +22,7 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  * Created by Diarmaid Lindsay on 2015/11/05.
  * Copyright Pulse and Decibels 2015
  */
-public class MemoDetailActivity extends FragmentActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class MemoDetailActivity extends FragmentActivity implements CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener {
 
     long mountainId;
     TextView mountainSubtitle;
@@ -33,8 +33,6 @@ public class MemoDetailActivity extends FragmentActivity implements DatePickerDi
     TimeHolder fromTimeHolder;
     DateHolder untilDateHolder;
     TimeHolder untilTimeHolder;
-    TimePickerDialog fromTimeDialog;
-    TimePickerDialog untilTimeDialog;
     EditText weather;
     EditText rating;
     EditText memo;
@@ -57,14 +55,6 @@ public class MemoDetailActivity extends FragmentActivity implements DatePickerDi
         mountainSubtitle.setText(mountain.getTitle());
 
         final DateTime now = new DateTime();
-        final DatePickerDialog fromDatePickerDialog = DatePickerDialog.newInstance(MemoDetailActivity.this, now.getYear()-1, now.getMonthOfYear()+1, now.getDayOfYear(), false);
-        final DatePickerDialog untilDatePickerDialog = DatePickerDialog.newInstance(MemoDetailActivity.this, now.getYear()-1, now.getMonthOfYear()+1, now.getDayOfYear(), false);
-        fromTimeDialog = TimePickerDialog.newInstance(MemoDetailActivity.this, now.getHourOfDay(), 0, true, false);
-        fromTimeDialog.setVibrate(false);
-        fromTimeDialog.setCloseOnSingleTapMinute(false);
-        untilTimeDialog = TimePickerDialog.newInstance(MemoDetailActivity.this, now.getHourOfDay(), 0, true, false);
-        untilTimeDialog.setVibrate(false);
-        untilTimeDialog.setCloseOnSingleTapMinute(false);
 
         dateFrom = (EditText) findViewById(R.id.memo_date_from);
         dateFrom.setKeyListener(null);
@@ -72,10 +62,10 @@ public class MemoDetailActivity extends FragmentActivity implements DatePickerDi
             @Override
             public void onClick(View v) {
                 from = true;
-                fromDatePickerDialog.setVibrate(false);
-                fromDatePickerDialog.setYearRange(1985, now.getYear());
-                fromDatePickerDialog.setCloseOnSingleTapDay(false);
-                fromDatePickerDialog.show(getSupportFragmentManager(), "fromDate");
+                CalendarDatePickerDialogFragment calendarDatePickerDialogFragment = CalendarDatePickerDialogFragment
+                        .newInstance(MemoDetailActivity.this, now.getYear(), now.getMonthOfYear() - 1,
+                                now.getDayOfMonth());
+                calendarDatePickerDialogFragment.show(getSupportFragmentManager(), "dateFrom");
             }
         });
         dateUntil = (EditText) findViewById(R.id.memo_date_until);
@@ -84,34 +74,12 @@ public class MemoDetailActivity extends FragmentActivity implements DatePickerDi
             @Override
             public void onClick(View v) {
                 from = false;
-                untilDatePickerDialog.setVibrate(false);
-                untilDatePickerDialog.setYearRange(1985, now.getYear());
-                untilDatePickerDialog.setCloseOnSingleTapDay(false);
-                untilDatePickerDialog.show(getSupportFragmentManager(), "untilDate");
+                CalendarDatePickerDialogFragment calendarDatePickerDialogFragment = CalendarDatePickerDialogFragment
+                        .newInstance(MemoDetailActivity.this, now.getYear(), now.getMonthOfYear() - 1,
+                                now.getDayOfMonth());
+                calendarDatePickerDialogFragment.show(getSupportFragmentManager(), "dateUntil");
             }
         });
-
-        if(savedInstanceState != null) {
-            DatePickerDialog fromDate = (DatePickerDialog) getSupportFragmentManager().findFragmentByTag("fromDate");
-            if (fromDate != null) {
-                fromDate.setOnDateSetListener(this);
-            }
-
-            DatePickerDialog untilDate = (DatePickerDialog) getSupportFragmentManager().findFragmentByTag("untilDate");
-            if (untilDate != null) {
-                untilDate.setOnDateSetListener(this);
-            }
-
-            TimePickerDialog fromTime = (TimePickerDialog) getSupportFragmentManager().findFragmentByTag("fromTime");
-            if (fromTime != null) {
-                fromTime.setOnTimeSetListener(this);
-            }
-
-            TimePickerDialog untilTime = (TimePickerDialog) getSupportFragmentManager().findFragmentByTag("untilTime");
-            if (untilTime != null) {
-                untilTime.setOnTimeSetListener(this);
-            }
-        }
 
         weather = (EditText) findViewById(R.id.memo_weather);
         rating = (EditText) findViewById(R.id.memo_rating);
@@ -120,18 +88,51 @@ public class MemoDetailActivity extends FragmentActivity implements DatePickerDi
     }
 
     @Override
-    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
-        if(from) {
-            fromDateHolder = new DateHolder(year, month, day);
-            fromTimeDialog.show(getSupportFragmentManager(), "fromTime");
-        } else {
-            untilDateHolder = new DateHolder(year, month, day);
-            untilTimeDialog.show(getSupportFragmentManager(), "untilTime");
+    public void onResume() {
+        // Example of reattaching to the fragment
+        super.onResume();
+        CalendarDatePickerDialogFragment dateFromFragment = (CalendarDatePickerDialogFragment) getSupportFragmentManager()
+                .findFragmentByTag("dateFrom");
+        if (dateFromFragment != null) {
+            dateFromFragment.setOnDateSetListener(this);
+        }
+
+        CalendarDatePickerDialogFragment dateUntilFragment = (CalendarDatePickerDialogFragment) getSupportFragmentManager()
+                .findFragmentByTag("dateUntil");
+        if (dateUntilFragment != null) {
+            dateUntilFragment.setOnDateSetListener(this);
+        }
+
+        RadialTimePickerDialogFragment timeFromFragment = (RadialTimePickerDialogFragment) getSupportFragmentManager()
+                .findFragmentByTag("timeFrom");
+        if (timeFromFragment != null) {
+            timeFromFragment.setOnTimeSetListener(this);
+        }
+
+        RadialTimePickerDialogFragment timeUntilFragment = (RadialTimePickerDialogFragment) getSupportFragmentManager()
+                .findFragmentByTag("timeFrom");
+        if (timeUntilFragment != null) {
+            timeUntilFragment.setOnTimeSetListener(this);
         }
     }
 
     @Override
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+    public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+        final DateTime now = new DateTime();
+        RadialTimePickerDialogFragment timePickerDialog = RadialTimePickerDialogFragment
+                .newInstance(MemoDetailActivity.this, now.getHourOfDay(), now.getMinuteOfHour(),
+                        DateFormat.is24HourFormat(MemoDetailActivity.this));
+        if(from) {
+            fromDateHolder = new DateHolder(year, monthOfYear + 1, dayOfMonth);
+            timePickerDialog.show(getSupportFragmentManager(), "timeFrom");
+        } else {
+            untilDateHolder = new DateHolder(year, monthOfYear + 1, dayOfMonth);
+            timePickerDialog.show(getSupportFragmentManager(), "timeUntil");
+        }
+    }
+
+    @Override
+    public void onTimeSet(RadialTimePickerDialogFragment dialog, int hourOfDay, int minute) {
         if(from) {
             fromTimeHolder = new TimeHolder(hourOfDay, minute);
             dateFrom.setText(String.format("%s%s", fromDateHolder.getDate(), fromTimeHolder.getTime()));
