@@ -107,4 +107,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">0.15</item>
     </style>
+    <style name="CustomTimePickerDialogTheme">
+        <item name="bpMainColor1">@android:color/white</item>
+        <item name="bpMainColor2">@color/memo_date_bg</item>
+        <item name="bpAccentColor">@color/memo_date_text</item>
+        <item name="bpMainTextColor">@color/memo_date_text</item>
+        <item name="bpLineColor">@color/memo_date_bg</item>
+        <item name="bpDoneBackgroundColor">@android:color/white</item>
+        <item name="bpSelectionAlpha">102</item>
+    </style>
 </resources>

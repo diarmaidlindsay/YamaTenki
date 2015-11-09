@@ -66,6 +66,7 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
                 CalendarDatePickerDialogFragment calendarDatePickerDialogFragment = CalendarDatePickerDialogFragment
                         .newInstance(MemoDetailActivity.this, now.getYear(), now.getMonthOfYear() - 1,
                                 now.getDayOfMonth());
+                calendarDatePickerDialogFragment.setThemeCustom(R.style.CustomTimePickerDialogTheme);
                 calendarDatePickerDialogFragment.show(getSupportFragmentManager(), "dateFrom");
             }
         });
@@ -78,6 +79,7 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
                 CalendarDatePickerDialogFragment calendarDatePickerDialogFragment = CalendarDatePickerDialogFragment
                         .newInstance(MemoDetailActivity.this, now.getYear(), now.getMonthOfYear() - 1,
                                 now.getDayOfMonth());
+                calendarDatePickerDialogFragment.setThemeCustom(R.style.CustomTimePickerDialogTheme);
                 calendarDatePickerDialogFragment.show(getSupportFragmentManager(), "dateUntil");
             }
         });
@@ -149,6 +151,8 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
         final DateTime now = new DateTime();
         RadialTimePickerDialogFragment timePickerDialog = RadialTimePickerDialogFragment
                 .newInstance(MemoDetailActivity.this, now.getHourOfDay(), now.getMinuteOfHour(), true);
+        timePickerDialog.setThemeCustom(R.style.CustomTimePickerDialogTheme);
+
         if(from) {
             fromDateHolder = new DateHolder(year, monthOfYear + 1, dayOfMonth);
             timePickerDialog.show(getSupportFragmentManager(), "timeFrom");
