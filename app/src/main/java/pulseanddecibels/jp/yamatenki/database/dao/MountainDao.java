@@ -35,7 +35,6 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
         public final static Property PrefectureId = new Property(7, long.class, "prefectureId", false, "PREFECTURE_ID");
         public final static Property AreaId = new Property(8, long.class, "areaId", false, "AREA_ID");
         public final static Property Height = new Property(9, Integer.class, "height", false, "HEIGHT");
-        public final static Property CurrentMountainIndex = new Property(10, Integer.class, "currentMountainIndex", false, "CURRENT_MOUNTAIN_INDEX");
     }
 
     private DaoSession daoSession;
@@ -63,8 +62,7 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
                 "'COORDINATE_ID' INTEGER NOT NULL ," + // 6: coordinateId
                 "'PREFECTURE_ID' INTEGER NOT NULL ," + // 7: prefectureId
                 "'AREA_ID' INTEGER NOT NULL ," + // 8: areaId
-                "'HEIGHT' INTEGER," + // 9: height
-                "'CURRENT_MOUNTAIN_INDEX' INTEGER);"); // 10: currentMountainIndex
+                "'HEIGHT' INTEGER);"); // 9: height
     }
 
     /** Drops the underlying database table. */
@@ -115,11 +113,6 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
         if (height != null) {
             stmt.bindLong(10, height);
         }
- 
-        Integer currentMountainIndex = entity.getCurrentMountainIndex();
-        if (currentMountainIndex != null) {
-            stmt.bindLong(11, currentMountainIndex);
-        }
     }
 
     @Override
@@ -147,8 +140,7 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
             cursor.getLong(offset + 6), // coordinateId
             cursor.getLong(offset + 7), // prefectureId
             cursor.getLong(offset + 8), // areaId
-            cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9), // height
-            cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10) // currentMountainIndex
+            cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9) // height
         );
         return entity;
     }
@@ -166,7 +158,6 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
         entity.setPrefectureId(cursor.getLong(offset + 7));
         entity.setAreaId(cursor.getLong(offset + 8));
         entity.setHeight(cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9));
-        entity.setCurrentMountainIndex(cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10));
      }
     
     /** @inheritdoc */

@@ -19,6 +19,7 @@ public class YamaTenkiGreenDao {
         Entity area = schema.addEntity("Area");
         Entity prefecture = schema.addEntity("Prefecture");
         Entity myMountain = schema.addEntity("MyMountain");
+        Entity myMemo = schema.addEntity("MyMemo");
 
         /**
          Mountain
@@ -88,6 +89,18 @@ public class YamaTenkiGreenDao {
         Property mountainIdMy = myMountain.addLongProperty("mountainId").notNull().getProperty();
         myMountain.addToOne(mountain, mountainIdMy);
         myMountain.setHasKeepSections(true);
+
+        /**
+         * Mountain Memo
+         */
+        myMemo.addIdProperty();
+        Property mountainIdMemo = myMemo.addLongProperty("mountainId").notNull().getProperty();
+        myMemo.addToOne(mountain, mountainIdMemo);
+        myMemo.addLongProperty("dateTimeFrom");
+        myMemo.addLongProperty("dateTimeUntil");
+        myMemo.addStringProperty("weather");
+        myMemo.addIntProperty("rating");
+        myMemo.addStringProperty("memo");
 
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));

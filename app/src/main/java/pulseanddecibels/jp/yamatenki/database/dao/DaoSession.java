@@ -24,6 +24,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig areaDaoConfig;
     private final DaoConfig prefectureDaoConfig;
     private final DaoConfig myMountainDaoConfig;
+    private final DaoConfig myMemoDaoConfig;
 
     private final MountainDao mountainDao;
     private final CoordinateDao coordinateDao;
@@ -31,6 +32,7 @@ public class DaoSession extends AbstractDaoSession {
     private final AreaDao areaDao;
     private final PrefectureDao prefectureDao;
     private final MyMountainDao myMountainDao;
+    private final MyMemoDao myMemoDao;
 
     public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
@@ -54,12 +56,16 @@ public class DaoSession extends AbstractDaoSession {
         myMountainDaoConfig = daoConfigMap.get(MyMountainDao.class).clone();
         myMountainDaoConfig.initIdentityScope(type);
 
+        myMemoDaoConfig = daoConfigMap.get(MyMemoDao.class).clone();
+        myMemoDaoConfig.initIdentityScope(type);
+
         mountainDao = new MountainDao(mountainDaoConfig, this);
         coordinateDao = new CoordinateDao(coordinateDaoConfig, this);
         forecastDao = new ForecastDao(forecastDaoConfig, this);
         areaDao = new AreaDao(areaDaoConfig, this);
         prefectureDao = new PrefectureDao(prefectureDaoConfig, this);
         myMountainDao = new MyMountainDao(myMountainDaoConfig, this);
+        myMemoDao = new MyMemoDao(myMemoDaoConfig, this);
 
         registerDao(Mountain.class, mountainDao);
         registerDao(Coordinate.class, coordinateDao);
@@ -67,6 +73,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(Area.class, areaDao);
         registerDao(Prefecture.class, prefectureDao);
         registerDao(MyMountain.class, myMountainDao);
+        registerDao(MyMemo.class, myMemoDao);
     }
     
     public void clear() {
@@ -76,6 +83,7 @@ public class DaoSession extends AbstractDaoSession {
         areaDaoConfig.getIdentityScope().clear();
         prefectureDaoConfig.getIdentityScope().clear();
         myMountainDaoConfig.getIdentityScope().clear();
+        myMemoDaoConfig.getIdentityScope().clear();
     }
 
     public MountainDao getMountainDao() {
@@ -100,6 +108,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public MyMountainDao getMyMountainDao() {
         return myMountainDao;
+    }
+
+    public MyMemoDao getMyMemoDao() {
+        return myMemoDao;
     }
 
 }
