@@ -5,7 +5,10 @@ import android.util.SparseArray;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Diarmaid Lindsay on 2015/10/05.
@@ -58,9 +61,20 @@ public class DateUtils {
         return String.format(format, dayString, month, day, JAPANESE_DAY_OF_WEEK.get(dayOfWeek), JAPANESE_TIME_OF_DAY[timeOfDay]);
     }
 
-    public static String getHourFromTimestamp(Timestamp sqlTimeStamp) {
-        DateTime dateTime = new DateTime(sqlTimeStamp.getTime());
-        return Utils.num2DigitString(dateTime.getHourOfDay());
+    public static DateTime getDateTimeFromForecast(String timeStampString) {
+        //http://developer.android.com/reference/java/text/SimpleDateFormat.html
+        DateTime dateTime = null;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ", Locale.JAPAN);
+            Date date = dateFormat.parse(timeStampString);
+            dateTime = new DateTime(date.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //"timestamp" : "2015-09-181T00:00:00.+09:00"
+
+        return dateTime;
     }
 
     /**
@@ -85,8 +99,7 @@ public class DateUtils {
     /**
      * Derive key for storing forecasts in HashMap from its TimeStamp
      */
-    public static String timeStampToMapKey(Timestamp sqlTimeStamp) {
-        DateTime dateTime = new DateTime(sqlTimeStamp.getTime());
+    public static String timeStampToMapKey(DateTime dateTime) {
         return
                 Utils.num2DigitString(dateTime.getMonthOfYear()) +
                         "/" +

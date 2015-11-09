@@ -1,9 +1,10 @@
 package pulseanddecibels.jp.yamatenki.model;
 
-import java.sql.Timestamp;
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 
-import pulseanddecibels.jp.yamatenki.utils.Utils;
+import pulseanddecibels.jp.yamatenki.utils.DateUtils;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/29.
@@ -17,7 +18,7 @@ public class MountainListJSON {
 
     public MountainListJSON() {
         mountainArrayElements = new ArrayList<>();
-        String timeStampString = "";
+        timestamp = "";
     }
 
     public MountainListJSON(ArrayList<MountainArrayElement> mountainArrayElements, String timeStampString) {
@@ -29,7 +30,7 @@ public class MountainListJSON {
         return mountainArrayElements;
     }
 
-    public Timestamp getTimestamp() {
-        return Utils.getTimeStamp(timestamp);
+    public DateTime getTimestamp() {
+        return DateUtils.getDateTimeFromForecast(timestamp);
     }
 }

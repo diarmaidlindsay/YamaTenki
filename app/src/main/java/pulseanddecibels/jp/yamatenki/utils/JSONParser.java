@@ -127,7 +127,7 @@ public class JSONParser {
         float precipitation = (float) forecast.optDouble("precipitation");
         Integer temperature = forecast.has("temperature") ? forecast.optInt("temperature") : null;
         int totalCloudCover = forecast.optInt("totalCloudCover");
-        return new ForecastArrayElement(Utils.getTimeStamp(dateTime), mountainStatus,
+        return new ForecastArrayElement(DateUtils.getDateTimeFromForecast(dateTime), mountainStatus,
                 windAndTemperaturesList, temperature, precipitation, totalCloudCover);
     }
 }

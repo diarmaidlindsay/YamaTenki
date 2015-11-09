@@ -25,6 +25,7 @@ public class DaoMaster extends AbstractDaoMaster {
         PrefectureDao.createTable(db, ifNotExists);
         MyMountainDao.createTable(db, ifNotExists);
         MyMemoDao.createTable(db, ifNotExists);
+        StatusDao.createTable(db, ifNotExists);
     }
     
     /** Drops underlying database table using DAOs. */
@@ -36,6 +37,7 @@ public class DaoMaster extends AbstractDaoMaster {
         PrefectureDao.dropTable(db, ifExists);
         MyMountainDao.dropTable(db, ifExists);
         MyMemoDao.dropTable(db, ifExists);
+        StatusDao.dropTable(db, ifExists);
     }
     
     public static abstract class OpenHelper extends SQLiteOpenHelper {
@@ -74,6 +76,7 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(PrefectureDao.class);
         registerDaoClass(MyMountainDao.class);
         registerDaoClass(MyMemoDao.class);
+        registerDaoClass(StatusDao.class);
     }
     
     public DaoSession newSession() {

@@ -30,7 +30,9 @@ import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
 import pulseanddecibels.jp.yamatenki.database.dao.MyMountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MyMountainDao;
+import pulseanddecibels.jp.yamatenki.database.dao.Status;
 import pulseanddecibels.jp.yamatenki.enums.MountainListColumn;
+import pulseanddecibels.jp.yamatenki.utils.DaoUtils;
 import pulseanddecibels.jp.yamatenki.utils.GeoLocation;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
@@ -120,7 +122,8 @@ public class MountainListAdapter extends BaseAdapter {
         Mountain mountain = (Mountain) getItem(position);
         viewHolder.name.setText(mountain.getTitle());
         final long mountainId = mountain.getId();
-        viewHolder.difficulty.setImageResource(difficultyArray.get(mountain.getCurrentMountainIndex()));
+        Status currentMountainStatus = DaoUtils.getCurrentMountainStatusForMountainId(mContext, mountainId);
+        viewHolder.difficulty.setImageResource(difficultyArray.get(currentMountainStatus == null ? 0 : currentMountainStatus.getStatus()));
         viewHolder.height.setText(String.format("%sm", String.valueOf(mountain.getHeight())));
 
         convertView.setOnClickListener(new View.OnClickListener() {

@@ -1,6 +1,7 @@
 package pulseanddecibels.jp.yamatenki.model;
 
-import java.sql.Timestamp;
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 /**
@@ -13,14 +14,14 @@ import java.util.List;
  * in a json file
  */
 public class ForecastArrayElement {
-    Timestamp dateTime;
+    DateTime dateTime;
     int mountainStatus;
     List<WindAndTemperatureElement> windAndTemperatures;
     double temperature;
     double precipitation;
     int totalCloudCover;
 
-    public ForecastArrayElement(Timestamp dateTime, int mountainStatus, List<WindAndTemperatureElement> windAndTemperatures, Integer temperature, float precipitation, int totalCloudCover) {
+    public ForecastArrayElement(DateTime dateTime, int mountainStatus, List<WindAndTemperatureElement> windAndTemperatures, Integer temperature, float precipitation, int totalCloudCover) {
         this.dateTime = dateTime;
         this.mountainStatus = mountainStatus;
         this.windAndTemperatures = windAndTemperatures;
@@ -29,7 +30,7 @@ public class ForecastArrayElement {
         this.totalCloudCover = totalCloudCover;
     }
 
-    public Timestamp getDateTime() {
+    public DateTime getDateTime() {
         return dateTime;
     }
 

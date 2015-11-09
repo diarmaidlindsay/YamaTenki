@@ -2,11 +2,12 @@ package pulseanddecibels.jp.yamatenki.model;
 
 import android.util.SparseArray;
 
-import java.sql.Timestamp;
+import org.joda.time.DateTime;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import pulseanddecibels.jp.yamatenki.utils.Utils;
+import pulseanddecibels.jp.yamatenki.utils.DateUtils;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/30.
@@ -50,7 +51,7 @@ public class MountainForecastJSON {
         return heights;
     }
 
-    public Timestamp getTimestamp() {
-        return Utils.getTimeStamp(timestamp);
+    public DateTime getTimestamp() {
+        return DateUtils.getDateTimeFromForecast(timestamp);
     }
 }

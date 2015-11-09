@@ -37,6 +37,7 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
     EditText weather;
     EditText rating;
     EditText memo;
+    Button buttonConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,7 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
         rating.setOnClickListener(getRatingOnClickListener());
         rating.setKeyListener(null);
         memo = (EditText) findViewById(R.id.memo_memo);
+        buttonConfirm = (Button) findViewById(R.id.button_confirm);
     }
 
     private View.OnClickListener getRatingOnClickListener() {
@@ -113,6 +115,18 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
                     }
                 }
 
+            }
+        };
+    }
+
+    private View.OnClickListener getConfirmButtonOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                MyMemo memo = new MyMemo(null, mountainId, );
+//                MyMemoDao dao = Database.getInstance(MemoDetailActivity.this).getMyMemoDao();
+//                dao.insert(memo);
+                finish();
             }
         };
     }

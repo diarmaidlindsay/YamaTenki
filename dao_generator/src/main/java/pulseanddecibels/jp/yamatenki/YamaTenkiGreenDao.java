@@ -20,6 +20,7 @@ public class YamaTenkiGreenDao {
         Entity prefecture = schema.addEntity("Prefecture");
         Entity myMountain = schema.addEntity("MyMountain");
         Entity myMemo = schema.addEntity("MyMemo");
+        Entity status = schema.addEntity("Status");
 
         /**
          Mountain
@@ -64,10 +65,10 @@ public class YamaTenkiGreenDao {
         forecast.addFloatProperty("precipitation");
         forecast.addIntProperty("temperatureHigh");
         forecast.addIntProperty("temperatureLow");
-        Property mountainIdF = forecast.addLongProperty("mountainId").notNull().getProperty(); //which mountain it belongs to
+        Property mountainIdForecast = forecast.addLongProperty("mountainId").notNull().getProperty(); //which mountain it belongs to
         //One mountain, Many forecasts
-        forecast.addToOne(mountain, mountainIdF);
-        mountain.addToMany(forecast, mountainIdF);
+        forecast.addToOne(mountain, mountainIdForecast);
+        mountain.addToMany(forecast, mountainIdForecast);
         forecast.setHasKeepSections(true);
 
         /**
@@ -86,8 +87,8 @@ public class YamaTenkiGreenDao {
          * My Mountain
          */
         myMountain.addIdProperty();
-        Property mountainIdMy = myMountain.addLongProperty("mountainId").notNull().getProperty();
-        myMountain.addToOne(mountain, mountainIdMy);
+        Property mountainIdMyMountain = myMountain.addLongProperty("mountainId").notNull().getProperty();
+        myMountain.addToOne(mountain, mountainIdMyMountain);
         myMountain.setHasKeepSections(true);
 
         /**
@@ -101,6 +102,14 @@ public class YamaTenkiGreenDao {
         myMemo.addStringProperty("weather");
         myMemo.addIntProperty("rating");
         myMemo.addStringProperty("memo");
+
+        /**
+         * Current Mountain Status
+         */
+        status.addIdProperty();
+        Property mountainIdStatus = status.addLongProperty("mountainId").notNull().getProperty();
+        status.addToOne(mountain, mountainIdStatus);
+        status.addIntProperty("status");
 
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
