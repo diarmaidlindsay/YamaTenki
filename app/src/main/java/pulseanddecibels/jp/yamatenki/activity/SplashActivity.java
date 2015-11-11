@@ -10,7 +10,10 @@ import android.os.Handler;
 import android.view.View;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.database.Database;
@@ -113,29 +116,56 @@ public class SplashActivity extends Activity {
         statusDao.deleteAll();
 
         try {
-            List<String> prefecturesList = Database.parsePrefectureCSV(this);
-            for (String prefecture : prefecturesList) {
-                prefectureDao.insert(new Prefecture(null, prefecture));
+            List<String> prefecturesListRaw = Database.parsePrefectureCSV(this);
+            List<Prefecture> prefectureList = new ArrayList<>();
+            for (String prefecture : prefecturesListRaw) {
+                prefectureList.add(new Prefecture(null, prefecture));
             }
+            prefectureDao.insertInTx(prefectureList);
 
-            List<String> areasList = Database.parseAreaCSV(this);
+            List<String> areasListRaw = Database.parseAreaCSV(this);
+            List<Area> areaList = new ArrayList<>();
             //start from zero to match the specifications (0 = 北海道, etc)
-            for (int i=0; i < areasList.size(); i++) {
-                areaDao.insert(new Area((long)i, areasList.get(i)));
+            for (int i=0; i < areasListRaw.size(); i++) {
+                areaList.add(new Area((long)i, areasListRaw.get(i)));
             }
+            areaDao.insertInTx(areaList);
+
+            List<String> yids = new ArrayList<>();
+
+            Map<String, Coordinate> coordinateMap = new HashMap<>();
+            Map<String, Status> statusMap = new HashMap<>();
+            List<Mountain> mountainList = new ArrayList<>();
 
             List<MountainArrayElement> jsonEntries = Database.parseMountainJSON(this);
             for(MountainArrayElement element : jsonEntries) {
-
+                String key = element.getYid();
+                yids.add(key);
                 Area area = areaDao.queryBuilder().where(AreaDao.Properties.Id.eq(element.getArea())).unique();
-                Prefecture prefecture = prefectureDao.queryBuilder().where(PrefectureDao.Properties.Name.eq(element.getPrefecture())).unique();
-                Long coordinateId = coordinateDao.insert(new Coordinate(null, (float) element.getCoordinate().getLatitude(), (float) element.getCoordinate().getLongitude()));
-                Long areaId = area != null ? area.getId() : 9L; //9L == Unknown 不明
-                Long prefectureId = prefecture != null ? prefecture.getId() : 47L; //47L == Unknown 不明
-                Long mountainId = mountainDao.insert(new Mountain(null, element.getYid(), element.getTitle(), element.getTitleExt(), element.getTitleEnglish(), element.getKana(),
-                                coordinateId, prefectureId, areaId, element.getHeight()));
-                statusDao.insert(new Status(null, mountainId, element.getCurrentMountainStatus()));
+                Prefecture prefecture = prefectureDao.queryBuilder().where(PrefectureDao.Properties.Name.eq(element.getPrefecture().trim())).unique();
+                Mountain mountain = new Mountain(null, element.getYid(), element.getTitle(), element.getTitleExt(), element.getTitleEnglish(), element.getKana(),
+                        prefecture.getId(), area.getId(), element.getHeight());
+                mountainList.add(mountain);
+                Coordinate coordinate = new Coordinate(null, (float) element.getCoordinate().getLatitude(), (float) element.getCoordinate().getLongitude());
+                coordinateMap.put(key, coordinate);
+                Status status = new Status(null, element.getCurrentMountainStatus());
+                statusMap.put(key, status);
             }
+
+            mountainDao.insertInTx(mountainList);
+
+            for(String yid : yids) {
+                Mountain mountain = mountainDao.queryBuilder().where(MountainDao.Properties.Yid.eq(yid)).unique();
+                Long mountainId = mountain.getId();
+                Status status = statusMap.get(yid);
+                status.setMountainId(mountainId);
+                Coordinate coordinate = coordinateMap.get(yid);
+                coordinate.setMountainId(mountainId);
+            }
+
+            statusDao.insertInTx(statusMap.values());
+            coordinateDao.insertInTx(coordinateMap.values());
+
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -39,12 +39,18 @@ public class DateUtils {
         DateTime dateTime = new DateTime();
         //don't cause IndexOutOfBoundsException
         switch (index) {
-            case 0 : break; //today
-            case 1 : break; //today
-            case 2 : //tomorrow
-            case 3 : dateTime = dateTime.plusDays(1); break; //tomorrow
-            case 4 : return JAPANESE_DAY_NAMES[4]; // rest of the week
-            default: return "";
+            case 0:
+                break; //today
+            case 1:
+                break; //today
+            case 2: //tomorrow
+            case 3:
+                dateTime = dateTime.plusDays(1);
+                break; //tomorrow
+            case 4:
+                return JAPANESE_DAY_NAMES[4]; // rest of the week
+            default:
+                return "";
         }
         String format = "%s %d/%d （%s）%s";
         String dayString = JAPANESE_DAY_NAMES[index];
@@ -53,27 +59,42 @@ public class DateUtils {
         int dayOfWeek = dateTime.getDayOfWeek();
         int timeOfDay;
         switch (index) {
-            case 0 : //AM
-            case 2 : //AM
-                timeOfDay = 0; break;
-            default : timeOfDay = 1; //PM
+            case 0: //AM
+            case 2: //AM
+                timeOfDay = 0;
+                break;
+            default:
+                timeOfDay = 1; //PM
         }
         return String.format(format, dayString, month, day, JAPANESE_DAY_OF_WEEK.get(dayOfWeek), JAPANESE_TIME_OF_DAY[timeOfDay]);
     }
 
     public static DateTime getDateTimeFromForecast(String timeStampString) {
+        //"timestamp" : "2015-09-181T00:00:00.+09:00"
+        return parseDateTime(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ", Locale.JAPAN), timeStampString);
+    }
+
+    public static DateTime getDateTimeFromMemo(String dateTimeString) {
+//        "2015年11月09日08:00"
+        return parseDateTime(new SimpleDateFormat("yyyy年MM月dd日HH:mm", Locale.JAPAN), dateTimeString);
+    }
+
+    public static String getMemoDateTimeFromMillis(long millis) {
+        DateTime dateTime = new DateTime(millis);
+        return String.format("%d/%s/%s", dateTime.getYear(), Utils.num2DigitString(dateTime.getMonthOfYear()), Utils.num2DigitString(dateTime.getDayOfMonth()));
+    }
+
+    private static DateTime parseDateTime(SimpleDateFormat dateFormat, String dateTimeString) {
         //http://developer.android.com/reference/java/text/SimpleDateFormat.html
         DateTime dateTime = null;
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ", Locale.JAPAN);
-            Date date = dateFormat.parse(timeStampString);
-            dateTime = new DateTime(date.getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (dateTimeString != null && dateTimeString.length() > 1) {
+            try {
+                Date date = dateFormat.parse(dateTimeString);
+                dateTime = new DateTime(date.getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
-
-        //"timestamp" : "2015-09-181T00:00:00.+09:00"
-
         return dateTime;
     }
 

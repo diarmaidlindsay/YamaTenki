@@ -51,4 +51,9 @@
     <string name="text_memo_ten_points">/10点</string>
     <string name="text_memo_hint">山の特徴、感想、出来事など。</string>
     <string name="button_confirm">決定</string>
+    <string name="error_memo_dates_reversed">開始時間より前です。</string>
+    <string name="text_memo_list_header">登った山メモ</string>
+    <string name="text_memo_table_header_name">名前</string>
+    <string name="text_memo_table_header_rating">評価</string>
+    <string name="text_memo_table_header_date">日時</string>
 </resources>

@@ -23,7 +23,6 @@ public class Mountain {
     private String titleExt;
     private String titleEnglish;
     private String kana;
-    private long coordinateId;
     private long prefectureId;
     private long areaId;
     private Integer height;
@@ -40,9 +39,6 @@ public class Mountain {
     private Prefecture prefecture;
     private Long prefecture__resolvedKey;
 
-    private Coordinate coordinate;
-    private Long coordinate__resolvedKey;
-
     private List<Forecast> forecastList;
 
     // KEEP FIELDS - put your custom fields here
@@ -55,14 +51,13 @@ public class Mountain {
         this.id = id;
     }
 
-    public Mountain(Long id, String yid, String title, String titleExt, String titleEnglish, String kana, long coordinateId, long prefectureId, long areaId, Integer height) {
+    public Mountain(Long id, String yid, String title, String titleExt, String titleEnglish, String kana, long prefectureId, long areaId, Integer height) {
         this.id = id;
         this.yid = yid;
         this.title = title;
         this.titleExt = titleExt;
         this.titleEnglish = titleEnglish;
         this.kana = kana;
-        this.coordinateId = coordinateId;
         this.prefectureId = prefectureId;
         this.areaId = areaId;
         this.height = height;
@@ -120,14 +115,6 @@ public class Mountain {
 
     public void setKana(String kana) {
         this.kana = kana;
-    }
-
-    public long getCoordinateId() {
-        return coordinateId;
-    }
-
-    public void setCoordinateId(long coordinateId) {
-        this.coordinateId = coordinateId;
     }
 
     public long getPrefectureId() {
@@ -210,34 +197,6 @@ public class Mountain {
         }
     }
 
-    /** To-one relationship, resolved on first access. */
-    public Coordinate getCoordinate() {
-        long __key = this.coordinateId;
-        if (coordinate__resolvedKey == null || !coordinate__resolvedKey.equals(__key)) {
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            CoordinateDao targetDao = daoSession.getCoordinateDao();
-            Coordinate coordinateNew = targetDao.load(__key);
-            synchronized (this) {
-                coordinate = coordinateNew;
-            	coordinate__resolvedKey = __key;
-            }
-        }
-        return coordinate;
-    }
-
-    public void setCoordinate(Coordinate coordinate) {
-        if (coordinate == null) {
-            throw new DaoException("To-one property 'coordinateId' has not-null constraint; cannot set to-one to null");
-        }
-        synchronized (this) {
-            this.coordinate = coordinate;
-            coordinateId = coordinate.getId();
-            coordinate__resolvedKey = coordinateId;
-        }
-    }
-
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
     public List<Forecast> getForecastList() {
         if (forecastList == null) {
@@ -289,7 +248,8 @@ public class Mountain {
     /**
      * Forecasts are given in 3 hour blocks, so given the time now
      * find the matching 3 hour block and return the entry from the database
-     * which matches the milliseconds range.
+     * which matches t
+     * he milliseconds range.
      */
     @Nullable
     public Forecast getLatestForecast() {

@@ -18,18 +18,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import pulseanddecibels.jp.yamatenki.R;
+import pulseanddecibels.jp.yamatenki.adapter.MemoListAdapter;
 import pulseanddecibels.jp.yamatenki.adapter.MountainListAdapter;
+import pulseanddecibels.jp.yamatenki.enums.MemoListColumn;
 import pulseanddecibels.jp.yamatenki.enums.MountainListColumn;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/28.
  * Copyright Pulse and Decibels 2015
- *
+ * <p/>
  * Android can only have 1 searchable Activity.
  * So all search functionality is contained in this Activity.
  * This includes...
- *
+ * <p/>
  * Search by Name
  * Search by Height
  * Search by Area
@@ -40,14 +42,14 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
 public class MountainListActivity extends Activity {
     TextView header;
     ListView mountainList;
-    TextView tableHeaderName;
-    TextView tableHeaderDifficulty;
-    TextView tableHeaderHeight;
+    ListView memoList;
     SearchView minHeightSearchView;
     SearchView maxHeightSearchView;
     SearchView myMountainSearchView;
+    SearchView memoSearchView;
 
     MountainListAdapter mountainListAdapter;
+    MemoListAdapter memoListAdapter;
 
     private final int MIN_HEIGHT = 0;
     private final int MAX_HEIGHT = 3776; //Fuji-san's height
@@ -69,81 +71,107 @@ public class MountainListActivity extends Activity {
 
         mountainListAdapter = new MountainListAdapter(this);
 
-        //we came here from AreaSearchActivity (Area was chosen)
-        if (areaId != 0) {
-            setContentView(R.layout.activity_search_area);
+        //memo searchView and headers are different than the other (mountain) searchable options
+        //we came here from MainActivity (Climbed Mountain Memo was chosen)
+        if (searchType != null && searchType.equals("myMemo")) {
+            memoListAdapter = new MemoListAdapter(this);
+            setContentView(R.layout.activity_memo_list);
             header = (TextView) findViewById(R.id.text_search_header);
-            String areaTemplate = "%sの山";
-            String area = getAreaForButtonId(areaId);
-            header.setText(String.format(areaTemplate, area));
-            mountainListAdapter.searchByArea(area);
+            header.setText(getResources().getString(R.string.text_memo_list_header));
+            memoSearchView = (SearchView) findViewById(R.id.search_memo_searchView);
+            setupSearchView(memoSearchView, false);
+            memoSearchView.setQueryHint(getResources().getString(R.string.text_search_textbox_hint));
+            memoSearchView.setOnQueryTextListener(getMemoTextListener());
+            memoListAdapter.search("");
 
-        } else if (latitude != 0 && longitude != 0) {
-            //we came here from Main Activity (Closest 20 Mountains)
-            setContentView(R.layout.activity_search_area);
-            header = (TextView) findViewById(R.id.text_search_header);
-            header.setText(getResources().getString(R.string.text_closest_mountain_header));
-            mountainListAdapter.searchByClosestMountains(latitude, longitude);
-        } else if (searchType != null && searchType.equals("height")) {
-            //we came here from Main Activity (Search by Height)
-            setContentView(R.layout.activity_search_height);
-            header = (TextView) findViewById(R.id.text_search_header);
-            header.setText(getResources().getString(R.string.text_search_height_header));
-            minHeightSearchView = (SearchView) findViewById(R.id.min_height_searchview);
-            maxHeightSearchView = (SearchView) findViewById(R.id.max_height_searchview);
+            LinearLayout memoListContainer = (LinearLayout) findViewById(R.id.memo_container);
+            memoList = (ListView) memoListContainer.findViewById(R.id.list_memos);
+            memoList.setAdapter(memoListAdapter);
+            TextView tableHeaderName = (TextView) memoListContainer.findViewById(R.id.table_header_name);
+            tableHeaderName.setOnClickListener(getMemoNameHeaderOnClickListener());
+            TextView tableHeaderRating = (TextView) memoListContainer.findViewById(R.id.table_header_rating);
+            tableHeaderRating.setOnClickListener(getRatingHeaderOnClickListener());
+            TextView tableHeaderDate = (TextView) memoListContainer.findViewById(R.id.table_header_date);
+            tableHeaderDate.setOnClickListener(getDateHeaderOnClickListener());
 
-            setupSearchView(minHeightSearchView, true);
-            setupSearchView(maxHeightSearchView, true);
-            minHeightSearchView.setInputType(InputType.TYPE_CLASS_NUMBER);
-            maxHeightSearchView.setInputType(InputType.TYPE_CLASS_NUMBER);
-            minHeightSearchView.setOnQueryTextListener(getHeightTextListener());
-            maxHeightSearchView.setOnQueryTextListener(getHeightTextListener());
-            minHeightSearchView.setQuery("" + MIN_HEIGHT, false); //set default values
-            maxHeightSearchView.setQuery("" + MAX_HEIGHT, false); //set default values
-            minHeightSearchView.requestFocus();
-        } else if (searchType != null && searchType.equals("name")) {
-            //we came here from Main Activity (Search by Name)
-            setContentView(R.layout.activity_search_name);
-            header = (TextView) findViewById(R.id.text_search_header);
-            header.setText(getResources().getString(R.string.text_search_name_header));
-            SearchView nameSearchView = (SearchView) findViewById(R.id.search_name_searchView);
-            setupSearchView(nameSearchView, false);
-            nameSearchView.setQueryHint(getResources().getString(R.string.text_search_textbox_hint));
-            nameSearchView.setOnQueryTextListener(getNameTextListener(nameSearchView));
-            mountainListAdapter.searchByName(""); //on launch display all
-        } else if (searchType != null && searchType.equals("myMountain")) {
-            //we came here from Main Activity (My Mountain List)
-            setContentView(R.layout.activity_my_mountain_list);
-            header = (TextView) findViewById(R.id.text_search_header);
-            header.setText(R.string.text_my_mountain_list_header);
-            myMountainSearchView = (SearchView) findViewById(R.id.search_my_mountain_searchView);
-            setupSearchView(myMountainSearchView, false);
-            myMountainSearchView.setQueryHint(getResources().getString(R.string.text_search_textbox_hint));
-            myMountainSearchView.setOnQueryTextListener(getMyMountainTextListener());
-            mountainListAdapter.searchByMyMountainName("");
+        } else {
+            //we came here from AreaSearchActivity (Area was chosen)
+            if (areaId != 0) {
+                setContentView(R.layout.activity_search_area);
+                header = (TextView) findViewById(R.id.text_search_header);
+                String areaTemplate = "%sの山";
+                String area = getAreaForButtonId(areaId);
+                header.setText(String.format(areaTemplate, area));
+                mountainListAdapter.searchByArea(area);
+
+            } else if (latitude != 0 && longitude != 0) {
+                //we came here from Main Activity (Closest 20 Mountains)
+                setContentView(R.layout.activity_search_area);
+                header = (TextView) findViewById(R.id.text_search_header);
+                header.setText(getResources().getString(R.string.text_closest_mountain_header));
+                mountainListAdapter.searchByClosestMountains(latitude, longitude);
+            } else if (searchType != null && searchType.equals("height")) {
+                //we came here from Main Activity (Search by Height)
+                setContentView(R.layout.activity_search_height);
+                header = (TextView) findViewById(R.id.text_search_header);
+                header.setText(getResources().getString(R.string.text_search_height_header));
+                minHeightSearchView = (SearchView) findViewById(R.id.min_height_searchview);
+                maxHeightSearchView = (SearchView) findViewById(R.id.max_height_searchview);
+
+                setupSearchView(minHeightSearchView, true);
+                setupSearchView(maxHeightSearchView, true);
+                minHeightSearchView.setInputType(InputType.TYPE_CLASS_NUMBER);
+                maxHeightSearchView.setInputType(InputType.TYPE_CLASS_NUMBER);
+                minHeightSearchView.setOnQueryTextListener(getHeightTextListener());
+                maxHeightSearchView.setOnQueryTextListener(getHeightTextListener());
+                minHeightSearchView.setQuery("" + MIN_HEIGHT, false); //set default values
+                maxHeightSearchView.setQuery("" + MAX_HEIGHT, false); //set default values
+                minHeightSearchView.requestFocus();
+            } else if (searchType != null && searchType.equals("name")) {
+                //we came here from Main Activity (Search by Name)
+                setContentView(R.layout.activity_search_name);
+                header = (TextView) findViewById(R.id.text_search_header);
+                header.setText(getResources().getString(R.string.text_search_name_header));
+                SearchView nameSearchView = (SearchView) findViewById(R.id.search_name_searchView);
+                setupSearchView(nameSearchView, false);
+                nameSearchView.setQueryHint(getResources().getString(R.string.text_search_textbox_hint));
+                nameSearchView.setOnQueryTextListener(getNameTextListener(nameSearchView));
+                mountainListAdapter.searchByName(""); //on launch display all
+            } else if (searchType != null && searchType.equals("myMountain")) {
+                //we came here from Main Activity (My Mountain List)
+                setContentView(R.layout.activity_my_mountain_list);
+                header = (TextView) findViewById(R.id.text_search_header);
+                header.setText(getResources().getString(R.string.text_my_mountain_list_header));
+                myMountainSearchView = (SearchView) findViewById(R.id.search_my_mountain_searchView);
+                setupSearchView(myMountainSearchView, false);
+                myMountainSearchView.setQueryHint(getResources().getString(R.string.text_search_textbox_hint));
+                myMountainSearchView.setOnQueryTextListener(getMyMountainTextListener());
+                mountainListAdapter.searchByMyMountainName("");
+            }
+
+            LinearLayout mountainListContainer = (LinearLayout) findViewById(R.id.mountain_list_container);
+            mountainList = (ListView) mountainListContainer.findViewById(R.id.list_mountains);
+            mountainList.setAdapter(mountainListAdapter);
+            TextView tableHeaderName = (TextView) mountainListContainer.findViewById(R.id.table_header_name);
+            tableHeaderName.setOnClickListener(getNameHeaderOnClickListener());
+            TextView tableHeaderDifficulty = (TextView) mountainListContainer.findViewById(R.id.table_header_difficulty);
+            tableHeaderDifficulty.setOnClickListener(getDifficultyHeaderOnClickListener());
+            TextView tableHeaderHeight = (TextView) mountainListContainer.findViewById(R.id.table_header_height);
+            tableHeaderHeight.setOnClickListener(getHeightHeaderOnClickListener());
         }
 
-        LinearLayout mountainListContainer = (LinearLayout) findViewById(R.id.mountain_list_container);
-        mountainList = (ListView) mountainListContainer.findViewById(R.id.list_mountains);
-        mountainList.setAdapter(mountainListAdapter);
-        tableHeaderName = (TextView) mountainListContainer.findViewById(R.id.table_header_name);
-        tableHeaderName.setOnClickListener(getNameHeaderOnClickListener());
-        tableHeaderDifficulty = (TextView) mountainListContainer.findViewById(R.id.table_header_difficulty);
-        tableHeaderDifficulty.setOnClickListener(getDifficultyHeaderOnClickListener());
-        tableHeaderHeight = (TextView) mountainListContainer.findViewById(R.id.table_header_height);
-        tableHeaderHeight.setOnClickListener(getHeightHeaderOnClickListener());
         header.setTypeface(Utils.getHannariTypeFace(this));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK) {
-            if(requestCode == 100) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 100) {
                 //a mountain was removed from my mountain list so we should resubmit the search
-                if(myMountainSearchView != null) {
+                if (myMountainSearchView != null) {
                     long mountainId = data.getLongExtra("changedMountain", 0L);
-                    if(mountainId != 0L) {
+                    if (mountainId != 0L) {
                         mountainListAdapter.searchByMyMountainName(myMountainSearchView.getQuery().toString());
                     }
                 }
@@ -315,6 +343,41 @@ public class MountainListActivity extends Activity {
         };
     }
 
+    private SearchView.OnQueryTextListener getMemoTextListener() {
+        return new SearchView.OnQueryTextListener() {
+            private String text;
+            Runnable mFilterTask = new Runnable() {
+                @Override
+                public void run() {
+                    memoListAdapter.search(text);
+                }
+            };
+            private Handler mHandler = new Handler();
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                text = query;
+                mHandler.removeCallbacks(mFilterTask);
+                mHandler.postDelayed(mFilterTask, 0);
+                hideKeyboard(memoSearchView);
+                memoList.requestFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //if text cleared display all again
+                if (newText.length() == 0) {
+                    text = newText;
+                    mHandler.removeCallbacks(mFilterTask);
+                    mHandler.postDelayed(mFilterTask, 0);
+                    memoList.requestFocus();
+                }
+                return true;
+            }
+        };
+    }
+
     private View.OnClickListener getSearchViewOnClickListener(final SearchView searchView) {
         return new View.OnClickListener() {
             @Override
@@ -347,6 +410,33 @@ public class MountainListActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mountainListAdapter.sort(MountainListColumn.HEIGHT);
+            }
+        };
+    }
+
+    private View.OnClickListener getMemoNameHeaderOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                memoListAdapter.sort(MemoListColumn.NAME);
+            }
+        };
+    }
+
+    private View.OnClickListener getRatingHeaderOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                memoListAdapter.sort(MemoListColumn.RATING);
+            }
+        };
+    }
+
+    private View.OnClickListener getDateHeaderOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                memoListAdapter.sort(MemoListColumn.DATE);
             }
         };
     }

@@ -110,6 +110,15 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             }
         });
 
+        myMemoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MountainListActivity.class);
+                intent.putExtra("searchType", "myMemo"); //indicate we want my memo
+                startActivity(intent);
+            }
+        });
+
         buildGoogleApiClient();
     }
 

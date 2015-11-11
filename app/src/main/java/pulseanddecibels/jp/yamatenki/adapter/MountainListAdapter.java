@@ -88,16 +88,6 @@ public class MountainListAdapter extends BaseAdapter {
         return position;
     }
 
-    /**
-     * Temporary until real difficulty data is available
-     * Return random difficulty between 1 and 3
-     */
-    private int getRandomDifficulty() {
-        final int MIN = 1;
-        final int MAX = 3;
-        return Utils.getRandomInRange(MIN, MAX);
-    }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolderItem viewHolder;
@@ -140,12 +130,7 @@ public class MountainListAdapter extends BaseAdapter {
 
     private Coordinate getMountainCoordinants(Mountain mountain) {
         CoordinateDao coordinateDao = Database.getInstance(mContext).getCoordinateDao();
-        List coordinates =
-                coordinateDao.queryBuilder().where(CoordinateDao.Properties.Id.eq(mountain.getCoordinateId())).list();
-        if (coordinates.size() == 1) {
-            return (Coordinate) coordinates.get(0);
-        }
-        return null;
+        return coordinateDao.queryBuilder().where(CoordinateDao.Properties.MountainId.eq(mountain.getId())).unique();
     }
 
     private double getDistanceFromHere(GeoLocation there) {
@@ -230,7 +215,6 @@ public class MountainListAdapter extends BaseAdapter {
 
     public void searchByClosestMountains(double latitude, double longitude) {
         CoordinateDao coordinateDao = Database.getInstance(mContext).getCoordinateDao();
-        MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();
         List<Coordinate> nearbyMountainCoordinates = new ArrayList<>();
 
         for (int offset = 1; offset < 7; offset++) {
@@ -254,12 +238,20 @@ public class MountainListAdapter extends BaseAdapter {
             Coordinate[] sortedCoordinates = sortByDistanceFromHere(nearbyMountainCoordinates, here);
             List<Long> coordinateIds = new ArrayList<>();
 
-            for (int i = 0; i < 20; i++) {
+            int coordinantsAmount = sortedCoordinates.length > 20 ? 20 : sortedCoordinates.length;
+            for (int i = 0; i < coordinantsAmount; i++) {
                 coordinateIds.add(sortedCoordinates[i].getId());
             }
 
-            mountainList =
-                    mountainDao.queryBuilder().where(MountainDao.Properties.CoordinateId.in(coordinateIds)).list();
+            List<Coordinate> coordinateList =
+                coordinateDao.queryBuilder().where(CoordinateDao.Properties.Id.in(coordinateIds)).list();
+
+            List<Mountain> matchingMountains = new ArrayList<>();
+            for(Coordinate coordinate : coordinateList) {
+                matchingMountains.add(coordinate.getMountain());
+            }
+
+            mountainList = matchingMountains;
             notifyDataSetChanged();
         }
     }

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
@@ -17,6 +18,9 @@ import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.database.Database;
 import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
+import pulseanddecibels.jp.yamatenki.database.dao.MyMemo;
+import pulseanddecibels.jp.yamatenki.database.dao.MyMemoDao;
+import pulseanddecibels.jp.yamatenki.utils.DateUtils;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
@@ -25,7 +29,8 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  */
 public class MemoDetailActivity extends FragmentActivity implements CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener {
 
-    long mountainId;
+    Long mountainId;
+    Long memoId;
     TextView mountainSubtitle;
     EditText dateFrom;
     EditText dateUntil;
@@ -45,6 +50,15 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
         setContentView(R.layout.activity_memo_edit);
         Bundle arguments = getIntent().getExtras();
         mountainId = arguments.getLong("mountainId");
+        memoId = arguments.getLong("memoId");
+
+        //editing an existing memo
+        if(memoId != 0L) {
+            MyMemoDao memoDao = Database.getInstance(this).getMyMemoDao();
+            MyMemo myMemo = memoDao.queryBuilder().where(MyMemoDao.Properties.Id.eq(memoId)).unique();
+            mountainId = myMemo.getMountainId();
+            //TODO : branch off from here... view memo mode, edit memo mode, new memo mode
+        }
 
         MountainDao mountainDao = Database.getInstance(this).getMountainDao();
         Mountain mountain =
@@ -91,6 +105,7 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
         rating.setKeyListener(null);
         memo = (EditText) findViewById(R.id.memo_memo);
         buttonConfirm = (Button) findViewById(R.id.button_confirm);
+        buttonConfirm.setOnClickListener(getConfirmButtonOnClickListener());
     }
 
     private View.OnClickListener getRatingOnClickListener() {
@@ -123,10 +138,22 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                MyMemo memo = new MyMemo(null, mountainId, );
-//                MyMemoDao dao = Database.getInstance(MemoDetailActivity.this).getMyMemoDao();
-//                dao.insert(memo);
-                finish();
+                DateTime from = DateUtils.getDateTimeFromMemo(dateFrom.getText().toString());
+                DateTime to = DateUtils.getDateTimeFromMemo(dateUntil.getText().toString());
+                String weatherText = weather.getText().toString();
+                Integer ratingText = rating.getText().toString().equals("") ? null : Integer.parseInt(rating.getText().toString());
+                String memoText = memo.getText().toString();
+
+                if(from != null && to != null && to.isBefore(from))
+                {
+                    //tell the user that from must be before to
+                    Toast.makeText(MemoDetailActivity.this, R.string.error_memo_dates_reversed, Toast.LENGTH_SHORT).show();
+                } else {
+                    MyMemo memo = new MyMemo(null, mountainId, from == null ? null : from.getMillis(), to == null ? null : to.getMillis(), weatherText, ratingText, memoText);
+                    MyMemoDao dao = Database.getInstance(MemoDetailActivity.this).getMyMemoDao();
+                    dao.insert(memo);
+                    finish();
+                }
             }
         };
     }

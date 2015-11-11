@@ -31,14 +31,12 @@ public class YamaTenkiGreenDao {
         mountain.addStringProperty("titleExt");
         mountain.addStringProperty("titleEnglish");
         mountain.addStringProperty("kana");
-        Property coordinateId = mountain.addLongProperty("coordinateId").notNull().getProperty();
         Property prefectureId = mountain.addLongProperty("prefectureId").notNull().getProperty();
         Property areaId = mountain.addLongProperty("areaId").notNull().getProperty();
         mountain.addIntProperty("height");
         //one mountain to one area
         mountain.addToOne(area, areaId);
         mountain.addToOne(prefecture, prefectureId);
-        mountain.addToOne(coordinate, coordinateId);
         mountain.setHasKeepSections(true);
 
         /**
@@ -46,8 +44,11 @@ public class YamaTenkiGreenDao {
          **/
         coordinate.addIdProperty();
         //one mountain to one coordinate
+        Property mountainIdCoordinate = coordinate.addLongProperty("mountainId").notNull().getProperty();
+        coordinate.addToOne(mountain, mountainIdCoordinate);
         coordinate.addFloatProperty("latitude");
         coordinate.addFloatProperty("longitude");
+        coordinate.setHasKeepSections(true);
 
         /**
          Forecast
@@ -110,6 +111,7 @@ public class YamaTenkiGreenDao {
         Property mountainIdStatus = status.addLongProperty("mountainId").notNull().getProperty();
         status.addToOne(mountain, mountainIdStatus);
         status.addIntProperty("status");
+        status.setHasKeepSections(true);
 
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
