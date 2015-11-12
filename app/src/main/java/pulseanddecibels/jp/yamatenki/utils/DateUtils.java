@@ -79,9 +79,34 @@ public class DateUtils {
         return parseDateTime(new SimpleDateFormat("yyyy年MM月dd日HH:mm", Locale.JAPAN), dateTimeString);
     }
 
-    public static String getMemoDateTimeFromMillis(long millis) {
+    public static String getMemoDateFromMillis(long millis) {
         DateTime dateTime = new DateTime(millis);
         return String.format("%d/%s/%s", dateTime.getYear(), Utils.num2DigitString(dateTime.getMonthOfYear()), Utils.num2DigitString(dateTime.getDayOfMonth()));
+    }
+
+    public static String getMemoDateTimeFromMillis(long millis) {
+        DateTime dateTime = new DateTime(millis);
+        return String.format("%d年%s月%s日%s:%s",
+                dateTime.getYear(), Utils.num2DigitString(dateTime.getMonthOfYear()), Utils.num2DigitString(dateTime.getDayOfMonth()),
+                Utils.num2DigitString(dateTime.getHourOfDay()), Utils.num2DigitString(dateTime.getMinuteOfHour()));
+    }
+
+    public static String getActivityTimeFromMillis(long millis) {
+        int minutes = (int) ((millis / (1000*60)) % 60);
+        int hours   = (int) ((millis / (1000*60*60)) % 24);
+        int days = (int) (millis / (1000*60*60*24));
+
+        String activityTime = "";
+
+        if(days > 0) {
+            activityTime += String.format("%d日", days);
+        }
+        if(hours > 0) {
+            activityTime += String.format("%d時間",hours);
+        }
+        activityTime += String.format("%d分", minutes);
+
+        return activityTime;
     }
 
     private static DateTime parseDateTime(SimpleDateFormat dateFormat, String dateTimeString) {

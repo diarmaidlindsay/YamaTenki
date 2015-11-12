@@ -45,7 +45,7 @@ public class AreaSearchActivity extends Activity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MountainListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SearchableActivity.class);
                 intent.putExtra("areaButtonId", buttonId);
                 startActivity(intent);
             }

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/yama_background"
+<LinearLayout
+    style="@style/YamaTenkiActivity"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:focusable="true"
     android:focusableInTouchMode="true">
 
@@ -70,9 +68,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:orientation="vertical">
 
         <include layout="@layout/fragment_mountain_list"/>
 

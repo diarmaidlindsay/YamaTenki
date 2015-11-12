@@ -85,15 +85,15 @@ public class MemoListAdapter extends BaseAdapter {
         Mountain mountain = memo.getMountain();
 
         viewHolder.name.setText(mountain.getTitle());
-        viewHolder.rating.setText(String.format("%d", memo.getRating()));
+        viewHolder.rating.setText(memo.getRating() == null ? "" : String.format("%d", memo.getRating()));
         Long dateTime = memo.getDateTimeFrom();
-        viewHolder.date.setText(dateTime == null ? "" : DateUtils.getMemoDateTimeFromMillis(dateTime));
+        viewHolder.date.setText(dateTime == null ? "" : DateUtils.getMemoDateFromMillis(dateTime));
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MemoDetailActivity.class);
                 intent.putExtra("memoId", memo.getId());
-                ((Activity)mContext).startActivityForResult(intent, 100);
+                ((Activity)mContext).startActivityForResult(intent, 200);
             }
         });
 
@@ -154,16 +154,16 @@ public class MemoListAdapter extends BaseAdapter {
                 Integer lhsRating = lhs.getRating();
                 Integer rhsRating = rhs.getRating();
 
-                if(lhsRating != null && rhsRating != null) {
-                    if(lhsRating < rhsRating) {
-                        return -1;
-                    } else if(lhsRating > rhsRating) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
+                if(lhsRating == null) lhsRating = 0;
+                if(rhsRating == null) rhsRating = 0;
+
+                if(lhsRating < rhsRating) {
+                    return -1;
+                } else if(lhsRating > rhsRating) {
+                    return 1;
+                } else {
+                    return 0;
                 }
-                return 0;
             }
         };
     }
@@ -175,16 +175,16 @@ public class MemoListAdapter extends BaseAdapter {
                 Long lhsDate = lhs.getDateTimeFrom();
                 Long rhsDate = rhs.getDateTimeFrom();
 
-                if(lhsDate != null && rhsDate != null) {
-                    if(lhsDate < rhsDate) {
-                        return -1;
-                    } else if(lhsDate > rhsDate) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
+                if(lhsDate == null) lhsDate = 0L;
+                if(rhsDate == null) rhsDate = 0L;
+
+                if(lhsDate < rhsDate) {
+                    return -1;
+                } else if(lhsDate > rhsDate) {
+                    return 1;
+                } else {
+                    return 0;
                 }
-                return 0;
             }
         };
     }

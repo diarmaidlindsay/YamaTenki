@@ -157,7 +157,7 @@ public class MountainForecastActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MemoDetailActivity.class);
-                intent.putExtra("mountainId", mountainId);
+                intent.putExtra("mountainId", mountainId); //which mountain to make a memo for
                 startActivity(intent);
             }
         };

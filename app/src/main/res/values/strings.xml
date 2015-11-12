@@ -56,4 +56,5 @@
     <string name="text_memo_table_header_name">名前</string>
     <string name="text_memo_table_header_rating">評価</string>
     <string name="text_memo_table_header_date">日時</string>
+    <string name="text_memo_activity_time">活動時間</string>
 </resources>

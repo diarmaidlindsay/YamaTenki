@@ -15,7 +15,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.dao.query.QueryBuilder;
 import pulseanddecibels.jp.yamatenki.R;
@@ -25,14 +27,13 @@ import pulseanddecibels.jp.yamatenki.database.dao.Area;
 import pulseanddecibels.jp.yamatenki.database.dao.AreaDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Coordinate;
 import pulseanddecibels.jp.yamatenki.database.dao.CoordinateDao;
-import pulseanddecibels.jp.yamatenki.database.dao.Forecast;
 import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
 import pulseanddecibels.jp.yamatenki.database.dao.MyMountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MyMountainDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Status;
+import pulseanddecibels.jp.yamatenki.database.dao.StatusDao;
 import pulseanddecibels.jp.yamatenki.enums.MountainListColumn;
-import pulseanddecibels.jp.yamatenki.utils.DaoUtils;
 import pulseanddecibels.jp.yamatenki.utils.GeoLocation;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
@@ -57,12 +58,18 @@ public class MountainListAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater layoutInflater;
     private GeoLocation here;
+    private Map<Long, Integer> currentMountainStatus = new HashMap<>();
     String searchString; //in case we have to resubmit the query after update in child activity
 
     public MountainListAdapter(Context context) {
         this.mContext = context;
         layoutInflater = LayoutInflater.from(context);
         initialiseDataSets();
+        StatusDao statusDao = Database.getInstance(mContext).getStatusDao();
+        List<Status> allStatus = statusDao.loadAll();
+        for(Status status : allStatus) {
+            currentMountainStatus.put(status.getMountainId(), status.getStatus());
+        }
     }
 
     private void initialiseDataSets() {
@@ -112,8 +119,7 @@ public class MountainListAdapter extends BaseAdapter {
         Mountain mountain = (Mountain) getItem(position);
         viewHolder.name.setText(mountain.getTitle());
         final long mountainId = mountain.getId();
-        Status currentMountainStatus = DaoUtils.getCurrentMountainStatusForMountainId(mContext, mountainId);
-        viewHolder.difficulty.setImageResource(difficultyArray.get(currentMountainStatus == null ? 0 : currentMountainStatus.getStatus()));
+        viewHolder.difficulty.setImageResource(difficultyArray.get(currentMountainStatus.get(mountainId)));
         viewHolder.height.setText(String.format("%sm", String.valueOf(mountain.getHeight())));
 
         convertView.setOnClickListener(new View.OnClickListener() {
@@ -315,21 +321,19 @@ public class MountainListAdapter extends BaseAdapter {
         return new Comparator<Mountain>() {
             @Override
             public int compare(Mountain lhs, Mountain rhs) {
-                Forecast leftForecast = lhs.getLatestForecast();
-                Forecast rightForecast = rhs.getLatestForecast();
+                Integer leftStatus = currentMountainStatus.get(lhs.getId());
+                Integer rightStatus = currentMountainStatus.get(rhs.getId());
 
-                if (leftForecast != null && rightForecast != null) {
-                    int lhsDifficulty = leftForecast.getDifficultyLevel().getIndex();
-                    int rhsDifficulty = rightForecast.getDifficultyLevel().getIndex();
-                    if (lhsDifficulty < rhsDifficulty) {
+                if(leftStatus != null && rightStatus != null) {
+                    if(leftStatus < rightStatus) {
                         return -1;
-                    } else if (lhsDifficulty > rhsDifficulty) {
+                    } else if (leftStatus > rightStatus) {
                         return 1;
                     } else {
                         return 0;
                     }
                 }
-                return 0; // if latestforest == null
+                return 0;
             }
         };
     }
@@ -344,6 +348,7 @@ public class MountainListAdapter extends BaseAdapter {
                     return 1;
                 } else {
                     return 0;
+
                 }
             }
         };

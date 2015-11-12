@@ -39,7 +39,7 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  * My Mountain List
  * My Mountain Memos
  */
-public class MountainListActivity extends Activity {
+public class SearchableActivity extends Activity {
     TextView header;
     ListView mountainList;
     ListView memoList;
@@ -175,6 +175,14 @@ public class MountainListActivity extends Activity {
                         mountainListAdapter.searchByMyMountainName(myMountainSearchView.getQuery().toString());
                     }
                 }
+            } else if (requestCode == 200) {
+                //a memo was changed, so we should resubmit the search
+                if(memoSearchView != null) {
+                    long memoId = data.getLongExtra("changedMemo", 0L);
+                    if(memoId != 0L) {
+                        memoListAdapter.search(memoSearchView.getQuery().toString());
+                    }
+                }
             }
         }
     }
@@ -243,7 +251,7 @@ public class MountainListActivity extends Activity {
                     }
 
                     if (minHeight > maxHeight) {
-                        Toast.makeText(MountainListActivity.this, "The minimum should be less than the maximum", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchableActivity.this, "The minimum should be less than the maximum", Toast.LENGTH_SHORT).show();
                         return;
                     }
 

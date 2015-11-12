@@ -269,6 +269,13 @@ public class Mountain {
         }
         return null;
     }
+
+    @Nullable
+    public Integer getCurrentStatus() {
+        StatusDao statusDao = daoSession.getStatusDao();
+        Status status = statusDao.queryBuilder().where(StatusDao.Properties.MountainId.eq(getId())).unique();
+        return status.getStatus();
+    }
     // KEEP METHODS END
 
 }

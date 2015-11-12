@@ -65,7 +65,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         mountainNameSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MountainListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SearchableActivity.class);
                 intent.putExtra("searchType", "name");
                 startActivity(intent);
             }
@@ -82,7 +82,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             @Override
             public void onClick(View v) {
                 if (mLastLocation != null) {
-                    Intent intent = new Intent(getApplicationContext(), MountainListActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), SearchableActivity.class);
                     intent.putExtra("lat", mLastLocation.getLatitude());
                     intent.putExtra("long", mLastLocation.getLongitude());
                     startActivity(intent);
@@ -95,7 +95,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         heightSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MountainListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SearchableActivity.class);
                 intent.putExtra("searchType", "height"); //indicate we want height search
                 startActivity(intent);
             }
@@ -104,7 +104,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         myMountainListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MountainListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SearchableActivity.class);
                 intent.putExtra("searchType", "myMountain"); //indicate we want my mountain list
                 startActivity(intent);
             }
@@ -113,7 +113,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         myMemoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MountainListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SearchableActivity.class);
                 intent.putExtra("searchType", "myMemo"); //indicate we want my memo
                 startActivity(intent);
             }
