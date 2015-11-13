@@ -1,10 +1,14 @@
 package pulseanddecibels.jp.yamatenki.activity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -30,28 +34,27 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  */
 public class MemoDetailActivity extends FragmentActivity implements CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener {
 
-    Long mountainId;
-    Long memoId;
-    TextView mountainSubtitle;
-    EditText dateFrom;
-    EditText dateUntil;
-    boolean from; //track which date box we're working with
-    DateHolder fromDateHolder;
-    TimeHolder fromTimeHolder;
-    DateHolder untilDateHolder;
-    TimeHolder untilTimeHolder;
-    EditText weather;
-    EditText rating;
-    EditText memo;
-    Button buttonConfirm;
-    DateTime initialDateTimeFrom = new DateTime();
-    DateTime initialDateTimeUntil = new DateTime();
-    TextView timeLabel;
-    TextView activityTimeLabel;
-    TextView activityTimeText;
-    TextView weatherLabel;
-    TextView ratingLabel;
-    TextView memoLabel;
+    private Long mountainId;
+    private static Long memoId;
+    private EditText dateFrom;
+    private EditText dateUntil;
+    private boolean from; //track which date box we're working with
+    private DateHolder fromDateHolder;
+    private DateHolder untilDateHolder;
+    private EditText weather;
+    private EditText rating;
+    private EditText memo;
+    private Button buttonConfirm;
+    private Button buttonEdit;
+    private Button buttonDelete;
+    private DateTime initialDateTimeFrom = new DateTime();
+    private DateTime initialDateTimeUntil = new DateTime();
+    private TextView timeLabel;
+    private TextView activityTimeLabel;
+    private TextView activityTimeText;
+    private TextView weatherLabel;
+    private TextView ratingLabel;
+    private TextView memoLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +66,14 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
 
         TextView header = (TextView) findViewById(R.id.memo_header);
         header.setTypeface(Utils.getHannariTypeFace(this));
-        mountainSubtitle = (TextView) findViewById(R.id.text_memo_mountain_name);
+        TextView mountainSubtitle = (TextView) findViewById(R.id.text_memo_mountain_name);
         mountainSubtitle.setTypeface(Utils.getHannariTypeFace(this));
+
+        timeLabel = (TextView) findViewById(R.id.text_memo_time);
+        activityTimeLabel = (TextView) findViewById(R.id.text_memo_activity_time);
+        weatherLabel = (TextView) findViewById(R.id.text_memo_weather);
+        ratingLabel = (TextView) findViewById(R.id.text_memo_rating);
+        memoLabel = (TextView) findViewById(R.id.text_memo_memo);
 
         dateFrom = (EditText) findViewById(R.id.memo_date_from);
         dateFrom.setKeyListener(null);
@@ -79,39 +88,15 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
         buttonConfirm = (Button) findViewById(R.id.button_confirm);
         buttonConfirm.setOnClickListener(getConfirmButtonOnClickListener(memoId));
 
+        buttonDelete = (Button) findViewById(R.id.button_delete);
+        buttonDelete.setOnClickListener(getDeleteButtonOnClickListener(memoId));
+        buttonEdit = (Button) findViewById(R.id.button_edit);
+        buttonEdit.setOnClickListener(getEditButtonOnClickListener());
+
         activityTimeText = (TextView) findViewById(R.id.memo_activity_time);
 
-        //editing an existing memo, populate the fields, start in read-only mode (disable edittexts)
-        if(memoId != 0L) {
-            MyMemoDao memoDao = Database.getInstance(this).getMyMemoDao();
-            MyMemo myMemo = memoDao.queryBuilder().where(MyMemoDao.Properties.Id.eq(memoId)).unique();
-            mountainId = myMemo.getMountainId();
-
-            Long memoDateTimeFrom = myMemo.getDateTimeFrom();
-            Long memoDateTimeUntil = myMemo.getDateTimeUntil();
-
-            if(memoDateTimeFrom != null) {
-                initialDateTimeFrom = new DateTime(memoDateTimeFrom);
-                dateFrom.setText(DateUtils.getMemoDateTimeFromMillis(memoDateTimeFrom));
-            }
-            if(memoDateTimeUntil != null) {
-                initialDateTimeUntil = new DateTime(memoDateTimeUntil);
-                dateUntil.setText(DateUtils.getMemoDateTimeFromMillis(memoDateTimeUntil));
-            }
-
-            if(memoDateTimeFrom != null && memoDateTimeUntil != null) {
-                activityTimeText.setText(DateUtils.getActivityTimeFromMillis(memoDateTimeUntil - memoDateTimeFrom));
-                activityTimeText.setVisibility(View.VISIBLE);
-            }
-
-            weather.setText(myMemo.getWeather());
-            rating.setText(myMemo.getRating() == null ? "" : String.format("%d", myMemo.getRating()));
-            memo.setText(myMemo.getMemo());
-            enableWidgets(false);
-        } else {
-            enableWidgets(true);
-        }
-
+        dateFrom.setHint(DateUtils.getMemoDateTimeFromDateTime(initialDateTimeFrom.withTime(6, 54, 0, 0)));
+        dateUntil.setHint(DateUtils.getMemoDateTimeFromDateTime(initialDateTimeUntil.withTime(12, 34, 0, 0)));
         dateUntil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,16 +121,151 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
             }
         });
 
+        //editing an existing memo, populate the fields, start in read-only mode (disable edittexts)
+        if (memoId != 0L) {
+            MyMemoDao memoDao = Database.getInstance(this).getMyMemoDao();
+            MyMemo myMemo = memoDao.queryBuilder().where(MyMemoDao.Properties.Id.eq(memoId)).unique();
+            mountainId = myMemo.getMountainId();
+
+            Long memoDateTimeFrom = myMemo.getDateTimeFrom();
+            Long memoDateTimeUntil = myMemo.getDateTimeUntil();
+
+            if (memoDateTimeFrom != null) {
+                initialDateTimeFrom = new DateTime(memoDateTimeFrom);
+                dateFrom.setText(DateUtils.getMemoDateTimeFromMillis(memoDateTimeFrom));
+            }
+            if (memoDateTimeUntil != null) {
+                initialDateTimeUntil = new DateTime(memoDateTimeUntil);
+                dateUntil.setText(DateUtils.getMemoDateTimeFromMillis(memoDateTimeUntil));
+            }
+
+            if (memoDateTimeFrom != null && memoDateTimeUntil != null) {
+                activityTimeText.setText(DateUtils.getActivityTimeFromMillis(memoDateTimeUntil - memoDateTimeFrom));
+                activityTimeText.setVisibility(View.VISIBLE);
+            }
+
+            weather.setText(myMemo.getWeather());
+            rating.setText(myMemo.getRating() == null ? "" : String.format("%d", myMemo.getRating()));
+            memo.setText(myMemo.getMemo());
+            editMode(false);
+        } else {
+
+
+            editMode(true);
+        }
+
         MountainDao mountainDao = Database.getInstance(this).getMountainDao();
         Mountain mountain =
                 mountainDao.queryBuilder().where(MountainDao.Properties.Id.eq(mountainId)).unique();
         mountainSubtitle.setText(mountain.getTitle());
     }
 
-    private void enableWidgets(boolean enable) {
+    /**
+     * Switch between read-only and edit/new memo mode.
+     * To enable switching with a single button press, all the layout parameters are set here.
+     */
+    private void editMode(boolean enable) {
         dateFrom.setEnabled(enable);
         dateUntil.setEnabled(enable);
+        weather.setEnabled(enable);
+        rating.setEnabled(enable);
+        memo.setEnabled(enable);
 
+        int yamaBackground = getResources().getColor(R.color.yama_background);
+        int yamaBrown = getResources().getColor(R.color.yama_brown);
+        int roundEditText = R.drawable.round_edittext;
+
+        activityTimeLabel.setBackgroundColor(yamaBrown);
+        activityTimeLabel.setTextColor(yamaBackground);
+
+        PercentRelativeLayout.LayoutParams dateFromLayout = (PercentRelativeLayout.LayoutParams) dateFrom.getLayoutParams();
+        PercentRelativeLayout.LayoutParams dateUntilLayout = (PercentRelativeLayout.LayoutParams) dateUntil.getLayoutParams();
+        PercentRelativeLayout.LayoutParams weatherLayout = (PercentRelativeLayout.LayoutParams) weather.getLayoutParams();
+        PercentRelativeLayout.LayoutParams ratingLayout = (PercentRelativeLayout.LayoutParams) rating.getLayoutParams();
+
+        if (!enable) { //read-only mode
+            dateFrom.setBackgroundColor(yamaBackground);
+            dateFromLayout.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            dateFromLayout.getPercentLayoutInfo().widthPercent = -1.0F;
+            dateFrom.setLayoutParams(dateFromLayout);
+            dateUntil.setBackgroundColor(yamaBackground);
+            dateUntilLayout.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            dateUntilLayout.getPercentLayoutInfo().widthPercent = -1.0F;
+            dateUntil.setLayoutParams(dateUntilLayout);
+            weather.setBackgroundColor(yamaBackground);
+            weatherLayout.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            weatherLayout.getPercentLayoutInfo().widthPercent = -1.0F;
+            weather.setLayoutParams(weatherLayout);
+            rating.setBackgroundColor(yamaBackground);
+            ratingLayout.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            ratingLayout.getPercentLayoutInfo().widthPercent = -1.0F;
+            rating.setLayoutParams(ratingLayout);
+            memo.setBackgroundColor(yamaBackground);
+            memoLabel.setBackgroundColor(yamaBrown);
+            memoLabel.setTextColor(yamaBackground);
+            ratingLabel.setBackgroundColor(yamaBrown);
+            ratingLabel.setTextColor(yamaBackground);
+            timeLabel.setBackgroundColor(yamaBrown);
+            timeLabel.setTextColor(yamaBackground);
+            weatherLabel.setBackgroundColor(yamaBrown);
+            weatherLabel.setTextColor(yamaBackground);
+
+            timeLabel.setText(getResources().getString(R.string.text_memo_time_view));
+            weatherLabel.setText(getResources().getString(R.string.text_memo_weather_view));
+            ratingLabel.setText(getResources().getString(R.string.text_memo_rating_view));
+            memoLabel.setText(getResources().getString(R.string.text_memo_memo_view));
+            activityTimeLabel.setVisibility(View.VISIBLE);
+            activityTimeText.setVisibility(View.VISIBLE);
+            buttonConfirm.setVisibility(View.GONE);
+            buttonEdit.setVisibility(View.VISIBLE);
+            buttonDelete.setVisibility(View.VISIBLE);
+        } else { //edit or new mode
+            dateFrom.setBackgroundResource(roundEditText);
+            dateFromLayout.width = 0;
+            dateFromLayout.getPercentLayoutInfo().widthPercent = .6F;
+            dateFrom.setLayoutParams(dateFromLayout);
+            dateUntil.setBackgroundResource(roundEditText);
+            dateUntilLayout.width = 0;
+            dateUntilLayout.getPercentLayoutInfo().widthPercent = .6F;
+            dateUntil.setLayoutParams(dateUntilLayout);
+            weather.setBackgroundResource(roundEditText);
+            weatherLayout.width = 0;
+            weatherLayout.getPercentLayoutInfo().widthPercent = .4F;
+            weather.setLayoutParams(weatherLayout);
+            rating.setBackgroundResource(roundEditText);
+            ratingLayout.width = 0;
+            ratingLayout.getPercentLayoutInfo().widthPercent = .15F;
+            rating.setLayoutParams(ratingLayout);
+            memo.setBackgroundResource(roundEditText);
+            memoLabel.setBackgroundColor(yamaBackground);
+            memoLabel.setTextColor(yamaBrown);
+            ratingLabel.setBackgroundColor(yamaBackground);
+            ratingLabel.setTextColor(yamaBrown);
+            timeLabel.setBackgroundColor(yamaBackground);
+            timeLabel.setTextColor(yamaBrown);
+            weatherLabel.setBackgroundColor(yamaBackground);
+            weatherLabel.setTextColor(yamaBrown);
+
+            timeLabel.setText(getResources().getString(R.string.text_memo_time_edit));
+            weatherLabel.setText(getResources().getString(R.string.text_memo_weather_edit));
+            ratingLabel.setText(getResources().getString(R.string.text_memo_rating_edit));
+            memoLabel.setText(getResources().getString(R.string.text_memo_memo_edit));
+            activityTimeLabel.setVisibility(View.INVISIBLE); //hide "time taken" field and label
+            activityTimeText.setVisibility(View.INVISIBLE);
+            buttonConfirm.setVisibility(View.VISIBLE);
+            buttonEdit.setVisibility(View.GONE);
+            buttonDelete.setVisibility(View.GONE);
+        }
+
+        float density = getResources().getDisplayMetrics().density;
+        int lrPadDp = (int) (5 * density); //left and right padding 5dp
+        int udPadDp = (int) (5 * density); //top and bottom padding 5dp
+
+        dateFrom.setPadding(lrPadDp, udPadDp, lrPadDp, udPadDp);
+        dateUntil.setPadding(lrPadDp, udPadDp, lrPadDp, udPadDp);
+        weather.setPadding(lrPadDp, udPadDp, lrPadDp, udPadDp);
+        rating.setPadding(lrPadDp, udPadDp, lrPadDp, udPadDp);
+        memo.setPadding(lrPadDp, udPadDp, lrPadDp, udPadDp);
     }
 
     private View.OnClickListener getRatingOnClickListener() {
@@ -156,9 +276,9 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
                 dialog.setContentView(R.layout.dialog_rating);
                 dialog.show();
                 dialog.setTitle("評価選択");
-                for(int i=1; i < 11; i++) {
+                for (int i = 1; i < 11; i++) {
                     Button button = (Button) dialog.findViewById(getResources().getIdentifier("button" + i, "id", getPackageName()));
-                    if(button != null) {
+                    if (button != null) {
                         final String value = Integer.toString(i);
                         button.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -179,38 +299,84 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
             @Override
             public void onClick(View v) {
                 DateTime from = DateUtils.getDateTimeFromMemo(dateFrom.getText().toString());
-                DateTime to = DateUtils.getDateTimeFromMemo(dateUntil.getText().toString());
+                DateTime until = DateUtils.getDateTimeFromMemo(dateUntil.getText().toString());
                 String weatherText = weather.getText().toString();
                 Integer ratingText = rating.getText().toString().equals("") ? null : Integer.parseInt(rating.getText().toString());
                 String memoText = memo.getText().toString();
 
-                if(from != null && to != null && to.isBefore(from))
-                {
-                    //tell the user that from must be before to
+                if (from != null && until != null && until.isBefore(from)) {
+                    //tell the user that from must be before until
                     Toast.makeText(MemoDetailActivity.this, R.string.error_memo_dates_reversed, Toast.LENGTH_SHORT).show();
                 } else {
 
                     MyMemoDao dao = Database.getInstance(MemoDetailActivity.this).getMyMemoDao();
                     //editing existing
-                    if(memoId != 0L) {
+                    if (memoId != 0L) {
                         MyMemo memo = dao.queryBuilder().where(MyMemoDao.Properties.Id.eq(memoId)).unique();
                         memo.setDateTimeFrom(from == null ? null : from.getMillis());
-                        memo.setDateTimeUntil(to == null ? null : to.getMillis());
+                        memo.setDateTimeUntil(until == null ? null : until.getMillis());
                         memo.setWeather(weatherText);
                         memo.setRating(ratingText);
                         memo.setMemo(memoText);
                         dao.update(memo);
-                        //going back to the memo list so we should trigger an update
+                        //going back until the memo list so we should trigger an update
                         Intent intent = getIntent();
                         intent.putExtra("changedMemo", memoId);
                         setResult(RESULT_OK, intent);
                     } else {
                         //new memo
-                        MyMemo memo = new MyMemo(null, mountainId, from == null ? null : from.getMillis(), to == null ? null : to.getMillis(), weatherText, ratingText, memoText);
-                        dao.insert(memo);
+                        MyMemo memo = new MyMemo(null, mountainId, from == null ? null : from.getMillis(), until == null ? null : until.getMillis(), weatherText, ratingText, memoText);
+                        MemoDetailActivity.memoId = dao.insert(memo);
                     }
-                    finish();
+                    if (from != null && until != null) {
+                        activityTimeText.setText(DateUtils.getActivityTimeFromMillis(until.getMillis() - from.getMillis()));
+                    } else {
+                        activityTimeText.setText("");
+                    }
+
+                    editMode(false);
                 }
+            }
+        };
+    }
+
+    private View.OnClickListener getDeleteButtonOnClickListener(final Long memoId) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MemoDetailActivity.this);
+                builder
+                        .setMessage(getResources().getString(R.string.dialog_delete_message))
+                        .setPositiveButton(getResources().getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                MyMemoDao dao = Database.getInstance(MemoDetailActivity.this).getMyMemoDao();
+                                MyMemo memo = dao.queryBuilder().where(MyMemoDao.Properties.Id.eq(memoId)).unique();
+                                dao.delete(memo);
+                                //going back to the memo list so we should trigger an update
+                                Intent intent = getIntent();
+                                intent.putExtra("changedMemo", memoId);
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(getResources().getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        })
+                        .show();
+            }
+        };
+    }
+
+    private View.OnClickListener getEditButtonOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editMode(true);
             }
         };
     }
@@ -253,7 +419,7 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
         timePickerDialogFrom.setThemeCustom(R.style.CustomTimePickerDialogTheme);
         timePickerDialogUntil.setThemeCustom(R.style.CustomTimePickerDialogTheme);
 
-        if(from) {
+        if (from) {
             fromDateHolder = new DateHolder(year, monthOfYear + 1, dayOfMonth);
             timePickerDialogFrom.show(getSupportFragmentManager(), "timeFrom");
         } else {
@@ -264,11 +430,11 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
 
     @Override
     public void onTimeSet(RadialTimePickerDialogFragment dialog, int hourOfDay, int minute) {
-        if(from) {
-            fromTimeHolder = new TimeHolder(hourOfDay, minute);
+        if (from) {
+            TimeHolder fromTimeHolder = new TimeHolder(hourOfDay, minute);
             dateFrom.setText(String.format("%s%s", fromDateHolder.getDate(), fromTimeHolder.getTime()));
         } else {
-            untilTimeHolder = new TimeHolder(hourOfDay, minute);
+            TimeHolder untilTimeHolder = new TimeHolder(hourOfDay, minute);
             dateUntil.setText(String.format("%s%s", untilDateHolder.getDate(), untilTimeHolder.getTime()));
         }
     }

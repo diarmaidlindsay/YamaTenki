@@ -42,12 +42,17 @@
     <string name="button_remove_my_mountain">Ｍｙ山リスト\nに登録解除</string>
     <string name="button_add_memo">登った山メモ\nに登録</string>
     <string name="text_memo_header">登った山メモ</string>
-    <string name="text_memo_time">日時：</string>
+    <string name="text_memo_time_edit">日時：　</string>
+    <string name="text_memo_time_view">日時　　</string>
     <string name="text_memo_from">から</string>
     <string name="text_memo_until">まで</string>
-    <string name="text_memo_weather">天候：</string>
-    <string name="text_memo_rating">評価：</string>
-    <string name="text_memo_memo">メモ：</string>
+    <string name="text_memo_weather_edit">天候：　</string>
+    <string name="text_memo_weather_view">天候　　</string>
+    <string name="text_memo_rating_edit">評価：　</string>
+    <string name="text_memo_rating_view">評価　　</string>
+    <string name="text_memo_memo_edit">メモ：　</string>
+    <string name="text_memo_memo_view">メモ　　</string>
+    <string name="text_memo_activity_time">活動時間</string>
     <string name="text_memo_ten_points">/10点</string>
     <string name="text_memo_hint">山の特徴、感想、出来事など。</string>
     <string name="button_confirm">決定</string>
@@ -56,5 +61,10 @@
     <string name="text_memo_table_header_name">名前</string>
     <string name="text_memo_table_header_rating">評価</string>
     <string name="text_memo_table_header_date">日時</string>
-    <string name="text_memo_activity_time">活動時間</string>
+    <string name="text_rating_hint">6</string>
+    <string name="text_weather_hint">晴れのち曇り</string>
+    <string name="button_edit">内容変更</string>
+    <string name="button_delete">削除</string>
+    <string name="dialog_delete_message">本当にこのメモを消しますか？</string>
+    <string name="button_cancel">戻る</string>
 </resources>

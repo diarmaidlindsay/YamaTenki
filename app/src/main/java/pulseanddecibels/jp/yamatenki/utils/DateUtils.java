@@ -84,11 +84,15 @@ public class DateUtils {
         return String.format("%d/%s/%s", dateTime.getYear(), Utils.num2DigitString(dateTime.getMonthOfYear()), Utils.num2DigitString(dateTime.getDayOfMonth()));
     }
 
-    public static String getMemoDateTimeFromMillis(long millis) {
-        DateTime dateTime = new DateTime(millis);
+    public static String getMemoDateTimeFromDateTime(DateTime dateTime) {
         return String.format("%d年%s月%s日%s:%s",
                 dateTime.getYear(), Utils.num2DigitString(dateTime.getMonthOfYear()), Utils.num2DigitString(dateTime.getDayOfMonth()),
                 Utils.num2DigitString(dateTime.getHourOfDay()), Utils.num2DigitString(dateTime.getMinuteOfHour()));
+    }
+
+    public static String getMemoDateTimeFromMillis(long millis) {
+        DateTime dateTime = new DateTime(millis);
+        return getMemoDateTimeFromDateTime(dateTime);
     }
 
     public static String getActivityTimeFromMillis(long millis) {

@@ -25,20 +25,20 @@
     <TextView
         android:id="@+id/text_memo_time"
         style="@style/MediumBrownText"
-        android:textColor="@android:color/darker_gray"
-        android:text="@string/text_memo_time"
+        android:text="@string/text_memo_time_edit"
         android:layout_below="@id/text_memo_mountain_name"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 
     <EditText
         android:id="@+id/memo_date_from"
+        style="@style/MediumBrownText"
         android:inputType="datetime"
         android:focusable="false"
         android:layout_width="0dp"
-        app:layout_widthPercent="69%"
+        app:layout_widthPercent="60%"
         android:background="@drawable/round_edittext"
-        android:layout_height="wrap_content"
+        android:textColorHint="@android:color/darker_gray"
         android:layout_below="@id/text_memo_mountain_name"
         android:layout_toRightOf="@id/text_memo_time"
         android:layout_toEndOf="@id/text_memo_time"
@@ -51,7 +51,6 @@
     <TextView
         android:id="@+id/text_memo_from"
         style="@style/MediumBrownText"
-        android:textColor="@android:color/darker_gray"
         android:text="@string/text_memo_from"
         android:layout_below="@id/text_memo_mountain_name"
         android:layout_toRightOf="@id/memo_date_from"
@@ -60,12 +59,13 @@
 
     <EditText
         android:id="@+id/memo_date_until"
+        style="@style/MediumBrownText"
         android:inputType="datetime"
         android:focusable="false"
         android:layout_width="0dp"
-        app:layout_widthPercent="69%"
+        app:layout_widthPercent="60%"
         android:background="@drawable/round_edittext"
-        android:layout_height="wrap_content"
+        android:textColorHint="@android:color/darker_gray"
         android:layout_below="@id/memo_date_from"
         android:layout_toRightOf="@id/text_memo_time"
         android:layout_toEndOf="@id/text_memo_time"
@@ -78,7 +78,6 @@
     <TextView
         android:id="@+id/text_memo_until"
         style="@style/MediumBrownText"
-        android:textColor="@android:color/darker_gray"
         android:text="@string/text_memo_until"
         android:layout_below="@id/memo_date_from"
         android:layout_toRightOf="@id/memo_date_until"
@@ -88,7 +87,7 @@
     <TextView
         android:id="@+id/text_memo_activity_time"
         style="@style/MediumBrownText"
-        android:textColor="@android:color/darker_gray"
+        android:visibility="invisible"
         android:text="@string/text_memo_activity_time"
         android:layout_below="@id/memo_date_until"
         android:layout_alignParentLeft="true"
@@ -97,6 +96,7 @@
     <TextView
         android:id="@+id/memo_activity_time"
         style="@style/MediumBrownText"
+        android:visibility="invisible"
         android:layout_below="@id/memo_date_until"
         android:layout_toRightOf="@id/text_memo_activity_time"
         android:layout_toEndOf="@id/text_memo_activity_time"
@@ -108,19 +108,19 @@
     <TextView
         android:id="@+id/text_memo_weather"
         style="@style/MediumBrownText"
-        android:textColor="@android:color/darker_gray"
-        android:text="@string/text_memo_weather"
+        android:text="@string/text_memo_weather_edit"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/memo_activity_time"/>
 
     <EditText
         android:id="@+id/memo_weather"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/MediumBrownText"
         android:inputType="text"
         app:layout_widthPercent="40%"
         android:background="@drawable/round_edittext"
+        android:hint="@string/text_weather_hint"
+        android:textColorHint="@android:color/darker_gray"
         android:layout_below="@id/memo_activity_time"
         android:layout_toRightOf="@id/text_memo_weather"
         android:layout_toEndOf="@id/text_memo_weather"
@@ -132,20 +132,20 @@
     <TextView
         android:id="@+id/text_memo_rating"
         style="@style/MediumBrownText"
-        android:textColor="@android:color/darker_gray"
-        android:text="@string/text_memo_rating"
+        android:text="@string/text_memo_rating_edit"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/memo_weather"/>
 
     <EditText
         android:id="@+id/memo_rating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/MediumBrownText"
         android:inputType="none"
         android:focusable="false"
         app:layout_widthPercent="15%"
         android:background="@drawable/round_edittext"
+        android:hint="@string/text_rating_hint"
+        android:textColorHint="@android:color/darker_gray"
         android:maxLength="2"
         android:layout_below="@id/memo_weather"
         android:layout_toRightOf="@id/text_memo_rating"
@@ -160,7 +160,6 @@
 
     <TextView
         style="@style/MediumBrownText"
-        android:textColor="@android:color/darker_gray"
         android:text="@string/text_memo_ten_points"
         android:layout_toRightOf="@id/memo_rating"
         android:layout_toEndOf="@id/memo_rating"
@@ -170,8 +169,7 @@
     <TextView
         android:id="@+id/text_memo_memo"
         style="@style/MediumBrownText"
-        android:textColor="@android:color/darker_gray"
-        android:text="@string/text_memo_memo"
+        android:text="@string/text_memo_memo_edit"
         android:layout_below="@id/memo_rating"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
@@ -179,12 +177,12 @@
 
     <EditText
         android:id="@+id/memo_memo"
+        style="@style/MediumBrownText"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        app:layout_heightPercent="34%"
+        app:layout_heightPercent="30%"
         android:hint="@string/text_memo_hint"
-        android:background="@drawable/round_edittext"
         android:textColorHint="@android:color/darker_gray"
+        android:background="@drawable/round_edittext"
         android:layout_below="@id/text_memo_memo"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
@@ -207,4 +205,36 @@
         android:layout_below="@id/memo_memo"
         android:layout_alignRight="@id/memo_memo"
         android:layout_alignEnd="@id/memo_memo"/>
+
+    <Button
+        android:id="@+id/button_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_edit"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/round_button_green"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_below="@id/memo_memo"
+        android:layout_alignRight="@id/memo_memo"
+        android:layout_alignEnd="@id/memo_memo"/>
+
+    <Button
+        android:id="@+id/button_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_delete"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/round_button_gray"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_below="@id/memo_memo"
+        android:layout_centerHorizontal="true"/>
+
 </android.support.percent.PercentRelativeLayout>
