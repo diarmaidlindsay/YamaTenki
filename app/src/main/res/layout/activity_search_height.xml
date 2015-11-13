@@ -28,7 +28,7 @@
             android:id="@+id/min_height_searchview"
             android:background="@drawable/round_edittext"
             style="@style/LargeBrownText"
-            android:textColorHint="@android:color/darker_gray"
+            android:textColorHint="@color/hint_text"
             android:textAppearance="?android:attr/textAppearanceSmallInverse"
             android:paddingTop="5dp"
             android:paddingBottom="5dp" />
@@ -49,7 +49,7 @@
             android:id="@+id/max_height_searchview"
             android:background="@drawable/round_edittext"
             style="@style/LargeBrownText"
-            android:textColorHint="@android:color/darker_gray"
+            android:textColorHint="@color/hint_text"
             android:textAppearance="?android:attr/textAppearanceSmallInverse"
             android:paddingTop="5dp"
             android:paddingBottom="5dp" />

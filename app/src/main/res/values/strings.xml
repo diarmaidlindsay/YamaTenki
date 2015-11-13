@@ -66,5 +66,6 @@
     <string name="button_edit">内容変更</string>
     <string name="button_delete">削除</string>
     <string name="dialog_delete_message">本当にこのメモを消しますか？</string>
+    <string name="button_confirm_delete">削除</string>
     <string name="button_cancel">戻る</string>
 </resources>

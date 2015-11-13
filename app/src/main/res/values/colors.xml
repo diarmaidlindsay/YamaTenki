@@ -9,4 +9,5 @@
     <item name="date_picker_selector" type="color">#6a3906</item>
     <item name="memo_date_bg" type="color">#fdf6d9</item>
     <item name="calendar_header" type="color">#fdf6d9</item>
+    <item name="hint_text" type="color">@android:color/darker_gray</item>
 </resources>

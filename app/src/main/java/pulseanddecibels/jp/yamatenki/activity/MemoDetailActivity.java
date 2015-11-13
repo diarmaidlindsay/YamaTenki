@@ -173,6 +173,7 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
 
         int yamaBackground = getResources().getColor(R.color.yama_background);
         int yamaBrown = getResources().getColor(R.color.yama_brown);
+        int hintTextColor = getResources().getColor(R.color.hint_text);
         int roundEditText = R.drawable.round_edittext;
 
         activityTimeLabel.setBackgroundColor(yamaBrown);
@@ -185,22 +186,27 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
 
         if (!enable) { //read-only mode
             dateFrom.setBackgroundColor(yamaBackground);
+            dateFrom.setHintTextColor(yamaBackground); //hide hint text
             dateFromLayout.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             dateFromLayout.getPercentLayoutInfo().widthPercent = -1.0F;
             dateFrom.setLayoutParams(dateFromLayout);
             dateUntil.setBackgroundColor(yamaBackground);
+            dateUntil.setHintTextColor(yamaBackground);
             dateUntilLayout.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             dateUntilLayout.getPercentLayoutInfo().widthPercent = -1.0F;
             dateUntil.setLayoutParams(dateUntilLayout);
             weather.setBackgroundColor(yamaBackground);
+            weather.setHintTextColor(yamaBackground);
             weatherLayout.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             weatherLayout.getPercentLayoutInfo().widthPercent = -1.0F;
             weather.setLayoutParams(weatherLayout);
             rating.setBackgroundColor(yamaBackground);
+            rating.setHintTextColor(yamaBackground);
             ratingLayout.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             ratingLayout.getPercentLayoutInfo().widthPercent = -1.0F;
             rating.setLayoutParams(ratingLayout);
             memo.setBackgroundColor(yamaBackground);
+            memo.setHintTextColor(yamaBackground);
             memoLabel.setBackgroundColor(yamaBrown);
             memoLabel.setTextColor(yamaBackground);
             ratingLabel.setBackgroundColor(yamaBrown);
@@ -221,22 +227,27 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
             buttonDelete.setVisibility(View.VISIBLE);
         } else { //edit or new mode
             dateFrom.setBackgroundResource(roundEditText);
+            dateFrom.setHintTextColor(hintTextColor); //show hint text
             dateFromLayout.width = 0;
             dateFromLayout.getPercentLayoutInfo().widthPercent = .6F;
             dateFrom.setLayoutParams(dateFromLayout);
             dateUntil.setBackgroundResource(roundEditText);
+            dateUntil.setHintTextColor(hintTextColor);
             dateUntilLayout.width = 0;
             dateUntilLayout.getPercentLayoutInfo().widthPercent = .6F;
             dateUntil.setLayoutParams(dateUntilLayout);
             weather.setBackgroundResource(roundEditText);
+            weather.setHintTextColor(hintTextColor);
             weatherLayout.width = 0;
             weatherLayout.getPercentLayoutInfo().widthPercent = .4F;
             weather.setLayoutParams(weatherLayout);
             rating.setBackgroundResource(roundEditText);
+            rating.setHintTextColor(hintTextColor);
             ratingLayout.width = 0;
             ratingLayout.getPercentLayoutInfo().widthPercent = .15F;
             rating.setLayoutParams(ratingLayout);
             memo.setBackgroundResource(roundEditText);
+            memo.setHintTextColor(hintTextColor);
             memoLabel.setBackgroundColor(yamaBackground);
             memoLabel.setTextColor(yamaBrown);
             ratingLabel.setBackgroundColor(yamaBackground);
@@ -348,7 +359,7 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
                 AlertDialog.Builder builder = new AlertDialog.Builder(MemoDetailActivity.this);
                 builder
                         .setMessage(getResources().getString(R.string.dialog_delete_message))
-                        .setPositiveButton(getResources().getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getResources().getString(R.string.button_confirm_delete), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
                                 MyMemoDao dao = Database.getInstance(MemoDetailActivity.this).getMyMemoDao();
