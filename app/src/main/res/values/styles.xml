@@ -11,6 +11,8 @@
         <item name="android:orientation">vertical</item>
     </style>
     <style name="ScreenTitle" parent="android:TextAppearance.Large">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">42sp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>

@@ -6,8 +6,6 @@
     android:focusableInTouchMode="true">
 
     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:text="@string/text_search_height_header"
         android:id="@+id/text_search_header"
         style="@style/ScreenTitle" />
