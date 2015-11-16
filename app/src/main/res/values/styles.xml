@@ -1,7 +1,7 @@
 <resources>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
-
+        <item name="android:seekBarStyle">@style/SeekBarAppTheme</item>
     </style>
     <style name="YamaTenkiActivity">
         <item name="android:layout_height">match_parent</item>
@@ -127,5 +127,14 @@
         <item name="bpLineColor">@color/memo_date_bg</item>
         <item name="bpDoneBackgroundColor">@android:color/white</item>
         <item name="bpSelectionAlpha">102</item>
+    </style>
+    <style name="yama_dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:background">@color/yama_background</item>
+        <item name="android:textColor">@color/yama_brown</item>
+    </style>
+    <style name="SeekBarAppTheme" parent="android:Widget.Holo.Light.SeekBar">
+        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_holo_light</item>
+        <item name="android:thumb">@drawable/scrubber_control_selector_holo_light</item>
     </style>
 </resources>

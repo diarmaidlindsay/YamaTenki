@@ -1,70 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:paddingBottom="20dp"
-              android:paddingLeft="50dp"
-              android:paddingRight="50dp"
-              android:paddingTop="20dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/yama_background"
+                android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/rating_min"
+        style="@style/MediumBrownText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:padding="10dp"
+        android:text="@string/text_rating_min"
+        android:textColor="@android:color/darker_gray"/>
+
+    <TextView
+        android:id="@+id/rating_max"
+        style="@style/MediumBrownText"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:padding="10dp"
+        android:text="@string/text_rating_max"
+        android:textColor="@android:color/darker_gray"/>
+
+    <SeekBar
+        android:id="@+id/rating_seekbar"
+        style="@style/SeekBarAppTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rating_min"/>
+
+    <TextView
+        android:id="@+id/selected_rating"
+        style="@style/LargeBrownText"
+        android:layout_below="@id/rating_seekbar"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"/>
 
     <Button
-        style="@style/RatingButton"
-        android:id="@+id/button10"
-        android:background="@drawable/round_button_green"
-        android:text="10"/>
-
-    <Button
-        style="@style/RatingButton"
-        android:id="@+id/button9"
-        android:background="@drawable/round_button_green"
-        android:text="9"/>
-
-    <Button
-        style="@style/RatingButton"
-        android:id="@+id/button8"
-        android:background="@drawable/round_button_green"
-        android:text="8"/>
-
-    <Button
-        style="@style/RatingButton"
-        android:id="@+id/button7"
-        android:background="@drawable/round_button_yellow"
-        android:text="7"/>
-
-    <Button
-        style="@style/RatingButton"
-        android:id="@+id/button6"
-        android:background="@drawable/round_button_yellow"
-        android:text="6"/>
-
-    <Button
-        style="@style/RatingButton"
-        android:id="@+id/button5"
-        android:background="@drawable/round_button_yellow"
-        android:text="5"/>
-
-    <Button
-        style="@style/RatingButton"
-        android:id="@+id/button4"
-        android:background="@drawable/round_button_red"
-        android:text="4"/>
-
-    <Button
-        style="@style/RatingButton"
-        android:id="@+id/button3"
-        android:background="@drawable/round_button_red"
-        android:text="3"/>
-
-    <Button
-        style="@style/RatingButton"
-        android:id="@+id/button2"
-        android:background="@drawable/round_button_red"
-        android:text="2"/>
-
-    <Button
-        style="@style/RatingButton"
-        android:id="@+id/button1"
-        android:background="@drawable/round_button_gray"
-        android:text="1"/>
-</LinearLayout>
+        android:id="@+id/button_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selected_rating"
+        android:layout_gravity="center"
+        android:background="@color/yama_brown"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="@string/button_confirm"
+        android:textColor="@color/yama_background"
+        android:textSize="20sp"/>
+</RelativeLayout>

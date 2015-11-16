@@ -68,4 +68,6 @@
     <string name="dialog_delete_message">本当にこのメモを消しますか？</string>
     <string name="button_confirm_delete">削除</string>
     <string name="button_cancel">戻る</string>
+    <string name="text_rating_min">1</string>
+    <string name="text_rating_max">10</string>
 </resources>

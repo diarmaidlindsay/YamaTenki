@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -283,24 +284,38 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = new Dialog(MemoDetailActivity.this);
+                final Dialog dialog = new Dialog(MemoDetailActivity.this, R.style.yama_dialog);
                 dialog.setContentView(R.layout.dialog_rating);
-                dialog.show();
-                dialog.setTitle("評価選択");
-                for (int i = 1; i < 11; i++) {
-                    Button button = (Button) dialog.findViewById(getResources().getIdentifier("button" + i, "id", getPackageName()));
-                    if (button != null) {
-                        final String value = Integer.toString(i);
-                        button.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                rating.setText(value);
-                                dialog.dismiss();
-                            }
-                        });
-                    }
-                }
+                dialog.setTitle(getResources().getString(R.string.text_memo_table_header_rating));
 
+                final TextView currentRating = (TextView) dialog.findViewById(R.id.selected_rating);
+                final SeekBar ratingSeek = (SeekBar) dialog.findViewById(R.id.rating_seekbar);
+                //seekbar runs from 0-9, we want 1-10, so we have to do some -1 and +1s
+                ratingSeek.setMax(9);
+                ratingSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        currentRating.setText(String.format("%d", progress + 1));
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {}
+                });
+                String currentRatingValue = rating.getText().toString();
+                ratingSeek.setProgress(currentRatingValue.equals("") ? 5 : Integer.parseInt(currentRatingValue) - 1);
+                Button setButton = (Button) dialog.findViewById(R.id.button_confirm);
+                setButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        rating.setText(String.format("%d", ratingSeek.getProgress() + 1));
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
             }
         };
     }
