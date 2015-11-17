@@ -43,6 +43,11 @@ public class SearchableActivity extends Activity {
     TextView header;
     ListView mountainList;
     ListView memoList;
+    TextView tableHeaderName;
+    TextView tableHeaderDifficulty;
+    TextView tableHeaderHeight;
+    TextView tableHeaderRating;
+    TextView tableHeaderDate;
     SearchView minHeightSearchView;
     SearchView maxHeightSearchView;
     SearchView myMountainSearchView;
@@ -87,12 +92,13 @@ public class SearchableActivity extends Activity {
             LinearLayout memoListContainer = (LinearLayout) findViewById(R.id.memo_container);
             memoList = (ListView) memoListContainer.findViewById(R.id.list_memos);
             memoList.setAdapter(memoListAdapter);
-            TextView tableHeaderName = (TextView) memoListContainer.findViewById(R.id.table_header_name);
+            tableHeaderName = (TextView) memoListContainer.findViewById(R.id.table_header_name);
             tableHeaderName.setOnClickListener(getMemoNameHeaderOnClickListener());
-            TextView tableHeaderRating = (TextView) memoListContainer.findViewById(R.id.table_header_rating);
+            tableHeaderRating = (TextView) memoListContainer.findViewById(R.id.table_header_rating);
             tableHeaderRating.setOnClickListener(getRatingHeaderOnClickListener());
-            TextView tableHeaderDate = (TextView) memoListContainer.findViewById(R.id.table_header_date);
+            tableHeaderDate = (TextView) memoListContainer.findViewById(R.id.table_header_date);
             tableHeaderDate.setOnClickListener(getDateHeaderOnClickListener());
+            memoListAdapter.sort(MemoListColumn.NAME);
 
         } else {
             //we came here from AreaSearchActivity (Area was chosen)
@@ -152,14 +158,16 @@ public class SearchableActivity extends Activity {
             LinearLayout mountainListContainer = (LinearLayout) findViewById(R.id.mountain_list_container);
             mountainList = (ListView) mountainListContainer.findViewById(R.id.list_mountains);
             mountainList.setAdapter(mountainListAdapter);
-            TextView tableHeaderName = (TextView) mountainListContainer.findViewById(R.id.table_header_name);
+            tableHeaderName = (TextView) mountainListContainer.findViewById(R.id.table_header_name);
             tableHeaderName.setOnClickListener(getNameHeaderOnClickListener());
-            TextView tableHeaderDifficulty = (TextView) mountainListContainer.findViewById(R.id.table_header_difficulty);
+            tableHeaderDifficulty = (TextView) mountainListContainer.findViewById(R.id.table_header_difficulty);
             tableHeaderDifficulty.setOnClickListener(getDifficultyHeaderOnClickListener());
-            TextView tableHeaderHeight = (TextView) mountainListContainer.findViewById(R.id.table_header_height);
+            tableHeaderHeight = (TextView) mountainListContainer.findViewById(R.id.table_header_height);
             tableHeaderHeight.setOnClickListener(getHeightHeaderOnClickListener());
+            mountainListAdapter.sort(MountainListColumn.NAME);
         }
 
+        updateHeaders();
         header.setTypeface(Utils.getHannariTypeFace(this));
     }
 
@@ -400,6 +408,7 @@ public class SearchableActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mountainListAdapter.sort(MountainListColumn.NAME);
+                updateHeaders();
             }
         };
     }
@@ -409,6 +418,7 @@ public class SearchableActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mountainListAdapter.sort(MountainListColumn.DIFFICULTY);
+                updateHeaders();
             }
         };
     }
@@ -418,6 +428,7 @@ public class SearchableActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mountainListAdapter.sort(MountainListColumn.HEIGHT);
+                updateHeaders();
             }
         };
     }
@@ -427,6 +438,7 @@ public class SearchableActivity extends Activity {
             @Override
             public void onClick(View v) {
                 memoListAdapter.sort(MemoListColumn.NAME);
+                updateHeaders();
             }
         };
     }
@@ -436,6 +448,7 @@ public class SearchableActivity extends Activity {
             @Override
             public void onClick(View v) {
                 memoListAdapter.sort(MemoListColumn.RATING);
+                updateHeaders();
             }
         };
     }
@@ -445,6 +458,7 @@ public class SearchableActivity extends Activity {
             @Override
             public void onClick(View v) {
                 memoListAdapter.sort(MemoListColumn.DATE);
+                updateHeaders();
             }
         };
     }
@@ -489,5 +503,52 @@ public class SearchableActivity extends Activity {
         }
 
         return area;
+    }
+
+    /**
+     * Call after sorting to add sorting arrow to a header
+     */
+    private void updateHeaders() {
+        //memos
+        if(memoListAdapter != null) {
+            String nameString = getResources().getString(R.string.text_memo_table_header_name);
+            String ratingString = getResources().getString(R.string.text_memo_table_header_rating);
+            String dateString = getResources().getString(R.string.text_memo_table_header_date);
+            switch (memoListAdapter.getCurrentSorting()) {
+
+                case NAME:
+                    nameString = memoListAdapter.getCurrentOrder().getIndicator() + nameString;
+                    break;
+                case RATING:
+                    ratingString = memoListAdapter.getCurrentOrder().getIndicator() + ratingString;
+                    break;
+                case DATE:
+                    dateString = memoListAdapter.getCurrentOrder().getIndicator() + dateString;
+                    break;
+            }
+            tableHeaderName.setText(nameString);
+            tableHeaderRating.setText(ratingString);
+            tableHeaderDate.setText(dateString);
+        } else {
+        //mountains
+            String nameString = getResources().getString(R.string.text_search_table_header_name);
+            String difficultyString = getResources().getString(R.string.text_search_table_header_difficulty);
+            String heightString = getResources().getString(R.string.text_search_table_header_height);
+            switch (mountainListAdapter.getCurrentSorting()) {
+
+                case NAME:
+                    nameString = mountainListAdapter.getCurrentOrder().getIndicator() + nameString;
+                    break;
+                case DIFFICULTY:
+                    difficultyString = mountainListAdapter.getCurrentOrder().getIndicator() + difficultyString;
+                    break;
+                case HEIGHT:
+                    heightString = mountainListAdapter.getCurrentOrder().getIndicator() + heightString;
+                    break;
+            }
+            tableHeaderName.setText(nameString);
+            tableHeaderDifficulty.setText(difficultyString);
+            tableHeaderHeight.setText(heightString);
+        }
     }
 }

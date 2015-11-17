@@ -70,4 +70,8 @@
     <string name="button_cancel">戻る</string>
     <string name="text_rating_min">1</string>
     <string name="text_rating_max">10</string>
+    <string name="sort_asc">▲</string>
+    <string name="sort_desc">▼</string>
+    <string name="checklist_explain">持ち物は場所、スタイル、日数、時期によって必要な道具も変わってきます。編集してお使いください。</string>
+    <string name="button_edit_checklist">編集</string>
 </resources>

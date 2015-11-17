@@ -25,6 +25,7 @@ import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
 import pulseanddecibels.jp.yamatenki.database.dao.MyMemo;
 import pulseanddecibels.jp.yamatenki.database.dao.MyMemoDao;
 import pulseanddecibels.jp.yamatenki.enums.MemoListColumn;
+import pulseanddecibels.jp.yamatenki.enums.SortOrder;
 import pulseanddecibels.jp.yamatenki.utils.DateUtils;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
@@ -36,7 +37,8 @@ public class MemoListAdapter extends BaseAdapter {
     private final Context mContext;
     private final LayoutInflater layoutInflater;
     private List memoList = new ArrayList<>();
-    private MemoListColumn currentSorting = MemoListColumn.NAME;
+    private MemoListColumn currentSorting;
+    private SortOrder currentOrder;
     String searchString = ""; //in case we have to resubmit the query after update in child activity
 
     public MemoListAdapter(Context context) {
@@ -192,8 +194,14 @@ public class MemoListAdapter extends BaseAdapter {
     public void sort(MemoListColumn column) {
         if(currentSorting == column) {
             Collections.reverse(memoList);
+            if(currentOrder == SortOrder.DESC) {
+                currentOrder = SortOrder.ASC;
+            } else {
+                currentOrder = SortOrder.DESC;
+            }
         } else {
             currentSorting = column;
+            currentOrder = SortOrder.DESC;
 
             switch(column) {
 
@@ -216,5 +224,13 @@ public class MemoListAdapter extends BaseAdapter {
         TextView name;
         TextView rating;
         TextView date;
+    }
+
+    public MemoListColumn getCurrentSorting() {
+        return currentSorting;
+    }
+
+    public SortOrder getCurrentOrder() {
+        return currentOrder;
     }
 }

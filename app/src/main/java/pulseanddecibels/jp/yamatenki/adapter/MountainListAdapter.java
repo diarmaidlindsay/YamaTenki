@@ -34,6 +34,7 @@ import pulseanddecibels.jp.yamatenki.database.dao.MyMountainDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Status;
 import pulseanddecibels.jp.yamatenki.database.dao.StatusDao;
 import pulseanddecibels.jp.yamatenki.enums.MountainListColumn;
+import pulseanddecibels.jp.yamatenki.enums.SortOrder;
 import pulseanddecibels.jp.yamatenki.utils.GeoLocation;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
@@ -52,7 +53,8 @@ public class MountainListAdapter extends BaseAdapter {
     };
     final double EARTH_RADIUS = 6371.01;
 
-    private MountainListColumn currentSorting = MountainListColumn.NAME;
+    private MountainListColumn currentSorting;
+    private SortOrder currentOrder;
 
     private List mountainList = new ArrayList<>();
     private Context mContext;
@@ -287,10 +289,16 @@ public class MountainListAdapter extends BaseAdapter {
     }
 
     public void sort(MountainListColumn column) {
-        if (currentSorting == column) {
+        if(currentSorting == column) {
             Collections.reverse(mountainList);
+            if(currentOrder == SortOrder.DESC) {
+                currentOrder = SortOrder.ASC;
+            } else {
+                currentOrder = SortOrder.DESC;
+            }
         } else {
             currentSorting = column;
+            currentOrder = SortOrder.DESC;
 
             switch (column) {
                 case NAME:
@@ -358,5 +366,13 @@ public class MountainListAdapter extends BaseAdapter {
         TextView name;
         ImageView difficulty;
         TextView height;
+    }
+
+    public MountainListColumn getCurrentSorting() {
+        return currentSorting;
+    }
+
+    public SortOrder getCurrentOrder() {
+        return currentOrder;
     }
 }
