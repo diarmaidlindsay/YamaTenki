@@ -68,7 +68,7 @@ public class ChecklistActivity extends Activity {
                             if (!textEntered.equals("")) {
                                 listAdapter.addNewItem(textEntered);
                                 editText.setText(""); //clear text
-                                checkList.setSelectionAfterHeaderView(); //scroll to top of list
+                                checkList.smoothScrollToPosition(0); //scroll to top of list
                             }
                             editText.setVisibility(View.GONE);
                             imm.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
