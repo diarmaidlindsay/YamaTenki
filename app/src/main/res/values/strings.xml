@@ -74,4 +74,6 @@
     <string name="sort_desc">▼</string>
     <string name="checklist_explain">持ち物は場所、スタイル、日数、時期によって必要な道具も変わってきます。編集してお使いください。</string>
     <string name="button_edit_checklist">編集</string>
+    <string name="button_editing_checklist">編集中</string>
+    <string name="button_new_checklist">追加</string>
 </resources>

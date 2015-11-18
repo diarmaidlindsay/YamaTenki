@@ -87,6 +87,10 @@ public class Database {
         return parseCSV(context, "databases/areaList.csv");
     }
 
+    public static List<String> parseChecklistCSV(Context context) throws IOException {
+        return parseCSV(context, "databases/initialChecklist.csv");
+    }
+
     private static List<String> parseCSV(Context context, String path) throws IOException {
         List<String> csvEntries = new ArrayList<>();
 

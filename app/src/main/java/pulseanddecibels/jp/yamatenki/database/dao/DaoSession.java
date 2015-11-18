@@ -13,7 +13,7 @@ import de.greenrobot.dao.internal.DaoConfig;
 
 /**
  * {@inheritDoc}
- * 
+ *
  * @see de.greenrobot.dao.AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
@@ -26,6 +26,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig myMountainDaoConfig;
     private final DaoConfig myMemoDaoConfig;
     private final DaoConfig statusDaoConfig;
+    private final DaoConfig checkListItemDaoConfig;
 
     private final MountainDao mountainDao;
     private final CoordinateDao coordinateDao;
@@ -35,6 +36,7 @@ public class DaoSession extends AbstractDaoSession {
     private final MyMountainDao myMountainDao;
     private final MyMemoDao myMemoDao;
     private final StatusDao statusDao;
+    private final CheckListItemDao checkListItemDao;
 
     public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
@@ -64,6 +66,9 @@ public class DaoSession extends AbstractDaoSession {
         statusDaoConfig = daoConfigMap.get(StatusDao.class).clone();
         statusDaoConfig.initIdentityScope(type);
 
+        checkListItemDaoConfig = daoConfigMap.get(CheckListItemDao.class).clone();
+        checkListItemDaoConfig.initIdentityScope(type);
+
         mountainDao = new MountainDao(mountainDaoConfig, this);
         coordinateDao = new CoordinateDao(coordinateDaoConfig, this);
         forecastDao = new ForecastDao(forecastDaoConfig, this);
@@ -72,6 +77,7 @@ public class DaoSession extends AbstractDaoSession {
         myMountainDao = new MyMountainDao(myMountainDaoConfig, this);
         myMemoDao = new MyMemoDao(myMemoDaoConfig, this);
         statusDao = new StatusDao(statusDaoConfig, this);
+        checkListItemDao = new CheckListItemDao(checkListItemDaoConfig, this);
 
         registerDao(Mountain.class, mountainDao);
         registerDao(Coordinate.class, coordinateDao);
@@ -81,8 +87,9 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(MyMountain.class, myMountainDao);
         registerDao(MyMemo.class, myMemoDao);
         registerDao(Status.class, statusDao);
+        registerDao(CheckListItem.class, checkListItemDao);
     }
-    
+
     public void clear() {
         mountainDaoConfig.getIdentityScope().clear();
         coordinateDaoConfig.getIdentityScope().clear();
@@ -92,6 +99,7 @@ public class DaoSession extends AbstractDaoSession {
         myMountainDaoConfig.getIdentityScope().clear();
         myMemoDaoConfig.getIdentityScope().clear();
         statusDaoConfig.getIdentityScope().clear();
+        checkListItemDaoConfig.getIdentityScope().clear();
     }
 
     public MountainDao getMountainDao() {
@@ -124,6 +132,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public StatusDao getStatusDao() {
         return statusDao;
+    }
+
+    public CheckListItemDao getCheckListItemDao() {
+        return checkListItemDao;
     }
 
 }

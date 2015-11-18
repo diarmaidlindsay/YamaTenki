@@ -21,6 +21,7 @@ public class YamaTenkiGreenDao {
         Entity myMountain = schema.addEntity("MyMountain");
         Entity myMemo = schema.addEntity("MyMemo");
         Entity status = schema.addEntity("Status");
+        Entity checklistItem = schema.addEntity("CheckListItem");
 
         /**
          Mountain
@@ -112,6 +113,13 @@ public class YamaTenkiGreenDao {
         status.addToOne(mountain, mountainIdStatus);
         status.addIntProperty("status");
         status.setHasKeepSections(true);
+
+        /**
+         * Checklist Item
+         */
+        checklistItem.addIdProperty();
+        checklistItem.addStringProperty("text");
+        checklistItem.addBooleanProperty("checked");
 
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));

@@ -19,6 +19,8 @@ import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.database.Database;
 import pulseanddecibels.jp.yamatenki.database.dao.Area;
 import pulseanddecibels.jp.yamatenki.database.dao.AreaDao;
+import pulseanddecibels.jp.yamatenki.database.dao.CheckListItem;
+import pulseanddecibels.jp.yamatenki.database.dao.CheckListItemDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Coordinate;
 import pulseanddecibels.jp.yamatenki.database.dao.CoordinateDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
@@ -109,11 +111,13 @@ public class SplashActivity extends Activity {
         PrefectureDao prefectureDao = Database.getInstance(this).getPrefectureDao();
         CoordinateDao coordinateDao = Database.getInstance(this).getCoordinateDao();
         StatusDao statusDao = Database.getInstance(this).getStatusDao();
+        CheckListItemDao checkListItemDao = Database.getInstance(this).getCheckListItemDao();
         mountainDao.deleteAll();
         areaDao.deleteAll();
         prefectureDao.deleteAll();
         coordinateDao.deleteAll();
         statusDao.deleteAll();
+        checkListItemDao.deleteAll();
 
         try {
             List<String> prefecturesListRaw = Database.parsePrefectureCSV(this);
@@ -165,6 +169,13 @@ public class SplashActivity extends Activity {
 
             statusDao.insertInTx(statusMap.values());
             coordinateDao.insertInTx(coordinateMap.values());
+
+            List<String> checklistListRaw = Database.parseChecklistCSV(this);
+            List<CheckListItem> checkList = new ArrayList<>();
+            for(String item : checklistListRaw) {
+                checkList.add(new CheckListItem(null, item, false));
+            }
+            checkListItemDao.insertInTx(checkList);
 
         } catch (IOException e) {
             e.printStackTrace();

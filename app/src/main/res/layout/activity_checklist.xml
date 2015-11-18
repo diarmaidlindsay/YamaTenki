@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    style="@style/YamaTenkiActivity"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/checklist_header"
+        style="@style/ScreenTitle"
+        android:layout_marginBottom="10dp"
+        android:text="@string/text_search_name_header"
+        app:layout_heightPercent="10%"/>
+
+    <TextView
+        android:id="@+id/checklist_explaination"
+        style="@style/MediumBrownText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/checklist_header"
+        android:layout_marginTop="10dp"
+        android:text="@string/checklist_explain"
+        android:textColor="@android:color/darker_gray"
+        app:layout_heightPercent="10%"/>
+
+    <ListView
+        android:id="@+id/checklist_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/checklist_explaination"
+        android:layout_margin="10dp"
+        android:clickable="false"
+        app:layout_heightPercent="60%"/>
+
+    <Button
+        android:id="@+id/button_new_checklist_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/checklist_list"
+        android:background="@drawable/round_button_green"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:text="@string/button_new_checklist"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_heightPercent="10%"/>
+
+    <Button
+        android:id="@+id/button_edit_checklist_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/checklist_list"
+        android:background="@drawable/round_button_red"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:text="@string/button_edit_checklist"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_heightPercent="10%"/>
+
+
+</android.support.percent.PercentRelativeLayout>
