@@ -7,7 +7,7 @@ package pulseanddecibels.jp.yamatenki.enums;
 public enum Difficulty {
     A(1), B(2), C(3);
 
-    int index;
+    final int index;
 
     Difficulty(int index) {
         this.index = index;

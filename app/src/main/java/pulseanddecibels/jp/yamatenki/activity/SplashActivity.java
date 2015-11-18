@@ -43,7 +43,7 @@ public class SplashActivity extends Activity {
         DateUtils.setDefaultTimeZone();
     }
 
-    final String PREFS_NAME = "YamaTenkiPrefs";
+    private final String PREFS_NAME = "YamaTenkiPrefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,8 +130,8 @@ public class SplashActivity extends Activity {
             List<String> areasListRaw = Database.parseAreaCSV(this);
             List<Area> areaList = new ArrayList<>();
             //start from zero to match the specifications (0 = 北海道, etc)
-            for (int i=0; i < areasListRaw.size(); i++) {
-                areaList.add(new Area((long)i, areasListRaw.get(i)));
+            for (int i = 0; i < areasListRaw.size(); i++) {
+                areaList.add(new Area((long) i, areasListRaw.get(i)));
             }
             areaDao.insertInTx(areaList);
 
@@ -142,7 +142,7 @@ public class SplashActivity extends Activity {
             List<Mountain> mountainList = new ArrayList<>();
 
             List<MountainArrayElement> jsonEntries = Database.parseMountainJSON(this);
-            for(MountainArrayElement element : jsonEntries) {
+            for (MountainArrayElement element : jsonEntries) {
                 String key = element.getYid();
                 yids.add(key);
                 Area area = areaDao.queryBuilder().where(AreaDao.Properties.Id.eq(element.getArea())).unique();
@@ -158,7 +158,7 @@ public class SplashActivity extends Activity {
 
             mountainDao.insertInTx(mountainList);
 
-            for(String yid : yids) {
+            for (String yid : yids) {
                 Mountain mountain = mountainDao.queryBuilder().where(MountainDao.Properties.Yid.eq(yid)).unique();
                 Long mountainId = mountain.getId();
                 Status status = statusMap.get(yid);
@@ -172,7 +172,7 @@ public class SplashActivity extends Activity {
 
             List<String> checklistListRaw = Database.parseChecklistCSV(this);
             List<CheckListItem> checkList = new ArrayList<>();
-            for(String item : checklistListRaw) {
+            for (String item : checklistListRaw) {
                 checkList.add(new CheckListItem(null, item, false));
             }
             checkListItemDao.insertInTx(checkList);

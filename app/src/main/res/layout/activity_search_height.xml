@@ -6,60 +6,60 @@
     android:focusableInTouchMode="true">
 
     <TextView
-        android:text="@string/text_search_height_header"
         android:id="@+id/text_search_header"
-        style="@style/ScreenTitle" />
+        style="@style/ScreenTitle"
+        android:text="@string/text_search_height_header"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center"
-        android:paddingStart="50dp"
+        android:orientation="horizontal"
+        android:paddingEnd="50dp"
         android:paddingLeft="50dp"
-        android:paddingEnd="50dp">
+        android:paddingStart="50dp">
 
         <SearchView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".40"
             android:id="@+id/min_height_searchview"
-            android:background="@drawable/round_edittext"
             style="@style/LargeBrownText"
-            android:textColorHint="@color/hint_text"
-            android:textAppearance="?android:attr/textAppearanceSmallInverse"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".10"
-            android:text="@string/text_search_height_range"
-            style="@style/LargeBrownText"
-            android:padding="5dp"
-            android:gravity="center" />
-
-        <SearchView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".40"
-            android:id="@+id/max_height_searchview"
             android:background="@drawable/round_edittext"
-            style="@style/LargeBrownText"
-            android:textColorHint="@color/hint_text"
-            android:textAppearance="?android:attr/textAppearanceSmallInverse"
+            android:paddingBottom="5dp"
             android:paddingTop="5dp"
-            android:paddingBottom="5dp" />
+            android:textAppearance="?android:attr/textAppearanceSmallInverse"
+            android:textColorHint="@color/hint_text"/>
 
         <TextView
+            style="@style/LargeBrownText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".10"
-            android:text="@string/text_search_height_m"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/text_search_height_range"/>
+
+        <SearchView
+            android:id="@+id/max_height_searchview"
             style="@style/LargeBrownText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".40"
+            android:background="@drawable/round_edittext"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:textAppearance="?android:attr/textAppearanceSmallInverse"
+            android:textColorHint="@color/hint_text"/>
+
+        <TextView
+            style="@style/LargeBrownText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"/>
+            android:layout_marginStart="5dp"
+            android:layout_weight=".10"
+            android:text="@string/text_search_height_m"/>
 
     </LinearLayout>
 

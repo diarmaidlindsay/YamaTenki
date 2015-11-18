@@ -40,24 +40,22 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  * My Mountain Memos
  */
 public class SearchableActivity extends Activity {
-    TextView header;
-    ListView mountainList;
-    ListView memoList;
-    TextView tableHeaderName;
-    TextView tableHeaderDifficulty;
-    TextView tableHeaderHeight;
-    TextView tableHeaderRating;
-    TextView tableHeaderDate;
-    SearchView minHeightSearchView;
-    SearchView maxHeightSearchView;
-    SearchView myMountainSearchView;
-    SearchView memoSearchView;
-
-    MountainListAdapter mountainListAdapter;
-    MemoListAdapter memoListAdapter;
-
     private final int MIN_HEIGHT = 0;
     private final int MAX_HEIGHT = 3776; //Fuji-san's height
+    private TextView header;
+    private ListView mountainList;
+    private ListView memoList;
+    private TextView tableHeaderName;
+    private TextView tableHeaderDifficulty;
+    private TextView tableHeaderHeight;
+    private TextView tableHeaderRating;
+    private TextView tableHeaderDate;
+    private SearchView minHeightSearchView;
+    private SearchView maxHeightSearchView;
+    private SearchView myMountainSearchView;
+    private SearchView memoSearchView;
+    private MountainListAdapter mountainListAdapter;
+    private MemoListAdapter memoListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,9 +183,9 @@ public class SearchableActivity extends Activity {
                 }
             } else if (requestCode == 200) {
                 //a memo was changed, so we should resubmit the search
-                if(memoSearchView != null) {
+                if (memoSearchView != null) {
                     long memoId = data.getLongExtra("changedMemo", 0L);
-                    if(memoId != 0L) {
+                    if (memoId != 0L) {
                         memoListAdapter.search(memoSearchView.getQuery().toString());
                     }
                 }
@@ -241,10 +239,10 @@ public class SearchableActivity extends Activity {
 
     private SearchView.OnQueryTextListener getHeightTextListener() {
         return new SearchView.OnQueryTextListener() {
+            private final Handler mHandler = new Handler();
             private String minHeightString;
             private String maxHeightString;
-
-            Runnable mFilterTask = new Runnable() {
+            final Runnable mFilterTask = new Runnable() {
 
                 @Override
                 public void run() {
@@ -268,7 +266,6 @@ public class SearchableActivity extends Activity {
                     mountainList.requestFocus();
                 }
             };
-            private Handler mHandler = new Handler();
 
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -288,8 +285,9 @@ public class SearchableActivity extends Activity {
 
     private SearchView.OnQueryTextListener getNameTextListener(final SearchView searchView) {
         return new SearchView.OnQueryTextListener() {
+            private final Handler mHandler = new Handler();
             private String text;
-            Runnable mFilterTask = new Runnable() {
+            final Runnable mFilterTask = new Runnable() {
 
                 @Override
                 public void run() {
@@ -297,7 +295,6 @@ public class SearchableActivity extends Activity {
                     //result.setText(mountainListAdapter.getCount() + " items displayed");
                 }
             };
-            private Handler mHandler = new Handler();
 
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -325,15 +322,15 @@ public class SearchableActivity extends Activity {
 
     private SearchView.OnQueryTextListener getMyMountainTextListener() {
         return new SearchView.OnQueryTextListener() {
+            private final Handler mHandler = new Handler();
             private String text;
-            Runnable mFilterTask = new Runnable() {
+            final Runnable mFilterTask = new Runnable() {
 
                 @Override
                 public void run() {
                     mountainListAdapter.searchByMyMountainName(text);
                 }
             };
-            private Handler mHandler = new Handler();
 
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -361,14 +358,14 @@ public class SearchableActivity extends Activity {
 
     private SearchView.OnQueryTextListener getMemoTextListener() {
         return new SearchView.OnQueryTextListener() {
+            private final Handler mHandler = new Handler();
             private String text;
-            Runnable mFilterTask = new Runnable() {
+            final Runnable mFilterTask = new Runnable() {
                 @Override
                 public void run() {
                     memoListAdapter.search(text);
                 }
             };
-            private Handler mHandler = new Handler();
 
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -463,7 +460,7 @@ public class SearchableActivity extends Activity {
         };
     }
 
-    public void hideKeyboard(SearchView searchView) {
+    private void hideKeyboard(SearchView searchView) {
         InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(searchView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
@@ -510,7 +507,7 @@ public class SearchableActivity extends Activity {
      */
     private void updateHeaders() {
         //memos
-        if(memoListAdapter != null) {
+        if (memoListAdapter != null) {
             String nameString = getResources().getString(R.string.text_memo_table_header_name);
             String ratingString = getResources().getString(R.string.text_memo_table_header_rating);
             String dateString = getResources().getString(R.string.text_memo_table_header_date);
@@ -530,7 +527,7 @@ public class SearchableActivity extends Activity {
             tableHeaderRating.setText(ratingString);
             tableHeaderDate.setText(dateString);
         } else {
-        //mountains
+            //mountains
             String nameString = getResources().getString(R.string.text_search_table_header_name);
             String difficultyString = getResources().getString(R.string.text_search_table_header_difficulty);
             String heightString = getResources().getString(R.string.text_search_table_header_height);

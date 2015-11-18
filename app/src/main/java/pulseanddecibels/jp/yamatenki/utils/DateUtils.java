@@ -33,7 +33,7 @@ public class DateUtils {
     //0 == today, 1 == tomorrow etc
     private static final String[] JAPANESE_DAY_NAMES = {"本日", "本日", "明日", "明日", "週間予測"};
     private static final String[] JAPANESE_TIME_OF_DAY = {"午前", "午後"};
-    private static DateTimeZone JAPAN_TIME_ZONE = DateTimeZone.forOffsetHours(9);
+    private static final DateTimeZone JAPAN_TIME_ZONE = DateTimeZone.forOffsetHours(9);
 
     public static String getFormattedHeader(int index) {
         DateTime dateTime = new DateTime();
@@ -96,17 +96,17 @@ public class DateUtils {
     }
 
     public static String getActivityTimeFromMillis(long millis) {
-        int minutes = (int) ((millis / (1000*60)) % 60);
-        int hours   = (int) ((millis / (1000*60*60)) % 24);
-        int days = (int) (millis / (1000*60*60*24));
+        int minutes = (int) ((millis / (1000 * 60)) % 60);
+        int hours = (int) ((millis / (1000 * 60 * 60)) % 24);
+        int days = (int) (millis / (1000 * 60 * 60 * 24));
 
         String activityTime = "";
 
-        if(days > 0) {
+        if (days > 0) {
             activityTime += String.format("%d日", days);
         }
-        if(hours > 0) {
-            activityTime += String.format("%d時間",hours);
+        if (hours > 0) {
+            activityTime += String.format("%d時間", hours);
         }
         activityTime += String.format("%d分", minutes);
 

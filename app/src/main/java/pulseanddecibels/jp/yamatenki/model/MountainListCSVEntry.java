@@ -5,16 +5,16 @@ package pulseanddecibels.jp.yamatenki.model;
  * Copyright Pulse and Decibels 2015
  */
 public class MountainListCSVEntry {
-    String kanjiName;
-    String kanjiNameArea;
-    String hiraganaName;
-    String romajiName;
-    Integer height;
-    String prefecture;
-    String area;
-    Float latitude;
-    Float longitude;
-    String closestTown;
+    private final String kanjiName;
+    private final String kanjiNameArea;
+    private final String hiraganaName;
+    private final String romajiName;
+    private final Integer height;
+    private final String prefecture;
+    private final String area;
+    private final Float latitude;
+    private final Float longitude;
+    private final String closestTown;
 
     public MountainListCSVEntry(String kanjiName, String kanjiNameArea, String hiraganaName, String romajiName, Integer height, String prefecture, String area, Float latitude, Float longitude, String closestTown) {
         this.kanjiName = kanjiName;

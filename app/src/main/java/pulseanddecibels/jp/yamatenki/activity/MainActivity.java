@@ -25,19 +25,19 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    TextView header;
-    Button mountainNameSearchButton;
-    Button nearMountainSearchButton;
-    Button areaSearchButton;
-    Button heightSearchButton;
-    Button myMountainListButton;
-    Button myMemoButton;
-    Button settingsButton;
-    Button checklistButton;
+    private TextView header;
+    private Button mountainNameSearchButton;
+    private Button nearMountainSearchButton;
+    private Button areaSearchButton;
+    private Button heightSearchButton;
+    private Button myMountainListButton;
+    private Button myMemoButton;
+    private Button settingsButton;
+    private Button checklistButton;
 
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    LocationRequest mLocationRequest;
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private LocationRequest mLocationRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,7 +171,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     @Override
     protected void onPause() {
         super.onPause();
-        if(mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
@@ -189,14 +189,14 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     @Override
     protected void onResume() {
         super.onResume();
-        if(mGoogleApiClient != null && mGoogleApiClient.isConnected() && mLastLocation == null) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && mLastLocation == null) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
     }
 
     @Override
     protected void onStop() {
-        if(mGoogleApiClient != null) {
+        if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
         }
         super.onStop();

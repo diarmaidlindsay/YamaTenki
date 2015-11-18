@@ -6,78 +6,78 @@
     <TextView
         android:id="@+id/text_search_header"
         style="@style/ScreenTitle"
-        android:text="@string/text_search_area_header" />
+        android:text="@string/text_search_area_header"/>
 
     <Button
         android:id="@+id/button_area_hokkaidou"
         style="@style/AreaButtonLeft"
-        android:text="@string/button_area_hokkaidou"
+        android:layout_below="@id/text_search_header"
         android:background="@drawable/round_button_light_blue"
-        android:layout_below="@id/text_search_header" />
+        android:text="@string/button_area_hokkaidou"/>
 
     <Button
         android:id="@+id/button_area_hokuriku"
         style="@style/AreaButtonLeft"
-        android:text="@string/button_area_hokuriku"
+        android:layout_below="@id/button_area_hokkaidou"
         android:background="@drawable/round_button_light_gray"
-        android:layout_below="@id/button_area_hokkaidou" />
+        android:text="@string/button_area_hokuriku"/>
 
     <Button
         android:id="@+id/button_area_toukai"
         style="@style/AreaButtonLeft"
-        android:text="@string/button_area_toukai"
+        android:layout_below="@id/button_area_hokuriku"
         android:background="@drawable/round_button_green"
-        android:layout_below="@id/button_area_hokuriku" />
+        android:text="@string/button_area_toukai"/>
 
     <Button
         android:id="@+id/button_area_chuugoku"
         style="@style/AreaButtonLeft"
-        android:text="@string/button_area_chuugoku"
+        android:layout_below="@id/button_area_toukai"
         android:background="@drawable/round_button_orange"
-        android:layout_below="@id/button_area_toukai" />
+        android:text="@string/button_area_chuugoku"/>
 
     <Button
         android:id="@+id/button_area_okinawa"
         style="@style/AreaButtonLeft"
-        android:text="@string/button_area_okinawa"
+        android:layout_below="@id/button_area_chuugoku"
         android:background="@drawable/round_button_red"
-        android:layout_below="@id/button_area_chuugoku"/>
+        android:text="@string/button_area_okinawa"/>
 
     <Button
         android:id="@+id/button_area_touhoku"
         style="@style/AreaButtonRight"
-        android:text="@string/button_area_touhoku"
-        android:background="@drawable/round_button_blue"
         android:layout_below="@id/text_search_header"
+        android:layout_toEndOf="@id/button_area_hokkaidou"
         android:layout_toRightOf="@id/button_area_hokkaidou"
-        android:layout_toEndOf="@id/button_area_hokkaidou" />
+        android:background="@drawable/round_button_blue"
+        android:text="@string/button_area_touhoku"/>
 
     <Button
         android:id="@+id/button_area_koushin"
         style="@style/AreaButtonRight"
-        android:text="@string/button_area_koushin"
-        android:background="@drawable/round_button_light_green"
         android:layout_below="@id/button_area_touhoku"
+        android:layout_toEndOf="@id/button_area_hokuriku"
         android:layout_toRightOf="@id/button_area_hokuriku"
-        android:layout_toEndOf="@id/button_area_hokuriku"/>
+        android:background="@drawable/round_button_light_green"
+        android:text="@string/button_area_koushin"/>
 
     <Button
         android:id="@+id/button_area_kinki"
         style="@style/AreaButtonRight"
-        android:text="@string/button_area_kinki"
-        android:background="@drawable/round_button_yellow"
         android:layout_below="@id/button_area_koushin"
+        android:layout_toEndOf="@id/button_area_toukai"
         android:layout_toRightOf="@id/button_area_toukai"
-        android:layout_toEndOf="@id/button_area_toukai"/>
+        android:background="@drawable/round_button_yellow"
+        android:text="@string/button_area_kinki"/>
 
     <Button
         android:id="@+id/button_area_shikoku"
         style="@style/AreaButtonRight"
-        android:text="@string/button_area_shikoku"
-        android:background="@drawable/round_button_purple"
         android:layout_below="@id/button_area_kinki"
-        android:layout_toRightOf="@id/button_area_chuugoku"
         android:layout_toEndOf="@id/button_area_chuugoku"
-        android:adjustViewBounds="false" />
+        android:layout_toRightOf="@id/button_area_chuugoku"
+        android:adjustViewBounds="false"
+        android:background="@drawable/round_button_purple"
+        android:text="@string/button_area_shikoku"/>
 
 </android.support.percent.PercentRelativeLayout>

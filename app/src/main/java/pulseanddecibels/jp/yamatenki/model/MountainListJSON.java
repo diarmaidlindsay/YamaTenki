@@ -13,8 +13,8 @@ import pulseanddecibels.jp.yamatenki.utils.DateUtils;
  * Representation of a mountain in the "mountain_list" JSON
  */
 public class MountainListJSON {
-    ArrayList<MountainArrayElement> mountainArrayElements;
-    String timestamp;
+    private final ArrayList<MountainArrayElement> mountainArrayElements;
+    private final String timestamp;
 
     public MountainListJSON() {
         mountainArrayElements = new ArrayList<>();

@@ -15,7 +15,7 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  * Copyright Pulse and Decibels 2015
  */
 public class AreaSearchActivity extends Activity {
-    TextView header;
+    private TextView header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

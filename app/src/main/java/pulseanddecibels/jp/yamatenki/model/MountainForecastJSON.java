@@ -16,11 +16,11 @@ import pulseanddecibels.jp.yamatenki.utils.DateUtils;
  * Representation of an entire JSON file for a mountain's weather forecast
  */
 public class MountainForecastJSON {
-    MountainArrayElement mountainArrayElement;
-    Map<String, ForecastArrayElement> forecasts;
-    String referenceCity;
-    SparseArray<Integer> heights;
-    String timestamp;
+    private final Map<String, ForecastArrayElement> forecasts;
+    private final SparseArray<Integer> heights;
+    private MountainArrayElement mountainArrayElement;
+    private String referenceCity;
+    private String timestamp;
 
     public MountainForecastJSON() {
         forecasts = new HashMap<>();

@@ -44,24 +44,22 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  */
 public class MountainListAdapter extends BaseAdapter {
 
-    final SparseIntArray difficultyArray = new SparseIntArray() {
+    private final SparseIntArray difficultyArray = new SparseIntArray() {
         {
             append(1, R.drawable.difficulty_small_a);
             append(2, R.drawable.difficulty_small_b);
             append(3, R.drawable.difficulty_small_c);
         }
     };
-    final double EARTH_RADIUS = 6371.01;
-
+    private final double EARTH_RADIUS = 6371.01;
+    private final Context mContext;
+    private final LayoutInflater layoutInflater;
+    private final Map<Long, Integer> currentMountainStatus = new HashMap<>();
     private MountainListColumn currentSorting;
     private SortOrder currentOrder;
-
     private List mountainList = new ArrayList<>();
-    private Context mContext;
-    private LayoutInflater layoutInflater;
     private GeoLocation here;
-    private Map<Long, Integer> currentMountainStatus = new HashMap<>();
-    String searchString; //in case we have to resubmit the query after update in child activity
+    private String searchString; //in case we have to resubmit the query after update in child activity
 
     public MountainListAdapter(Context context) {
         this.mContext = context;
@@ -69,7 +67,7 @@ public class MountainListAdapter extends BaseAdapter {
         initialiseDataSets();
         StatusDao statusDao = Database.getInstance(mContext).getStatusDao();
         List<Status> allStatus = statusDao.loadAll();
-        for(Status status : allStatus) {
+        for (Status status : allStatus) {
             currentMountainStatus.put(status.getMountainId(), status.getStatus());
         }
     }
@@ -129,7 +127,7 @@ public class MountainListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MountainForecastActivity.class);
                 intent.putExtra("mountainId", mountainId);
-                ((Activity)mContext).startActivityForResult(intent, 100);
+                ((Activity) mContext).startActivityForResult(intent, 100);
             }
         });
 
@@ -197,7 +195,7 @@ public class MountainListAdapter extends BaseAdapter {
 
         List<Long> myMountainIds = new ArrayList<>();
 
-        for(MyMountain mountain : myMountainDao.queryBuilder().list()) {
+        for (MyMountain mountain : myMountainDao.queryBuilder().list()) {
             myMountainIds.add(mountain.getMountainId());
         }
 
@@ -252,10 +250,10 @@ public class MountainListAdapter extends BaseAdapter {
             }
 
             List<Coordinate> coordinateList =
-                coordinateDao.queryBuilder().where(CoordinateDao.Properties.Id.in(coordinateIds)).list();
+                    coordinateDao.queryBuilder().where(CoordinateDao.Properties.Id.in(coordinateIds)).list();
 
             List<Mountain> matchingMountains = new ArrayList<>();
-            for(Coordinate coordinate : coordinateList) {
+            for (Coordinate coordinate : coordinateList) {
                 matchingMountains.add(coordinate.getMountain());
             }
 
@@ -271,7 +269,7 @@ public class MountainListAdapter extends BaseAdapter {
                 .list();
     }
 
-    public Coordinate[] sortByDistanceFromHere(List<Coordinate> coordinatesList, GeoLocation here) {
+    private Coordinate[] sortByDistanceFromHere(List<Coordinate> coordinatesList, GeoLocation here) {
         Coordinate[] coordinates =
                 coordinatesList.toArray(new Coordinate[coordinatesList.size()]);
         Coordinate temp;
@@ -289,9 +287,9 @@ public class MountainListAdapter extends BaseAdapter {
     }
 
     public void sort(MountainListColumn column) {
-        if(currentSorting == column) {
+        if (currentSorting == column) {
             Collections.reverse(mountainList);
-            if(currentOrder == SortOrder.DESC) {
+            if (currentOrder == SortOrder.DESC) {
                 currentOrder = SortOrder.ASC;
             } else {
                 currentOrder = SortOrder.DESC;
@@ -332,8 +330,8 @@ public class MountainListAdapter extends BaseAdapter {
                 Integer leftStatus = currentMountainStatus.get(lhs.getId());
                 Integer rightStatus = currentMountainStatus.get(rhs.getId());
 
-                if(leftStatus != null && rightStatus != null) {
-                    if(leftStatus < rightStatus) {
+                if (leftStatus != null && rightStatus != null) {
+                    if (leftStatus < rightStatus) {
                         return -1;
                     } else if (leftStatus > rightStatus) {
                         return 1;
@@ -362,17 +360,17 @@ public class MountainListAdapter extends BaseAdapter {
         };
     }
 
-    static class ViewHolderItem {
-        TextView name;
-        ImageView difficulty;
-        TextView height;
-    }
-
     public MountainListColumn getCurrentSorting() {
         return currentSorting;
     }
 
     public SortOrder getCurrentOrder() {
         return currentOrder;
+    }
+
+    static class ViewHolderItem {
+        TextView name;
+        ImageView difficulty;
+        TextView height;
     }
 }

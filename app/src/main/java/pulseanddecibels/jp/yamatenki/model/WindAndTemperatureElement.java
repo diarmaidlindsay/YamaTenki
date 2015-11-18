@@ -5,9 +5,9 @@ package pulseanddecibels.jp.yamatenki.model;
  * Copyright Pulse and Decibels 2015
  */
 public class WindAndTemperatureElement {
-    double temperature;
-    double windVelocity;
-    int windDirection;
+    private final double temperature;
+    private final double windVelocity;
+    private final int windDirection;
 
     public WindAndTemperatureElement(double temperature, double windVelocity, int windDirection) {
         this.temperature = temperature;

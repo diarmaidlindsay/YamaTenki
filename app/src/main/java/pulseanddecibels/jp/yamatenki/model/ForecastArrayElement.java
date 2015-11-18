@@ -14,12 +14,12 @@ import java.util.List;
  * in a json file
  */
 public class ForecastArrayElement {
-    DateTime dateTime;
-    int mountainStatus;
-    List<WindAndTemperatureElement> windAndTemperatures;
-    double temperature;
-    double precipitation;
-    int totalCloudCover;
+    private final DateTime dateTime;
+    private final int mountainStatus;
+    private final List<WindAndTemperatureElement> windAndTemperatures;
+    private final double temperature;
+    private final double precipitation;
+    private final int totalCloudCover;
 
     public ForecastArrayElement(DateTime dateTime, int mountainStatus, List<WindAndTemperatureElement> windAndTemperatures, Integer temperature, float precipitation, int totalCloudCover) {
         this.dateTime = dateTime;
@@ -39,7 +39,7 @@ public class ForecastArrayElement {
     }
 
     public String getTemperature() { //what is this for?
-        return ""+ (int) temperature;
+        return "" + (int) temperature;
     }
 
     public String getPrecipitation() {

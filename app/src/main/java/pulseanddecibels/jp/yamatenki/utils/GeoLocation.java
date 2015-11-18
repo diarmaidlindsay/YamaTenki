@@ -23,16 +23,14 @@ import pulseanddecibels.jp.yamatenki.database.dao.DaoSession;
  */
 public class GeoLocation {
 
-    private double radLat;  // latitude in radians
-    private double radLon;  // longitude in radians
-
-    private double degLat;  // latitude in degrees
-    private double degLon;  // longitude in degrees
-
     private static final double MIN_LAT = Math.toRadians(-90d);  // -PI/2
     private static final double MAX_LAT = Math.toRadians(90d);   //  PI/2
     private static final double MIN_LON = Math.toRadians(-180d); // -PI
     private static final double MAX_LON = Math.toRadians(180d);  //  PI
+    private double radLat;  // latitude in radians
+    private double radLon;  // longitude in radians
+    private double degLat;  // latitude in degrees
+    private double degLon;  // longitude in degrees
 
     private GeoLocation() {
     }
@@ -55,7 +53,7 @@ public class GeoLocation {
      * @param latitude  the latitude, in radians.
      * @param longitude the longitude, in radians.
      */
-    public static GeoLocation fromRadians(double latitude, double longitude) {
+    private static GeoLocation fromRadians(double latitude, double longitude) {
         GeoLocation result = new GeoLocation();
         result.radLat = latitude;
         result.radLon = longitude;
@@ -67,6 +65,35 @@ public class GeoLocation {
 
     public static GeoLocation fromCoordinates(Coordinate coordinate) {
         return fromDegrees(coordinate.getLatitude(), coordinate.getLongitude());
+    }
+
+    public static List<Coordinate> findPlacesWithinDistance(
+            double radius, GeoLocation location, double distance,
+            DaoSession daoSession) {
+
+        GeoLocation[] boundingCoordinates =
+                location.boundingCoordinates(distance, radius);
+        boolean meridian180WithinDistance =
+                boundingCoordinates[0].getLongitudeInRadians() >
+                        boundingCoordinates[1].getLongitudeInRadians();
+
+        CoordinateDao coordinateDao = daoSession.getCoordinateDao();
+        String LAT = CoordinateDao.Properties.Latitude.columnName;
+        String LON = CoordinateDao.Properties.Longitude.columnName;
+
+        List<Object> params = new ArrayList<>();
+        params.add(boundingCoordinates[0].getLatitudeInRadians());
+        params.add(boundingCoordinates[1].getLatitudeInRadians());
+        params.add(boundingCoordinates[0].getLongitudeInRadians());
+        params.add(boundingCoordinates[1].getLongitudeInRadians());
+        params.add(location.getLatitudeInRadians());
+        params.add(location.getLatitudeInRadians());
+        params.add(location.getLongitudeInRadians());
+        params.add(distance / radius);
+
+        return coordinateDao.queryRawCreateListArgs("WHERE (" + LAT + " >= ? AND " + LAT + " <= ?) AND (" + LON + " >= ? " +
+                (meridian180WithinDistance ? "OR" : "AND") + " " + LON + " <= ?) AND " +
+                "acos(sin(?) * sin(" + LAT + ") + cos(?) * cos(" + LAT + ") * cos(" + LON + " - ?)) <= ?", params).list();
     }
 
     private void checkBounds() {
@@ -92,14 +119,14 @@ public class GeoLocation {
     /**
      * @return the latitude, in radians.
      */
-    public double getLatitudeInRadians() {
+    private double getLatitudeInRadians() {
         return radLat;
     }
 
     /**
      * @return the longitude, in radians.
      */
-    public double getLongitudeInRadians() {
+    private double getLongitudeInRadians() {
         return radLon;
     }
 
@@ -158,7 +185,7 @@ public class GeoLocation {
      * array element.</li>
      * </ul>
      */
-    public GeoLocation[] boundingCoordinates(double distance, double radius) {
+    private GeoLocation[] boundingCoordinates(double distance, double radius) {
 
         if (radius < 0d || distance < 0d)
             throw new IllegalArgumentException();
@@ -187,35 +214,6 @@ public class GeoLocation {
 
         return new GeoLocation[]{fromRadians(minLat, minLon),
                 fromRadians(maxLat, maxLon)};
-    }
-
-    public static List<Coordinate> findPlacesWithinDistance(
-            double radius, GeoLocation location, double distance,
-            DaoSession daoSession) {
-
-        GeoLocation[] boundingCoordinates =
-                location.boundingCoordinates(distance, radius);
-        boolean meridian180WithinDistance =
-                boundingCoordinates[0].getLongitudeInRadians() >
-                        boundingCoordinates[1].getLongitudeInRadians();
-
-        CoordinateDao coordinateDao = daoSession.getCoordinateDao();
-        String LAT = CoordinateDao.Properties.Latitude.columnName;
-        String LON = CoordinateDao.Properties.Longitude.columnName;
-
-        List<Object> params = new ArrayList<>();
-        params.add(boundingCoordinates[0].getLatitudeInRadians());
-        params.add(boundingCoordinates[1].getLatitudeInRadians());
-        params.add(boundingCoordinates[0].getLongitudeInRadians());
-        params.add(boundingCoordinates[1].getLongitudeInRadians());
-        params.add(location.getLatitudeInRadians());
-        params.add(location.getLatitudeInRadians());
-        params.add(location.getLongitudeInRadians());
-        params.add(distance / radius);
-
-        return coordinateDao.queryRawCreateListArgs("WHERE (" + LAT + " >= ? AND " + LAT + " <= ?) AND (" + LON + " >= ? " +
-                (meridian180WithinDistance ? "OR" : "AND") + " " + LON + " <= ?) AND " +
-                "acos(sin(?) * sin(" + LAT + ") + cos(?) * cos(" + LAT + ") * cos(" + LON + " - ?)) <= ?", params).list();
     }
 
 

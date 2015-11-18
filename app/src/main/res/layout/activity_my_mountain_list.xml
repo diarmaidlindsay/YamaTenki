@@ -4,9 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
-        android:text="@string/text_search_name_header"
         android:id="@+id/text_search_header"
-        style="@style/ScreenTitle" />
+        style="@style/ScreenTitle"
+        android:text="@string/text_search_name_header"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,15 +14,15 @@
         android:orientation="vertical">
 
         <SearchView
+            android:id="@+id/search_my_mountain_searchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/search_my_mountain_searchView"
-            android:background="@drawable/round_edittext"
-            android:inputType="textAutoComplete"
-            android:hint="@string/text_search_textbox_hint"
             android:layout_marginBottom="10dp"
-            android:textColorHint="@color/hint_text"
-            android:textAppearance="?android:attr/textAppearanceSmallInverse"/>
+            android:background="@drawable/round_edittext"
+            android:hint="@string/text_search_textbox_hint"
+            android:inputType="textAutoComplete"
+            android:textAppearance="?android:attr/textAppearanceSmallInverse"
+            android:textColorHint="@color/hint_text"/>
 
         <include layout="@layout/fragment_mountain_list"/>
 

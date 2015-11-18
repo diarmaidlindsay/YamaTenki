@@ -14,10 +14,10 @@ import pulseanddecibels.jp.yamatenki.adapter.ChecklistListAdapter;
  * Copyright Pulse and Decibels 2015
  */
 public class ChecklistActivity extends Activity {
-    ListView checkList;
-    Button addButton;
-    Button editButton;
-    ChecklistListAdapter listAdapter;
+    private ListView checkList;
+    private Button addButton;
+    private Button editButton;
+    private ChecklistListAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

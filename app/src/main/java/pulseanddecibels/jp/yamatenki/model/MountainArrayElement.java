@@ -7,16 +7,16 @@ package pulseanddecibels.jp.yamatenki.model;
  * Representation of a mountain "list" array element from "mountainList" JSON
  */
 public class MountainArrayElement {
-    String yid;
-    String title;
-    String titleExt;
-    String titleEnglish;
-    String kana;
-    CoordinateElement coordinate;
-    String prefecture;
-    int area;
-    int height;
-    int currentMountainStatus;
+    private final String yid;
+    private final String title;
+    private final String titleExt;
+    private final String titleEnglish;
+    private final String kana;
+    private final CoordinateElement coordinate;
+    private final String prefecture;
+    private final int area;
+    private final int height;
+    private final int currentMountainStatus;
 
     public MountainArrayElement(String yid, String title, String titleExt, String titleEnglish, String kana, CoordinateElement coordinate, String prefecture, int area, int height, int currentMountainStatus) {
         this.yid = yid;

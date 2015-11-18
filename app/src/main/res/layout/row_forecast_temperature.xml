@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="wrap_content">
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <TextView
             style="@style/ForecastTableLeftSideColumn"
             android:text="@string/text_forecast_atmospheric_temperature"/>
+
         <TextView
-            style="@style/ForecastTableText"
-            android:id="@+id/forecast_temp_00"/>
+            android:id="@+id/forecast_temp_00"
+            style="@style/ForecastTableText"/>
+
         <TextView
-            style="@style/ForecastTableText"
-            android:id="@+id/forecast_temp_03"/>
+            android:id="@+id/forecast_temp_03"
+            style="@style/ForecastTableText"/>
+
         <TextView
-            style="@style/ForecastTableText"
-            android:id="@+id/forecast_temp_06"/>
+            android:id="@+id/forecast_temp_06"
+            style="@style/ForecastTableText"/>
+
         <TextView
-            style="@style/ForecastTableText"
-            android:id="@+id/forecast_temp_09"/>
+            android:id="@+id/forecast_temp_09"
+            style="@style/ForecastTableText"/>
     </LinearLayout>
 </TableRow>

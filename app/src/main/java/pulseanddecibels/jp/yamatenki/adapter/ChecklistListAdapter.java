@@ -24,7 +24,7 @@ import pulseanddecibels.jp.yamatenki.database.dao.CheckListItemDao;
 public class ChecklistListAdapter extends BaseAdapter {
     private final Context mContext;
     private final LayoutInflater layoutInflater;
-    CheckListItemDao checkListItemDao;
+    private final CheckListItemDao checkListItemDao;
     private List checkList = new ArrayList<>();
 
     private boolean editMode = false;
@@ -54,7 +54,7 @@ public class ChecklistListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolderItem viewHolder;
-        if(convertView == null) {
+        if (convertView == null) {
             viewHolder = new ViewHolderItem();
             convertView = layoutInflater.inflate(R.layout.list_item_checklist, parent, false);
             viewHolder.checkBox = (CheckBox) convertView.findViewById(R.id.checklist_checkbox);
@@ -80,7 +80,7 @@ public class ChecklistListAdapter extends BaseAdapter {
     }
 
     private View.OnClickListener getCheckboxOnClickListener(final CheckListItem item) {
-        if(isEditMode()) return null; //disable checkbox in edit mode
+        if (isEditMode()) return null; //disable checkbox in edit mode
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {

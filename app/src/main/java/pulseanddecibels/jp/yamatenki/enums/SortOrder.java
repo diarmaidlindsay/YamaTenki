@@ -8,7 +8,7 @@ public enum SortOrder {
     ASC("▲"),
     DESC("▼");
 
-    String indicator;
+    final String indicator;
 
     SortOrder(String indicator) {
         this.indicator = indicator;

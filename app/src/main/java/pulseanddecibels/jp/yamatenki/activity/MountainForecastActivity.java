@@ -39,27 +39,27 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  * Copyright Pulse and Decibels 2015
  */
 public class MountainForecastActivity extends Activity {
-    final SparseIntArray DIFFICULTY_SMALL_IMAGES = new SparseIntArray() {
+    private final SparseIntArray DIFFICULTY_SMALL_IMAGES = new SparseIntArray() {
         {
             append(1, R.drawable.difficulty_small_a);
             append(2, R.drawable.difficulty_small_b);
             append(3, R.drawable.difficulty_small_c);
         }
     };
-    final SparseIntArray DIFFICULTY_BIG_IMAGES = new SparseIntArray() {
+    private final SparseIntArray DIFFICULTY_BIG_IMAGES = new SparseIntArray() {
         {
             append(1, R.drawable.difficulty_large_a);
             append(2, R.drawable.difficulty_large_b);
             append(3, R.drawable.difficulty_large_c);
         }
     };
-    TextView title;
-    ImageView currentDifficultyImage;
-    ScrollView mountainForecastScrollView;
-    Button addMyMountainButton;
-    Button addMemoButton;
-    long mountainId;
-    List<ForecastScrollViewElement> scrollViewElements = new ArrayList<>();
+    private final List<ForecastScrollViewElement> scrollViewElements = new ArrayList<>();
+    private TextView title;
+    private ImageView currentDifficultyImage;
+    private ScrollView mountainForecastScrollView;
+    private Button addMyMountainButton;
+    private Button addMemoButton;
+    private long mountainId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,18 +185,18 @@ public class MountainForecastActivity extends Activity {
             //now depending on the amount of heights, we will display a different amount of rows...
             SparseArray<Integer> heights = forecasts.getHeights();
             String heightPressureTemplate = "高度 %s m付近（%shPa )";
-            if(heights.size() == 3 || heights.size() == 2 || heights.size() == 1) {
+            if (heights.size() == 3 || heights.size() == 2 || heights.size() == 1) {
                 int height = heights.keyAt(0);
                 String lowHeightPressure = String.format(heightPressureTemplate, height, heights.get(height));
                 scrollViewElement.getLowHeightPressure().setText(lowHeightPressure);
             }
-            if(heights.size() == 3 || heights.size() == 2) {
+            if (heights.size() == 3 || heights.size() == 2) {
                 int height = heights.keyAt(1);
                 String midHeightPressure = String.format(heightPressureTemplate, height, heights.get(height));
                 scrollViewElement.getMidHeightPressure().setText(midHeightPressure);
                 scrollViewElement.showMidHeightRow(true);
             }
-            if(heights.size() == 3) {
+            if (heights.size() == 3) {
                 int height = heights.keyAt(2);
                 String highHeightPressure = String.format(heightPressureTemplate, height, heights.get(height));
                 scrollViewElement.getHighHeightPressure().setText(highHeightPressure);
@@ -209,7 +209,7 @@ public class MountainForecastActivity extends Activity {
                 //find if there is a matching forecast available from json. If not, whole column is grey.
                 String key = DateUtils.timeToMapKey(i, forecastColumn.getColumnId());
 //                ForecastArrayElement forecastArrayElement = forecastMap.get(key); //when we get realtime forecasts
-                int forecastIndex = j + (i*4); //TEMPORARY until we get realtime forecasts
+                int forecastIndex = j + (i * 4); //TEMPORARY until we get realtime forecasts
                 ForecastArrayElement forecastArrayElement = forecastArray[forecastIndex]; //TEMPORARY until we get realtime forecasts
                 forecastColumn.getTime().setText(forecastColumn.getColumnId());
 
@@ -217,7 +217,7 @@ public class MountainForecastActivity extends Activity {
                     List<WindAndTemperatureElement> windAndTemperatureElements =
                             forecastArrayElement.getWindAndTemperatures();
                     //again depending on the amount of heights, we will display a different amount of rows...
-                    if(heights.size() == 3 || heights.size() == 2 || heights.size() == 1) {
+                    if (heights.size() == 3 || heights.size() == 2 || heights.size() == 1) {
                         int direction = getDirectionFromDegrees(windAndTemperatureElements.get(0).getWindDirection());
                         int velocity = windAndTemperatureElements.get(0).getWindVelocity();
                         forecastColumn.getLowHeightTemperature().setText(windAndTemperatureElements.get(0).getTemperature());
@@ -225,14 +225,14 @@ public class MountainForecastActivity extends Activity {
                         forecastColumn.getLowHeightWind().setText(windAndTemperatureElements.get(0).getWindVelocityString());
 
                     }
-                    if(heights.size() == 3 || heights.size() == 2) {
+                    if (heights.size() == 3 || heights.size() == 2) {
                         int direction = getDirectionFromDegrees(windAndTemperatureElements.get(1).getWindDirection());
                         int velocity = windAndTemperatureElements.get(1).getWindVelocity();
                         forecastColumn.getMidHeightTemperature().setText(windAndTemperatureElements.get(1).getTemperature());
                         forecastColumn.getMidHeightWindDirection().setImageResource(getWindImage(direction, velocity));
                         forecastColumn.getMidHeightWind().setText(windAndTemperatureElements.get(1).getWindVelocityString());
                     }
-                    if(heights.size() == 3) {
+                    if (heights.size() == 3) {
                         int direction = getDirectionFromDegrees(windAndTemperatureElements.get(2).getWindDirection());
                         int velocity = windAndTemperatureElements.get(2).getWindVelocity();
                         forecastColumn.getHighHeightTemperature().setText(windAndTemperatureElements.get(2).getTemperature());
@@ -298,7 +298,7 @@ public class MountainForecastActivity extends Activity {
             }
         };
 
-        if(velocity < 7) {
+        if (velocity < 7) {
             return GREEN_ARROWS.get(direction);
         } else if (velocity < 15) {
             return BLUE_ARROWS.get(direction);
@@ -308,7 +308,7 @@ public class MountainForecastActivity extends Activity {
     }
 
     private int getDirectionFromDegrees(int degrees) {
-        if(((degrees >= 337.5) && (degrees <= 360)) || (degrees >= 0 & degrees < 22.5)) {
+        if (((degrees >= 337.5) && (degrees <= 360)) || (degrees >= 0 & degrees < 22.5)) {
             return 1;
         } else if (degrees >= 22.5 && degrees < 67.5) {
             return 2;
@@ -331,22 +331,22 @@ public class MountainForecastActivity extends Activity {
     // For now this is used for "Today" and "Tomorrow", ie, short term forecasts
     private class ForecastScrollViewElement {
         private final String[] TIME_INCREMENTS = {"00", "03", "06", "09"}; // column headers
-        private TextView header;
-        private List<ForecastColumn> columns = new ArrayList<>();
-        private TextView lowHeightPressure; //1000m
-        private TextView midHeightPressure; //2000m
-        private TextView highHeightPressure; //3000m
+        private final TextView header;
+        private final List<ForecastColumn> columns = new ArrayList<>();
+        private final TextView lowHeightPressure; //1000m
+        private final TextView midHeightPressure; //2000m
+        private final TextView highHeightPressure; //3000m
 
-        private TableRow lowHeightPressureRow;
-        private TableRow midHeightPressureRow;
-        private TableRow highHeightPressureRow;
+        private final TableRow lowHeightPressureRow;
+        private final TableRow midHeightPressureRow;
+        private final TableRow highHeightPressureRow;
 
-        private TableRow lowTempRow;
-        private TableRow lowWindRow;
-        private TableRow midTempRow;
-        private TableRow midWindRow;
-        private TableRow highTempRow;
-        private TableRow highWindRow;
+        private final TableRow lowTempRow;
+        private final TableRow lowWindRow;
+        private final TableRow midTempRow;
+        private final TableRow midWindRow;
+        private final TableRow highTempRow;
+        private final TableRow highWindRow;
 
         public ForecastScrollViewElement(LinearLayout forecast) {
             header = (TextView) forecast.findViewById(R.id.forecast_header);
@@ -378,7 +378,7 @@ public class MountainForecastActivity extends Activity {
 
         public void showMidHeightRow(boolean show) {
             int visibility;
-            if(show) {
+            if (show) {
                 visibility = View.VISIBLE;
             } else {
                 visibility = View.GONE;
@@ -390,7 +390,7 @@ public class MountainForecastActivity extends Activity {
 
         public void showHighHeightRow(boolean show) {
             int visibility;
-            if(show) {
+            if (show) {
                 visibility = View.VISIBLE;
             } else {
                 visibility = View.GONE;
@@ -422,20 +422,20 @@ public class MountainForecastActivity extends Activity {
     }
 
     private class ForecastColumn {
-        private String columnId;
-        private TextView time;
-        private ImageView difficulty;
-        private TextView lowHeightTemperature;
-        private TextView lowHeightWind;
-        private ImageView lowHeightWindDirection;
-        private TextView midHeightTemperature;
-        private TextView midHeightWind;
-        private ImageView midHeightWindDirection;
-        private TextView highHeightTemperature;
-        private TextView highHeightWind;
-        private ImageView highHeightWindDirection;
-        private TextView rainLevel;
-        private TextView cloudCover;
+        private final String columnId;
+        private final TextView time;
+        private final ImageView difficulty;
+        private final TextView lowHeightTemperature;
+        private final TextView lowHeightWind;
+        private final ImageView lowHeightWindDirection;
+        private final TextView midHeightTemperature;
+        private final TextView midHeightWind;
+        private final ImageView midHeightWindDirection;
+        private final TextView highHeightTemperature;
+        private final TextView highHeightWind;
+        private final ImageView highHeightWindDirection;
+        private final TextView rainLevel;
+        private final TextView cloudCover;
 
         public ForecastColumn(TableLayout forecastTable, TableRow lowTemp, TableRow lowWind, TableRow midTemp, TableRow midWind, TableRow highTemp, TableRow highWind, String columnId) {
             this.columnId = columnId;

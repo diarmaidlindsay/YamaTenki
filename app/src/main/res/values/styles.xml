@@ -3,6 +3,7 @@
     <style name="AppTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
         <item name="android:seekBarStyle">@style/SeekBarAppTheme</item>
     </style>
+
     <style name="YamaTenkiActivity">
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">match_parent</item>
@@ -10,6 +11,7 @@
         <item name="android:padding">12dp</item>
         <item name="android:orientation">vertical</item>
     </style>
+
     <style name="ScreenTitle" parent="android:TextAppearance.Large">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -19,6 +21,7 @@
         <item name="android:textColor">@color/yama_brown</item>
         <item name="android:layout_margin">10dp</item>
     </style>
+
     <style name="MenuButton">
         <item name="android:gravity">center</item>
         <item name="layout_widthPercent">39%</item>
@@ -31,6 +34,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">20sp</item>
     </style>
+
     <style name="MainButtonLeft" parent="MenuButton">
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_marginBottom">30dp</item>
@@ -38,6 +42,7 @@
         <item name="android:textSize">25sp</item>
         <item name="android:layout_marginRight">20dp</item>
     </style>
+
     <style name="MainButtonRight" parent="MenuButton">
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_marginBottom">30dp</item>
@@ -45,14 +50,17 @@
         <item name="android:textSize">25sp</item>
         <item name="android:layout_marginLeft">20dp</item>
     </style>
+
     <style name="AreaButtonLeft" parent="MenuButton">
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_marginRight">20dp</item>
     </style>
+
     <style name="AreaButtonRight" parent="MenuButton">
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_marginLeft">20dp</item>
     </style>
+
     <style name="RatingButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -64,28 +72,35 @@
         <item name="android:layout_marginBottom">5dp</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
+
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">2dp</item>
         <item name="android:background">@color/yama_brown</item>
     </style>
+
     <style name="BrownText">
         <item name="android:textColor">@color/yama_brown</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
     </style>
+
     <style name="SmallestBrownText" parent="BrownText">
         <item name="android:textSize">12sp</item>
     </style>
+
     <style name="SmallBrownText" parent="BrownText">
         <item name="android:textSize">14sp</item>
     </style>
+
     <style name="MediumBrownText" parent="BrownText">
         <item name="android:textSize">16sp</item>
     </style>
+
     <style name="LargeBrownText" parent="BrownText">
         <item name="android:textSize">20sp</item>
     </style>
+
     <style name="ForecastTableHeader">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@android:color/white</item>
@@ -93,6 +108,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
     </style>
+
     <style name="ForecastTableLeftSideColumn" parent="SmallBrownText">
         <item name="android:background">@color/table_bg_alt</item>
         <item name="android:layout_weight">0.30</item>
@@ -100,12 +116,14 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:gravity">center</item>
     </style>
+
     <style name="ForecastTableSmallImage">
         <item name="android:layout_weight">0.05</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_gravity">center</item>
     </style>
+
     <style name="ForecastTableText" parent="LargeBrownText">
         <item name="android:textStyle">bold</item>
         <item name="android:layout_weight">0.15</item>
@@ -113,14 +131,17 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:gravity">center</item>
     </style>
+
     <style name="ForecastTableTextSmall" parent="ForecastTableText">
         <item name="android:textSize">14sp</item>
     </style>
+
     <style name="ForecastTableImage">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">0.15</item>
     </style>
+
     <style name="CustomTimePickerDialogTheme">
         <item name="bpMainColor1">@android:color/white</item>
         <item name="bpMainColor2">@color/memo_date_bg</item>
@@ -130,13 +151,18 @@
         <item name="bpDoneBackgroundColor">@android:color/white</item>
         <item name="bpSelectionAlpha">102</item>
     </style>
+
     <style name="yama_dialog" parent="@android:style/Theme.Dialog">
         <item name="android:background">@color/yama_background</item>
         <item name="android:textColor">@color/yama_brown</item>
     </style>
+
     <style name="SeekBarAppTheme" parent="android:Widget.Holo.Light.SeekBar">
-        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_holo_light</item>
-        <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_holo_light</item>
+        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_holo_light
+        </item>
+        <item name="android:indeterminateDrawable">
+            @drawable/scrubber_progress_horizontal_holo_light
+        </item>
         <item name="android:thumb">@drawable/scrubber_control_selector_holo_light</item>
     </style>
 </resources>

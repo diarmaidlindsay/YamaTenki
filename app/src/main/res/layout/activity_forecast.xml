@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
-    style="@style/YamaTenkiActivity"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/scroll_forecasts"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    style="@style/YamaTenkiActivity"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.percent.PercentRelativeLayout
         android:layout_width="fill_parent"
@@ -12,100 +12,100 @@
 
         <TextView
             android:id="@+id/text_forecast_header"
-            android:text="@string/text_unset"
+            style="@style/ScreenTitle"
             android:lines="2"
             android:maxLines="2"
-            style="@style/ScreenTitle" />
+            android:text="@string/text_unset"/>
 
         <ImageView
+            android:id="@+id/mountain_forecast_current_difficulty"
             android:layout_width="207dp"
             android:layout_height="162dp"
+            android:layout_below="@id/text_forecast_header"
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/text_search_table_header_difficulty"
-            android:id="@+id/mountain_forecast_current_difficulty"
-            android:layout_below="@id/text_forecast_header"
             android:src="@drawable/difficulty_large_a"/>
 
         <TextView
+            android:id="@+id/mountain_forecast_current_difficulty_text"
             style="@style/MediumBrownText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/mountain_forecast_current_difficulty_text"
             android:layout_below="@id/mountain_forecast_current_difficulty"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
             android:text="@string/text_search_table_header_difficulty"
-            android:layout_marginBottom="10dp"/>
+            android:textSize="25sp"/>
 
         <Button
+            android:id="@+id/button_add_my_mountain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_add_my_mountain"
-            android:background="@drawable/round_button_red"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:id="@+id/button_add_my_mountain"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@id/mountain_forecast_current_difficulty_text"
-            android:padding="10dp"
-            app:layout_widthPercent="45%"
-            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button_add_memo"
-            android:background="@drawable/round_button_brown"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/round_button_red"
+            android:padding="10dp"
+            android:text="@string/button_add_my_mountain"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold"
+            app:layout_widthPercent="45%"/>
+
+        <Button
             android:id="@+id/button_add_memo"
-            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_below="@id/mountain_forecast_current_difficulty_text"
-            android:layout_toRightOf="@id/button_add_my_mountain"
-            android:layout_toEndOf="@id/button_add_my_mountain"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            app:layout_widthPercent="45%"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_toEndOf="@id/button_add_my_mountain"
+            android:layout_toRightOf="@id/button_add_my_mountain"
+            android:background="@drawable/round_button_brown"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/button_add_memo"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_widthPercent="45%"/>
 
         <include
             android:id="@+id/today_am_forecast"
-            android:layout_below="@id/button_add_my_mountain"
             layout="@layout/scroll_item_forecast"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/button_add_my_mountain"
             />
 
         <include
             android:id="@+id/today_pm_forecast"
-            android:layout_below="@id/today_am_forecast"
             layout="@layout/scroll_item_forecast"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/today_am_forecast"
             />
 
         <include
             android:id="@+id/tomorrow_am_forecast"
-            android:layout_below="@id/today_pm_forecast"
             layout="@layout/scroll_item_forecast"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/today_pm_forecast"
             />
 
         <include
             android:id="@+id/tomorrow_pm_forecast"
-            android:layout_below="@id/tomorrow_am_forecast"
             layout="@layout/scroll_item_forecast"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/tomorrow_am_forecast"
             />
 
     </android.support.percent.PercentRelativeLayout>

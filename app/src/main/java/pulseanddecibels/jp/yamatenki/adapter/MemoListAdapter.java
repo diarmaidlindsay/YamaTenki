@@ -39,7 +39,7 @@ public class MemoListAdapter extends BaseAdapter {
     private List memoList = new ArrayList<>();
     private MemoListColumn currentSorting;
     private SortOrder currentOrder;
-    String searchString = ""; //in case we have to resubmit the query after update in child activity
+    private String searchString = ""; //in case we have to resubmit the query after update in child activity
 
     public MemoListAdapter(Context context) {
         this.mContext = context;
@@ -64,7 +64,7 @@ public class MemoListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolderItem viewHolder;
-        if(convertView == null) {
+        if (convertView == null) {
             viewHolder = new ViewHolderItem();
             convertView = layoutInflater.inflate(R.layout.list_item_memo, parent, false);
             viewHolder.name = (TextView) convertView.findViewById(R.id.memo_list_name);
@@ -95,7 +95,7 @@ public class MemoListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MemoDetailActivity.class);
                 intent.putExtra("memoId", memo.getId());
-                ((Activity)mContext).startActivityForResult(intent, 200);
+                ((Activity) mContext).startActivityForResult(intent, 200);
             }
         });
 
@@ -110,7 +110,7 @@ public class MemoListAdapter extends BaseAdapter {
 
         List<MyMemo> allMemos = myMemoDao.loadAll();
         Set<Long> uniqueMountainIds = new HashSet<>();
-        for(MyMemo memo : allMemos) {
+        for (MyMemo memo : allMemos) {
             uniqueMountainIds.add(memo.getMountainId());
         }
 
@@ -131,8 +131,8 @@ public class MemoListAdapter extends BaseAdapter {
 
         List matchingMountains = qb.list();
         List<Long> matchingMountainIds = new ArrayList<>();
-        for(int i = 0; i < matchingMountains.size(); i++) {
-            Mountain mountain = (Mountain)matchingMountains.get(i);
+        for (int i = 0; i < matchingMountains.size(); i++) {
+            Mountain mountain = (Mountain) matchingMountains.get(i);
             matchingMountainIds.add(mountain.getId());
         }
 
@@ -156,12 +156,12 @@ public class MemoListAdapter extends BaseAdapter {
                 Integer lhsRating = lhs.getRating();
                 Integer rhsRating = rhs.getRating();
 
-                if(lhsRating == null) lhsRating = 0;
-                if(rhsRating == null) rhsRating = 0;
+                if (lhsRating == null) lhsRating = 0;
+                if (rhsRating == null) rhsRating = 0;
 
-                if(lhsRating < rhsRating) {
+                if (lhsRating < rhsRating) {
                     return -1;
-                } else if(lhsRating > rhsRating) {
+                } else if (lhsRating > rhsRating) {
                     return 1;
                 } else {
                     return 0;
@@ -177,12 +177,12 @@ public class MemoListAdapter extends BaseAdapter {
                 Long lhsDate = lhs.getDateTimeFrom();
                 Long rhsDate = rhs.getDateTimeFrom();
 
-                if(lhsDate == null) lhsDate = 0L;
-                if(rhsDate == null) rhsDate = 0L;
+                if (lhsDate == null) lhsDate = 0L;
+                if (rhsDate == null) rhsDate = 0L;
 
-                if(lhsDate < rhsDate) {
+                if (lhsDate < rhsDate) {
                     return -1;
-                } else if(lhsDate > rhsDate) {
+                } else if (lhsDate > rhsDate) {
                     return 1;
                 } else {
                     return 0;
@@ -192,9 +192,9 @@ public class MemoListAdapter extends BaseAdapter {
     }
 
     public void sort(MemoListColumn column) {
-        if(currentSorting == column) {
+        if (currentSorting == column) {
             Collections.reverse(memoList);
-            if(currentOrder == SortOrder.DESC) {
+            if (currentOrder == SortOrder.DESC) {
                 currentOrder = SortOrder.ASC;
             } else {
                 currentOrder = SortOrder.DESC;
@@ -203,7 +203,7 @@ public class MemoListAdapter extends BaseAdapter {
             currentSorting = column;
             currentOrder = SortOrder.DESC;
 
-            switch(column) {
+            switch (column) {
 
                 case NAME:
                     Collections.sort(memoList, getNameComparitor());
@@ -220,17 +220,17 @@ public class MemoListAdapter extends BaseAdapter {
         notifyDataSetInvalidated();
     }
 
-    static class ViewHolderItem {
-        TextView name;
-        TextView rating;
-        TextView date;
-    }
-
     public MemoListColumn getCurrentSorting() {
         return currentSorting;
     }
 
     public SortOrder getCurrentOrder() {
         return currentOrder;
+    }
+
+    static class ViewHolderItem {
+        TextView name;
+        TextView rating;
+        TextView date;
     }
 }

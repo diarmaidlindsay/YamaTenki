@@ -35,8 +35,8 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  */
 public class MemoDetailActivity extends FragmentActivity implements CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener {
 
-    private Long mountainId;
     private static Long memoId;
+    private Long mountainId;
     private EditText dateFrom;
     private EditText dateUntil;
     private boolean from; //track which date box we're working with
@@ -299,10 +299,12 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
                     }
 
                     @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {}
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                    }
 
                     @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {}
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                    }
                 });
                 String currentRatingValue = rating.getText().toString();
                 ratingSeek.setProgress(currentRatingValue.equals("") ? 5 : Integer.parseInt(currentRatingValue) - 1);
@@ -466,9 +468,9 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
     }
 
     private class DateHolder {
-        private int year;
-        private int month;
-        private int day;
+        private final int year;
+        private final int month;
+        private final int day;
 
         public DateHolder(int year, int month, int day) {
             this.year = year;
@@ -482,8 +484,8 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
     }
 
     private class TimeHolder {
-        private int hour;
-        private int minute;
+        private final int hour;
+        private final int minute;
 
         public TimeHolder(int hour, int minute) {
             this.hour = hour;

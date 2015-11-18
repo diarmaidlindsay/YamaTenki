@@ -7,8 +7,8 @@ package pulseanddecibels.jp.yamatenki.model;
  * Representation of a "coordinate" object found in JSON
  */
 public class CoordinateElement {
-    double latitude;
-    double longitude;
+    private final double latitude;
+    private final double longitude;
 
     public CoordinateElement(double latitude, double longitude) {
         this.latitude = latitude;
