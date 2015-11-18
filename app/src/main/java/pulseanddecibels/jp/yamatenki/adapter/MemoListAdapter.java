@@ -39,7 +39,6 @@ public class MemoListAdapter extends BaseAdapter {
     private List memoList = new ArrayList<>();
     private MemoListColumn currentSorting;
     private SortOrder currentOrder;
-    private String searchString = ""; //in case we have to resubmit the query after update in child activity
 
     public MemoListAdapter(Context context) {
         this.mContext = context;
@@ -103,7 +102,6 @@ public class MemoListAdapter extends BaseAdapter {
     }
 
     public void search(String searchString) {
-        this.searchString = searchString;
         //all mountains which have memos
         MyMemoDao myMemoDao = Database.getInstance(mContext).getMyMemoDao();
         MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();

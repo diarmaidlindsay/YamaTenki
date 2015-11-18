@@ -10,6 +10,8 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import pulseanddecibels.jp.yamatenki.R;
@@ -25,7 +27,7 @@ public class ChecklistListAdapter extends BaseAdapter {
     private final Context mContext;
     private final LayoutInflater layoutInflater;
     private final CheckListItemDao checkListItemDao;
-    private List checkList = new ArrayList<>();
+    private List<CheckListItem> checkList = new ArrayList<>();
 
     private boolean editMode = false;
 
@@ -34,6 +36,7 @@ public class ChecklistListAdapter extends BaseAdapter {
         layoutInflater = LayoutInflater.from(context);
         checkListItemDao = Database.getInstance(context).getCheckListItemDao();
         checkList = checkListItemDao.loadAll();
+        Collections.sort(checkList, getIdComparitor());
     }
 
     @Override
@@ -67,11 +70,10 @@ public class ChecklistListAdapter extends BaseAdapter {
         }
 
         final CheckListItem item = (CheckListItem) getItem(position);
+
         viewHolder.checkBox.setChecked(item.getChecked());
         viewHolder.text.setText(item.getText());
-        viewHolder.text.setOnClickListener(getCheckboxOnClickListener(item));
         viewHolder.checkBox.setOnClickListener(getCheckboxOnClickListener(item));
-        convertView.setOnClickListener(getCheckboxOnClickListener(item)); //make everything clickable
         viewHolder.checkBox.setVisibility(isEditMode() ? View.INVISIBLE : View.VISIBLE);
         viewHolder.clearButton.setVisibility(isEditMode() ? View.VISIBLE : View.INVISIBLE);
         viewHolder.clearButton.setOnClickListener(getClearButtonOnClickListener(item));
@@ -100,6 +102,32 @@ public class ChecklistListAdapter extends BaseAdapter {
                 notifyDataSetChanged();
             }
         };
+    }
+
+    /**
+     * We want newest items on top of the list so need a custom comparitor
+     */
+    public Comparator<CheckListItem> getIdComparitor() {
+        return new Comparator<CheckListItem>() {
+            @Override
+            public int compare(CheckListItem lhs, CheckListItem rhs) {
+                if(lhs.getId() < rhs.getId()) {
+                    return 1;
+                } else if (lhs.getId() > rhs.getId()) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        };
+    }
+
+    public void addNewItem(String textEntered) {
+        final CheckListItem item = new CheckListItem(null, textEntered, false);
+        CheckListItemDao dao = Database.getInstance(mContext).getCheckListItemDao();
+        dao.insert(item);
+        checkList.add(0, item);
+        notifyDataSetChanged();
     }
 
     public boolean isEditMode() {

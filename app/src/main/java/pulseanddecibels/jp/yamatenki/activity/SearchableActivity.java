@@ -97,7 +97,7 @@ public class SearchableActivity extends Activity {
             tableHeaderDate = (TextView) memoListContainer.findViewById(R.id.table_header_date);
             tableHeaderDate.setOnClickListener(getDateHeaderOnClickListener());
             memoListAdapter.sort(MemoListColumn.NAME);
-
+            memoList.requestFocus(); //stop search box auto focusing
         } else {
             //we came here from AreaSearchActivity (Area was chosen)
             if (areaId != 0) {
@@ -163,9 +163,10 @@ public class SearchableActivity extends Activity {
             tableHeaderHeight = (TextView) mountainListContainer.findViewById(R.id.table_header_height);
             tableHeaderHeight.setOnClickListener(getHeightHeaderOnClickListener());
             mountainListAdapter.sort(MountainListColumn.NAME);
+            mountainList.requestFocus(); //stop search box auto focusing
         }
 
-        updateHeaders();
+        updateTableHeaders();
         header.setTypeface(Utils.getHannariTypeFace(this));
     }
 
@@ -405,7 +406,7 @@ public class SearchableActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mountainListAdapter.sort(MountainListColumn.NAME);
-                updateHeaders();
+                updateTableHeaders();
             }
         };
     }
@@ -415,7 +416,7 @@ public class SearchableActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mountainListAdapter.sort(MountainListColumn.DIFFICULTY);
-                updateHeaders();
+                updateTableHeaders();
             }
         };
     }
@@ -425,7 +426,7 @@ public class SearchableActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mountainListAdapter.sort(MountainListColumn.HEIGHT);
-                updateHeaders();
+                updateTableHeaders();
             }
         };
     }
@@ -435,7 +436,7 @@ public class SearchableActivity extends Activity {
             @Override
             public void onClick(View v) {
                 memoListAdapter.sort(MemoListColumn.NAME);
-                updateHeaders();
+                updateTableHeaders();
             }
         };
     }
@@ -445,7 +446,7 @@ public class SearchableActivity extends Activity {
             @Override
             public void onClick(View v) {
                 memoListAdapter.sort(MemoListColumn.RATING);
-                updateHeaders();
+                updateTableHeaders();
             }
         };
     }
@@ -455,7 +456,7 @@ public class SearchableActivity extends Activity {
             @Override
             public void onClick(View v) {
                 memoListAdapter.sort(MemoListColumn.DATE);
-                updateHeaders();
+                updateTableHeaders();
             }
         };
     }
@@ -505,7 +506,7 @@ public class SearchableActivity extends Activity {
     /**
      * Call after sorting to add sorting arrow to a header
      */
-    private void updateHeaders() {
+    private void updateTableHeaders() {
         //memos
         if (memoListAdapter != null) {
             String nameString = getResources().getString(R.string.text_memo_table_header_name);
