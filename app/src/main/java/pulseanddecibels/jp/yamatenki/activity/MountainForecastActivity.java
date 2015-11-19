@@ -1,12 +1,14 @@
 package pulseanddecibels.jp.yamatenki.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -56,9 +58,7 @@ public class MountainForecastActivity extends Activity {
     private final List<ForecastScrollViewElement> scrollViewElements = new ArrayList<>();
     private TextView title;
     private ImageView currentDifficultyImage;
-    private ScrollView mountainForecastScrollView;
     private Button addMyMountainButton;
-    private Button addMemoButton;
     private long mountainId;
 
     @Override
@@ -78,13 +78,16 @@ public class MountainForecastActivity extends Activity {
         currentDifficultyImage = (ImageView) findViewById(R.id.mountain_forecast_current_difficulty);
         TextView currentDifficultyText = (TextView) findViewById(R.id.mountain_forecast_current_difficulty_text);
         currentDifficultyText.setTypeface(Utils.getHannariTypeFace(this));
+        ImageView helpIconDifficulty = (ImageView) findViewById(R.id.mountain_forecast_difficulty_help);
+        helpIconDifficulty.setOnClickListener(
+                getHelpDialogOnClickListener(R.string.help_text_difficulty));
         addMyMountainButton = (Button) findViewById(R.id.button_add_my_mountain);
         addMyMountainButton.setOnClickListener(getAddMyMountainListener());
         addMyMountainButton.setText(getMyMountainForMountainId() == null ?
                 getResources().getString(R.string.button_add_my_mountain) :
                 getResources().getString(R.string.button_remove_my_mountain));
         addMyMountainButton.setTypeface(Utils.getHannariTypeFace(this));
-        addMemoButton = (Button) findViewById(R.id.button_add_memo);
+        Button addMemoButton = (Button) findViewById(R.id.button_add_memo);
         addMemoButton.setTypeface(Utils.getHannariTypeFace(this));
         addMemoButton.setOnClickListener(getAddMemoListener());
         initialiseWidgets();
@@ -93,7 +96,7 @@ public class MountainForecastActivity extends Activity {
     }
 
     private void initialiseWidgets() {
-        mountainForecastScrollView = (ScrollView) findViewById(R.id.scroll_forecasts);
+        ScrollView mountainForecastScrollView = (ScrollView) findViewById(R.id.scroll_forecasts);
         LinearLayout todayAMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.today_am_forecast);
         LinearLayout todayPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.today_pm_forecast);
         LinearLayout tomorrowAMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_am_forecast);
@@ -328,6 +331,22 @@ public class MountainForecastActivity extends Activity {
         return 0;
     }
 
+    public View.OnClickListener getHelpDialogOnClickListener(final int stringId) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String text = MountainForecastActivity.this.getResources().getString(stringId);
+                final Dialog dialog = new Dialog(MountainForecastActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_help);
+                TextView helpText = (TextView) dialog.findViewById(R.id.help_text);
+                helpText.setText(text);
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.show();
+            }
+        };
+    }
+
     // For now this is used for "Today" and "Tomorrow", ie, short term forecasts
     private class ForecastScrollViewElement {
         private final String[] TIME_INCREMENTS = {"00", "03", "06", "09"}; // column headers
@@ -343,10 +362,14 @@ public class MountainForecastActivity extends Activity {
 
         private final TableRow lowTempRow;
         private final TableRow lowWindRow;
+        private final ImageView lowWindHelp;
         private final TableRow midTempRow;
         private final TableRow midWindRow;
+        private final ImageView midWindHelp;
         private final TableRow highTempRow;
         private final TableRow highWindRow;
+        private final ImageView highWindHelp;
+        private final ImageView cloudCoverHelp;
 
         public ForecastScrollViewElement(LinearLayout forecast) {
             header = (TextView) forecast.findViewById(R.id.forecast_header);
@@ -354,12 +377,20 @@ public class MountainForecastActivity extends Activity {
 
             lowTempRow = (TableRow) forecastTable.findViewById(R.id.forecast_low_row_temperature);
             lowWindRow = (TableRow) forecastTable.findViewById(R.id.forecast_low_row_wind);
+            lowWindHelp = (ImageView) lowWindRow.findViewById(R.id.help_icon_wind_speed);
+            lowWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
 
             midTempRow = (TableRow) forecastTable.findViewById(R.id.forecast_mid_row_temperature);
             midWindRow = (TableRow) forecastTable.findViewById(R.id.forecast_mid_row_wind);
+            midWindHelp = (ImageView) midWindRow.findViewById(R.id.help_icon_wind_speed);
+            midWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
 
             highTempRow = (TableRow) forecastTable.findViewById(R.id.forecast_high_row_temperature);
             highWindRow = (TableRow) forecastTable.findViewById(R.id.forecast_high_row_wind);
+            highWindHelp = (ImageView) highWindRow.findViewById(R.id.help_icon_wind_speed);
+            highWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
+            cloudCoverHelp = (ImageView) forecastTable.findViewById(R.id.help_icon_cloud_cover);
+            cloudCoverHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_cloud_cover));
 
             for (String time : TIME_INCREMENTS) {
                 columns.add(new ForecastColumn(forecastTable, lowTempRow, lowWindRow, midTempRow, midWindRow, highTempRow, highWindRow, time));

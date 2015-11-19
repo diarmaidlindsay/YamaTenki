@@ -169,6 +169,7 @@
                         android:textColor="@color/yama_brown"/>
 
                     <ImageView
+                        android:id="@+id/help_icon_cloud_cover"
                         android:layout_width="15dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
