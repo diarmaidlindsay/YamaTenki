@@ -91,12 +91,66 @@
             android:textStyle="bold"
             app:layout_widthPercent="45%"/>
 
+        <ImageView
+            android:id="@+id/icon_facebook"
+            android:layout_width="0dp"
+            app:layout_widthPercent="20%"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/button_add_my_mountain"
+            android:src="@drawable/sn_icon_facebook"
+            android:contentDescription="@string/item_desc_icon_facebook"/>
+
+        <ImageView
+            android:id="@+id/icon_line"
+            android:layout_width="0dp"
+            app:layout_widthPercent="20%"
+            android:layout_below="@id/button_add_my_mountain"
+            android:layout_toRightOf="@id/icon_facebook"
+            android:layout_toEndOf="@id/icon_facebook"
+            android:layout_height="wrap_content"
+            android:src="@drawable/sn_icon_line"
+            android:contentDescription="@string/item_desc_icon_line"/>
+
+        <ImageView
+            android:id="@+id/icon_twitter"
+            android:layout_width="0dp"
+            app:layout_widthPercent="20%"
+            android:layout_below="@id/button_add_my_mountain"
+            android:layout_toRightOf="@id/icon_line"
+            android:layout_toEndOf="@id/icon_line"
+            android:layout_height="wrap_content"
+            android:src="@drawable/sn_icon_twitter"
+            android:contentDescription="@string/item_desc_icon_twitter"/>
+
+        <ImageView
+            android:id="@+id/icon_mail"
+            android:layout_width="0dp"
+            app:layout_widthPercent="20%"
+            android:layout_below="@id/button_add_my_mountain"
+            android:layout_toRightOf="@id/icon_twitter"
+            android:layout_toEndOf="@id/icon_twitter"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_mail"
+            android:contentDescription="@string/item_desc_icon_mail"/>
+
+        <ImageView
+            android:id="@+id/icon_maps"
+            android:layout_width="0dp"
+            app:layout_widthPercent="20%"
+            android:layout_below="@id/button_add_my_mountain"
+            android:layout_toRightOf="@id/icon_mail"
+            android:layout_toEndOf="@id/icon_mail"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_map"
+            android:contentDescription="@string/item_desc_icon_maps"/>
+
         <include
             android:id="@+id/today_am_forecast"
             layout="@layout/scroll_item_forecast"
+            android:layout_marginTop="10dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/button_add_my_mountain"
+            android:layout_below="@id/icon_facebook"
             />
 
         <include

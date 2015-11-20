@@ -77,7 +77,12 @@
     <string name="button_edit_checklist">編集</string>
     <string name="button_editing_checklist">編集中</string>
     <string name="button_new_checklist">追加</string>
-    <string name="help_text_wind_speed">風速の配列</string>
+    <string name="help_text_wind_speed">風速0.3m/s未満：静穏\n10m/s以上15m/s未満：やや強い風\n15m/s以上20m/s未満：強い風\n20m/s以上30m/s未満：非常に強い風</string>
     <string name="help_text_difficulty">山行指数とは? \n\n山行指数とは、登山をするための快適さを 気温・風・積算降水量・雲量を元に独自計 算し A~C で表現をしています。\nまた山頂付近の天気は麓付近とは異なる場 合がありますので、ご注意ください。\n登山指数には火山の噴火や地震、台風や積 雪に関する情報は含まれておりません。\n\nA 登山に適しています。\nB 風または雨が強く、やや登山に適していません。\nC 風または雨が強く、登山に適していません。</string>
-    <string name="help_text_cloud_cover">全雲量。0%〜100%</string>
+    <string name="help_text_cloud_cover">0：無雲\n1：晴れ\n2：雲が散在\n3：軽度の曇り\n4：部分的に曇り\n5：中程度の曇り\n6：大部分が曇り\n7：ほぼ全天が曇り\n8：全天が曇り\n9：不明\n-：計測なし</string>
+    <string name="item_desc_icon_facebook">Facebook icon</string>
+    <string name="item_desc_icon_line">LINE icon</string>
+    <string name="item_desc_icon_twitter">Twitter icon</string>
+    <string name="item_desc_icon_mail">Mail icon</string>
+    <string name="item_desc_icon_maps">Google Maps icon</string>
 </resources>
