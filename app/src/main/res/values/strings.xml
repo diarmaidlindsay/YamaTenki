@@ -85,4 +85,18 @@
     <string name="item_desc_icon_twitter">Twitter icon</string>
     <string name="item_desc_icon_mail">Mail icon</string>
     <string name="item_desc_icon_maps">Google Maps icon</string>
+    <string name="text_settings_header">詳細設定</string>
+    <string name="text_forecast_warning">気象情報ご利用上の注意\n\n高度別の値は気象予測の数値計算結果です。天気予報ではありませんので、地形や日射などの影響により山岳では値が大きく異なる場合がありますので十分ご注意ください。</string>
+    <string name="text_setting_subscription_title">チケット購入状況</string>
+    <string name="text_setting_subscription_subtitle_false">チケットの購入がありません。</string>
+    <string name="text_setting_subscription_subtitle_true">現在のチケット有効日数は%d日です。</string>
+    <string name="text_setting_title_warning">Display forecast warning</string>
+    <string name="text_setting_subtitle_warning_false">"This is not a forecast" warning will not be displayed.</string>
+    <string name="text_setting_subtitle_warning_true">"This is not a forecast" warning will be displayed.</string>
+    <string name="text_setting_title_mobile">Update using Mobile Network</string>
+    <string name="text_setting_subtitle_mobile_false">Update over Wifi only.</string>
+    <string name="text_setting_subtitle_mobile_true">Update using Mobile Network or Wifi.</string>
+    <string name="text_setting_title_checklist_reset">Reset checklist automatically</string>
+    <string name="text_setting_subtitle_checklist_reset_false">Checklist will not reset automatically.</string>
+    <string name="text_setting_subtitle_checklist_reset_true">Checklist will reset the day after last use.</string>
 </resources>

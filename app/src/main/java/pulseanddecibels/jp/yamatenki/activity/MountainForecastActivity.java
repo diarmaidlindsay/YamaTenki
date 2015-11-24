@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -34,6 +36,7 @@ import pulseanddecibels.jp.yamatenki.model.WindAndTemperatureElement;
 import pulseanddecibels.jp.yamatenki.utils.DateUtils;
 import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
 import pulseanddecibels.jp.yamatenki.utils.JSONParser;
+import pulseanddecibels.jp.yamatenki.utils.Settings;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
@@ -93,6 +96,9 @@ public class MountainForecastActivity extends Activity {
         initialiseWidgets();
         populateWidgets(JSONParser.parseMountainForecastFromFile(
                 JSONDownloader.getMockMountainForecast(this, mountain.getYid())));
+        if(new Settings(this).getSetting("setting_display_warning")) {
+            displayWarningDialog();
+        }
     }
 
     private void initialiseWidgets() {
@@ -342,9 +348,26 @@ public class MountainForecastActivity extends Activity {
                 TextView helpText = (TextView) dialog.findViewById(R.id.help_text);
                 helpText.setText(text);
                 dialog.setCanceledOnTouchOutside(true);
+                Drawable d = new ColorDrawable(getResources().getColor(R.color.yama_brown));
+                d.setAlpha(200);
+                dialog.getWindow().setBackgroundDrawable(d);
                 dialog.show();
             }
         };
+    }
+
+    public void displayWarningDialog() {
+        final String text = MountainForecastActivity.this.getResources().getString(R.string.text_forecast_warning);
+        final Dialog dialog = new Dialog(MountainForecastActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_help);
+        TextView helpText = (TextView) dialog.findViewById(R.id.help_text);
+        helpText.setText(text);
+        dialog.setCanceledOnTouchOutside(true);
+        Drawable d = new ColorDrawable(getResources().getColor(R.color.yama_brown));
+        d.setAlpha(200);
+        dialog.getWindow().setBackgroundDrawable(d);
+        dialog.show();
     }
 
     // For now this is used for "Today" and "Tomorrow", ie, short term forecasts

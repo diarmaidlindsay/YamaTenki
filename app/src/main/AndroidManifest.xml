@@ -64,6 +64,11 @@
                   android:label="@string/app_name">
         </activity>
 
+        <!-- Settings Activity -->
+        <activity android:name=".activity.SettingsActivity"
+                  android:label="@string/app_name">
+        </activity>
+
     </application>
 
 </manifest>

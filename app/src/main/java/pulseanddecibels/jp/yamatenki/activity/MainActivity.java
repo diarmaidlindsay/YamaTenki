@@ -126,6 +126,13 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             }
         });
 
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+            }
+        });
+
         buildGoogleApiClient();
     }
 

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/YamaTenkiActivity"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/text_settings_header"
+        style="@style/ScreenTitle"
+        android:text="@string/text_settings_header"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/setting_subscription"
+                layout="@layout/scroll_item_settings_nocheck"/>
+
+            <View style="@style/Divider"/>
+
+            <include
+                android:id="@+id/setting_display_warning"
+                layout="@layout/scroll_item_settings_check"/>
+
+            <View style="@style/Divider"/>
+
+            <include
+                android:id="@+id/setting_download_mobile"
+                layout="@layout/scroll_item_settings_check"/>
+
+            <View style="@style/Divider"/>
+
+            <include
+                android:id="@+id/setting_reset_checklist"
+                layout="@layout/scroll_item_settings_check"/>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>

@@ -2,7 +2,6 @@ package pulseanddecibels.jp.yamatenki.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +30,7 @@ import pulseanddecibels.jp.yamatenki.database.dao.Status;
 import pulseanddecibels.jp.yamatenki.database.dao.StatusDao;
 import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
 import pulseanddecibels.jp.yamatenki.utils.DateUtils;
+import pulseanddecibels.jp.yamatenki.utils.Settings;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/24.
@@ -43,16 +43,15 @@ public class SplashActivity extends Activity {
         DateUtils.setDefaultTimeZone();
     }
 
-    private final String PREFS_NAME = "YamaTenkiPrefs";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         goFullScreen();
 
-        if (isFirstTime()) {
+        if (new Settings(this).isFirstTimeRun()) {
             new DatabaseSetupTask().execute();
+            writeDefaultSettings();
         } else {
             displayNormalSplash();
         }
@@ -89,17 +88,6 @@ public class SplashActivity extends Activity {
             int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             decorView.setSystemUiVisibility(uiOptions);
         }
-    }
-
-    private boolean isFirstTime() {
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-
-        if (settings.getBoolean("first_time", true)) {
-            settings.edit().putBoolean("first_time", false).apply();
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -180,6 +168,13 @@ public class SplashActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void writeDefaultSettings() {
+        Settings settings = new Settings(this);
+        settings.setSetting("setting_display_warning", true);
+        settings.setSetting("setting_download_mobile", true);
+        settings.setSetting("setting_reset_checklist", false);
     }
 
     private class DatabaseSetupTask extends AsyncTask<Void, Void, Void> {
