@@ -97,7 +97,7 @@ public class SearchableActivity extends Activity {
             tableHeaderDate = (TextView) memoListContainer.findViewById(R.id.table_header_date);
             tableHeaderDate.setOnClickListener(getDateHeaderOnClickListener());
             memoListAdapter.sort(MemoListColumn.NAME);
-            memoList.requestFocus(); //stop search box auto focusing
+            findViewById(R.id.memo_container).requestFocus(); //stop search box auto focusing
         } else {
             //we came here from AreaSearchActivity (Area was chosen)
             if (areaId != 0) {

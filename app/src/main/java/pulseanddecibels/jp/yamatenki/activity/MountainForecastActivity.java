@@ -11,6 +11,7 @@ import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,12 +20,23 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.database.Database;
+import pulseanddecibels.jp.yamatenki.database.dao.Coordinate;
+import pulseanddecibels.jp.yamatenki.database.dao.CoordinateDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
 import pulseanddecibels.jp.yamatenki.database.dao.MyMountain;
@@ -63,16 +75,17 @@ public class MountainForecastActivity extends Activity {
     private ImageView currentDifficultyImage;
     private Button addMyMountainButton;
     private long mountainId;
+    private MapView mMapView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
 
         Bundle arguments = getIntent().getExtras();
         mountainId = arguments.getLong("mountainId");
         MountainDao mountainDao = Database.getInstance(this).getMountainDao();
-        Mountain mountain =
+        final Mountain mountain =
                 mountainDao.queryBuilder().where(MountainDao.Properties.Id.eq(mountainId)).unique();
 
         title = (TextView) findViewById(R.id.text_forecast_header);
@@ -84,6 +97,17 @@ public class MountainForecastActivity extends Activity {
         ImageView helpIconDifficulty = (ImageView) findViewById(R.id.mountain_forecast_difficulty_help);
         helpIconDifficulty.setOnClickListener(
                 getHelpDialogOnClickListener(R.string.help_text_difficulty));
+        ImageView iconFacebook = (ImageView) findViewById(R.id.icon_facebook);
+        ImageView iconLine = (ImageView) findViewById(R.id.icon_line);
+        ImageView iconTwitter = (ImageView) findViewById(R.id.icon_twitter);
+        ImageView iconMail = (ImageView) findViewById(R.id.icon_mail);
+        ImageView iconMaps = (ImageView) findViewById(R.id.icon_maps);
+        iconMaps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayMapDialog(savedInstanceState);
+            }
+        });
         addMyMountainButton = (Button) findViewById(R.id.button_add_my_mountain);
         addMyMountainButton.setOnClickListener(getAddMyMountainListener());
         addMyMountainButton.setText(getMyMountainForMountainId() == null ?
@@ -356,7 +380,7 @@ public class MountainForecastActivity extends Activity {
         };
     }
 
-    public void displayWarningDialog() {
+    private void displayWarningDialog() {
         final String text = MountainForecastActivity.this.getResources().getString(R.string.text_forecast_warning);
         final Dialog dialog = new Dialog(MountainForecastActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -368,6 +392,71 @@ public class MountainForecastActivity extends Activity {
         d.setAlpha(200);
         dialog.getWindow().setBackgroundDrawable(d);
         dialog.show();
+    }
+
+    private void displayMapDialog(Bundle savedInstanceState) {
+        final Dialog dialog = new Dialog(MountainForecastActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_map);
+        dialog.setCanceledOnTouchOutside(true);
+        Window window = dialog.getWindow();
+        window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        mMapView = (MapView) dialog.findViewById(R.id.mapview);
+        //must call the whole lifecycle http://www.matt-reid.co.uk/blog_post.php?id=93
+        mMapView.onCreate(savedInstanceState);
+        mMapView.onResume();
+        MapsInitializer.initialize(MountainForecastActivity.this);
+        GoogleMap map = mMapView.getMap();
+
+        MountainDao mountainDao = Database.getInstance(this).getMountainDao();
+        CoordinateDao coordinateDao = Database.getInstance(this).getCoordinateDao();
+        Mountain mountain = mountainDao.load(mountainId);
+        Coordinate coordinate =
+                coordinateDao.queryBuilder().where(CoordinateDao.Properties.MountainId.eq(mountainId)).unique();
+
+        LatLng latLng = new LatLng(coordinate.getLatitude(), coordinate.getLongitude());
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+        map.moveCamera(cameraUpdate);
+        map.addMarker(new MarkerOptions()
+                .position(latLng)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mountain_axe_pin))
+                .snippet(mountain.getHeight()+"m")
+                .title(mountain.getTitleExt())).showInfoWindow();
+
+        dialog.show();
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mMapView != null) {
+            mMapView.onResume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mMapView != null) {
+            mMapView.onPause();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(mMapView != null) {
+            mMapView.onDestroy();
+        }
+
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if(mMapView != null) {
+            mMapView.onLowMemory();
+        }
     }
 
     // For now this is used for "Today" and "Tomorrow", ie, short term forecasts
