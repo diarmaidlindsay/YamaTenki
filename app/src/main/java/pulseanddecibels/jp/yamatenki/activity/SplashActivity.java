@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
+import com.facebook.FacebookSdk;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +49,7 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         goFullScreen();
 
         if (new Settings(this).isFirstTimeRun()) {

@@ -152,9 +152,15 @@
         <item name="bpSelectionAlpha">102</item>
     </style>
 
-    <style name="yama_dialog" parent="@android:style/Theme.Dialog">
-        <item name="android:background">@color/yama_background</item>
-        <item name="android:textColor">@color/yama_brown</item>
+    <style name="YamaDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:background">@color/yama_brown</item>
+        <item name="android:textColor">@color/yama_background</item>
+        <item name="android:windowTitleStyle">@style/YamaDialogTitle</item>
+    </style>
+
+    <style name="YamaDialogTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">@color/yama_background</item>
     </style>
 
     <style name="SeekBarAppTheme" parent="android:Widget.Holo.Light.SeekBar">

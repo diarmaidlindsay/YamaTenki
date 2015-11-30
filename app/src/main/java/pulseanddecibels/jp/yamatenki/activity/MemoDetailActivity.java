@@ -284,7 +284,7 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = new Dialog(MemoDetailActivity.this, R.style.yama_dialog);
+                final Dialog dialog = new Dialog(MemoDetailActivity.this, R.style.YamaDialog);
                 dialog.setContentView(R.layout.dialog_rating);
                 dialog.setTitle(getResources().getString(R.string.text_memo_table_header_rating));
 

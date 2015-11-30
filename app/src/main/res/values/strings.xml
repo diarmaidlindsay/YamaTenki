@@ -99,4 +99,9 @@
     <string name="text_setting_title_checklist_reset">Reset checklist automatically</string>
     <string name="text_setting_subtitle_checklist_reset_false">Checklist will not reset automatically.</string>
     <string name="text_setting_subtitle_checklist_reset_true">Checklist will reset the day after last use.</string>
+    <string name="facebook_app_id">1676238312590862</string>
+    <string name="text_powered_by">Powered by 山てんき</string>
+    <string name="item_desc_facebook_preview">Facebook image preview</string>
+    <string name="dialog_facebook">Facebook</string>
+    <string name="button_post">ポスト</string>
 </resources>

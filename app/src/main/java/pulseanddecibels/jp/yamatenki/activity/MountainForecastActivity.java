@@ -3,23 +3,35 @@ package pulseanddecibels.jp.yamatenki.activity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.share.ShareApi;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,7 +41,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -76,6 +91,8 @@ public class MountainForecastActivity extends Activity {
     private Button addMyMountainButton;
     private long mountainId;
     private MapView mMapView;
+    private CallbackManager callbackManager;
+    private LoginManager loginManager;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -85,8 +102,7 @@ public class MountainForecastActivity extends Activity {
         Bundle arguments = getIntent().getExtras();
         mountainId = arguments.getLong("mountainId");
         MountainDao mountainDao = Database.getInstance(this).getMountainDao();
-        final Mountain mountain =
-                mountainDao.queryBuilder().where(MountainDao.Properties.Id.eq(mountainId)).unique();
+        final Mountain mountain = mountainDao.load(mountainId);
 
         title = (TextView) findViewById(R.id.text_forecast_header);
         title.setTypeface(Utils.getHannariTypeFace(this));
@@ -98,6 +114,12 @@ public class MountainForecastActivity extends Activity {
         helpIconDifficulty.setOnClickListener(
                 getHelpDialogOnClickListener(R.string.help_text_difficulty));
         ImageView iconFacebook = (ImageView) findViewById(R.id.icon_facebook);
+        iconFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayFacebookDialog();
+            }
+        });
         ImageView iconLine = (ImageView) findViewById(R.id.icon_line);
         ImageView iconTwitter = (ImageView) findViewById(R.id.icon_twitter);
         ImageView iconMail = (ImageView) findViewById(R.id.icon_mail);
@@ -120,7 +142,7 @@ public class MountainForecastActivity extends Activity {
         initialiseWidgets();
         populateWidgets(JSONParser.parseMountainForecastFromFile(
                 JSONDownloader.getMockMountainForecast(this, mountain.getYid())));
-        if(new Settings(this).getSetting("setting_display_warning")) {
+        if (new Settings(this).getSetting("setting_display_warning")) {
             displayWarningDialog();
         }
     }
@@ -204,6 +226,7 @@ public class MountainForecastActivity extends Activity {
         //set forecast page's title
         title.setText(mountainInfo.getTitle());
         //set forecast page's big difficulty image
+        //TEMPORARY - using random big image
         currentDifficultyImage.setImageResource(DIFFICULTY_BIG_IMAGES.get(getRandomDifficulty()));
 
         Map<String, ForecastArrayElement> forecastMap = forecasts.getForecasts();
@@ -421,15 +444,124 @@ public class MountainForecastActivity extends Activity {
         map.addMarker(new MarkerOptions()
                 .position(latLng)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.mountain_axe_pin))
-                .snippet(mountain.getHeight()+"m")
+                .snippet(mountain.getHeight() + "m")
                 .title(mountain.getTitleExt())).showInfoWindow();
 
         dialog.show();
     }
+
+    private void displayFacebookDialog() {
+        final Dialog dialog = new Dialog(MountainForecastActivity.this, R.style.YamaDialog);
+        dialog.setContentView(R.layout.dialog_facebook);
+        dialog.setTitle(getResources().getString(R.string.dialog_facebook));
+        dialog.setCanceledOnTouchOutside(true);
+
+        Button postButton = (Button) dialog.findViewById(R.id.facebook_post_button);
+        final EditText postText = (EditText) dialog.findViewById(R.id.facebook_post_text);
+        ImageView postPreview = (ImageView) dialog.findViewById(R.id.facebook_image_preview);
+
+        final Bitmap composite = createForecastComposite();
+        postPreview.setImageBitmap(composite);
+
+        postButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postToFacebook(postText.getText().toString(), composite);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private Bitmap createForecastComposite() {
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        LinearLayout snLayout = (LinearLayout) inflater.inflate(R.layout.social_network_forecast, null);
+        snLayout.setDrawingCacheEnabled(true);
+        snLayout.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        final String[] TIME_INTERVAL = {"00", "03", "06", "09", "12", "15", "18", "21"};
+
+        MountainDao mountainDao = Database.getInstance(this).getMountainDao();
+        final Mountain mountain = mountainDao.load(mountainId);
+
+        TextView snForecastHeader = (TextView) snLayout.findViewById(R.id.sn_forecast_header);
+        snForecastHeader.setText(mountain.getTitle());
+        snForecastHeader.setTypeface(Utils.getHannariTypeFace(this));
+
+        TextView snCurrentDifficultyText = (TextView) snLayout.findViewById(R.id.sn_current_difficulty_text);
+        snCurrentDifficultyText.setTypeface(Utils.getHannariTypeFace(this));
+
+        TextView snPoweredByText = (TextView) snLayout.findViewById(R.id.text_powered_by);
+        snPoweredByText.setTypeface(Utils.getHannariTypeFace(this));
+
+        ImageView snCurrentDifficulty = (ImageView) snLayout.findViewById(R.id.sn_current_difficulty);
+        //TEMPORARY - using random difficulty image
+        snCurrentDifficulty.setImageResource(DIFFICULTY_BIG_IMAGES.get(getRandomDifficulty()));
+
+        TextView snDate = (TextView) snLayout.findViewById(R.id.sn_date);
+        DateTime now = new DateTime();
+        snDate.setText(String.format("%s月%s日　本日の山行指数", Utils.num2DigitString(now.getMonthOfYear()), Utils.num2DigitString(now.getDayOfMonth())));
+
+        MountainForecastJSON forecastJSON = JSONParser.parseMountainForecastFromFile(
+                JSONDownloader.getMockMountainForecast(this, mountain.getYid()));
+        if (forecastJSON != null) {
+            Map<String, ForecastArrayElement> forecasts = forecastJSON.getForecasts();
+            //TEMPORARY until we get realtime forecasts
+            ForecastArrayElement[] forecastArray = forecasts.values().toArray(new ForecastArrayElement[forecasts.values().size()]);
+            for (int i = 0; i < TIME_INTERVAL.length; i++) {
+                ForecastArrayElement forecast = forecastArray[i];
+                TextView time = (TextView) snLayout.findViewById(getResources().getIdentifier("sn_time_" + TIME_INTERVAL[i], "id", getPackageName()));
+                time.setText(TIME_INTERVAL[i]);
+                ImageView image = (ImageView) snLayout.findViewById(getResources().getIdentifier("sn_image_" + TIME_INTERVAL[i], "id", getPackageName()));
+                image.setImageResource(DIFFICULTY_SMALL_IMAGES.get(forecast.getMountainStatus()));
+            }
+        }
+        snLayout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        snLayout.layout(0, 0, snLayout.getMeasuredWidth(), snLayout.getMeasuredHeight());
+        snLayout.buildDrawingCache(true);
+        Bitmap composite = Bitmap.createBitmap(snLayout.getDrawingCache(true));
+
+        snLayout.setDrawingCacheEnabled(false);
+        return composite;
+    }
+
+    private void postToFacebook(final String text, final Bitmap image) {
+        callbackManager = CallbackManager.Factory.create();
+        List<String> permissionNeeds = Collections.singletonList("publish_actions");
+        //this loginManager helps you eliminate adding a LoginButton to your UI
+        loginManager = LoginManager.getInstance();
+        loginManager.logInWithPublishPermissions(this, permissionNeeds);
+        loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                SharePhoto photo = new SharePhoto.Builder()
+                        .setBitmap(image)
+                        .setCaption(text)
+                        .build();
+                SharePhotoContent content = new SharePhotoContent.Builder()
+                        .addPhoto(photo)
+                        .build();
+                ShareApi.share(content, null);
+            }
+
+            @Override
+            public void onCancel() {
+                System.out.println("sharePictureToFacebook.onCancel()");
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                Toast.makeText(MountainForecastActivity.this,
+                        "Could not post to Facebook now, please try again later.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        if(mMapView != null) {
+        if (mMapView != null) {
             mMapView.onResume();
         }
     }
@@ -437,7 +569,7 @@ public class MountainForecastActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        if(mMapView != null) {
+        if (mMapView != null) {
             mMapView.onPause();
         }
     }
@@ -445,7 +577,7 @@ public class MountainForecastActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mMapView != null) {
+        if (mMapView != null) {
             mMapView.onDestroy();
         }
 
@@ -454,9 +586,15 @@ public class MountainForecastActivity extends Activity {
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        if(mMapView != null) {
+        if (mMapView != null) {
             mMapView.onLowMemory();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int responseCode, Intent data) {
+        super.onActivityResult(requestCode, responseCode, data);
+        callbackManager.onActivityResult(requestCode, responseCode, data);
     }
 
     // For now this is used for "Today" and "Tomorrow", ie, short term forecasts
