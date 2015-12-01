@@ -45,6 +45,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.apache.http.protocol.HTTP;
 import org.joda.time.DateTime;
 
 import java.io.File;
@@ -138,12 +139,10 @@ public class MountainForecastActivity extends Activity {
                         shareWithLINE();
                     } catch (URISyntaxException | IOException e) {
                         Toast.makeText(MountainForecastActivity.this,
-                            getString(R.string.toast_facebook_post_fail), Toast.LENGTH_SHORT).show();
+                                getString(R.string.toast_facebook_post_fail), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 } else {
-//                    Toast.makeText(MountainForecastActivity.this,
-//                            getString(R.string.toast_line_not_installed), Toast.LENGTH_SHORT).show();
                     AlertDialog.Builder builder = new AlertDialog.Builder(MountainForecastActivity.this, R.style.YamaDialog);
                     builder.setMessage("LINEがインストールされていません。インストールしますか？")
                             .setPositiveButton("はい", new DialogInterface.OnClickListener() {
@@ -190,6 +189,18 @@ public class MountainForecastActivity extends Activity {
             }
         });
         ImageView iconMail = (ImageView) findViewById(R.id.icon_mail);
+        iconMail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    shareWithMail();
+                } catch (URISyntaxException | IOException e) {
+                    Toast.makeText(MountainForecastActivity.this,
+                            getString(R.string.toast_facebook_post_fail), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+        });
         ImageView iconMaps = (ImageView) findViewById(R.id.icon_maps);
         iconMaps.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -653,7 +664,21 @@ public class MountainForecastActivity extends Activity {
         intent.setAction(Intent.ACTION_SEND);
         intent.setPackage("com.twitter.android");
         intent.setType("image/png");
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(shareImage.getAbsolutePath()));
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(shareImage));
+        startActivity(intent);
+    }
+
+    private void shareWithMail() throws URISyntaxException, IOException {
+        Bitmap image = createForecastComposite();
+        File shareImage = new File(getExternalCacheDir(), "forecast.png");
+        OutputStream outputStream = new FileOutputStream(shareImage);
+        image.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        outputStream.close();
+        outputStream.flush();
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType(HTTP.PLAIN_TEXT_TYPE);
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(shareImage));
         startActivity(intent);
     }
 
