@@ -143,7 +143,7 @@ public class MountainForecastActivity extends Activity {
                         e.printStackTrace();
                     }
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MountainForecastActivity.this, R.style.YamaDialog);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MountainForecastActivity.this);
                     builder.setMessage("LINEがインストールされていません。インストールしますか？")
                             .setPositiveButton("はい", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
@@ -172,7 +172,7 @@ public class MountainForecastActivity extends Activity {
                         e.printStackTrace();
                     }
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MountainForecastActivity.this, R.style.YamaDialog);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MountainForecastActivity.this);
                     builder.setMessage("Twitterがインストールされていません。インストールしますか？")
                             .setPositiveButton("はい", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
@@ -529,7 +529,7 @@ public class MountainForecastActivity extends Activity {
     }
 
     private void displayFacebookDialog() {
-        final Dialog dialog = new Dialog(MountainForecastActivity.this, R.style.YamaDialog);
+        final Dialog dialog = new Dialog(MountainForecastActivity.this, R.style.SocialDialog);
         dialog.setContentView(R.layout.dialog_facebook);
         dialog.setTitle(getResources().getString(R.string.dialog_facebook));
         dialog.setCanceledOnTouchOutside(true);

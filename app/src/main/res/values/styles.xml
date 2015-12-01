@@ -151,24 +151,22 @@
         <item name="bpDoneBackgroundColor">@android:color/white</item>
         <item name="bpSelectionAlpha">102</item>
     </style>
-
-    <style name="YamaDialog" parent="@android:style/Theme.Dialog">
-        <item name="android:background">@color/yama_brown</item>
-        <item name="android:textColor">@color/yama_background</item>
-        <item name="android:windowTitleStyle">@style/YamaDialogTitle</item>
+    <style name="RatingDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:background">@color/yama_background</item>
+        <item name="android:textColor">@color/yama_brown</item>
     </style>
-
-    <style name="YamaDialogTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
+    <style name="SocialDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:background">@color/yama_brown</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:windowTitleStyle">@style/SocialDialogTitle</item>
+    </style>
+    <style name="SocialDialogTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textColor">@color/yama_background</item>
     </style>
-
     <style name="SeekBarAppTheme" parent="android:Widget.Holo.Light.SeekBar">
-        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_holo_light
-        </item>
-        <item name="android:indeterminateDrawable">
-            @drawable/scrubber_progress_horizontal_holo_light
-        </item>
+        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_holo_light</item>
         <item name="android:thumb">@drawable/scrubber_control_selector_holo_light</item>
     </style>
 </resources>
