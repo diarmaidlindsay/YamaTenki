@@ -161,6 +161,34 @@ public class MountainForecastActivity extends Activity {
             }
         });
         ImageView iconTwitter = (ImageView) findViewById(R.id.icon_twitter);
+        iconTwitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isInstalledTwitter()) {
+                    try {
+                        shareWithTwitter();
+                    } catch (URISyntaxException | IOException e) {
+                        Toast.makeText(MountainForecastActivity.this,
+                                getString(R.string.toast_facebook_post_fail), Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MountainForecastActivity.this, R.style.YamaDialog);
+                    builder.setMessage("Twitterがインストールされていません。インストールしますか？")
+                            .setPositiveButton("はい", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.twitter.android"));
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("いいえ", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    builder.create().show();
+                }
+            }
+        });
         ImageView iconMail = (ImageView) findViewById(R.id.icon_mail);
         ImageView iconMaps = (ImageView) findViewById(R.id.icon_maps);
         iconMaps.setOnClickListener(new View.OnClickListener() {
@@ -613,11 +641,37 @@ public class MountainForecastActivity extends Activity {
         startActivity(intent);
     }
 
+    private void shareWithTwitter() throws URISyntaxException, IOException {
+        Bitmap image = createForecastComposite();
+        File shareImage = new File(getExternalCacheDir(), "forecast.png");
+        OutputStream outputStream = new FileOutputStream(shareImage);
+        image.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        outputStream.close();
+        outputStream.flush();
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setPackage("com.twitter.android");
+        intent.setType("image/png");
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(shareImage.getAbsolutePath()));
+        startActivity(intent);
+    }
+
     // アプリがインストールされているかチェック
     private boolean isInstalledLINE() {
         try {
             PackageManager pm = getPackageManager();
             pm.getApplicationInfo("jp.naver.line.android", PackageManager.GET_META_DATA);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
+    private boolean isInstalledTwitter() {
+        try {
+            PackageManager pm = getPackageManager();
+            pm.getApplicationInfo("com.twitter.android", PackageManager.GET_META_DATA);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
             return false;
