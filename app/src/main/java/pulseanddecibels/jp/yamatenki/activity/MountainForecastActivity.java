@@ -1,12 +1,16 @@
 package pulseanddecibels.jp.yamatenki.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -43,6 +47,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.joda.time.DateTime;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -121,6 +130,36 @@ public class MountainForecastActivity extends Activity {
             }
         });
         ImageView iconLine = (ImageView) findViewById(R.id.icon_line);
+        iconLine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isInstalledLINE()) {
+                    try {
+                        shareWithLINE();
+                    } catch (URISyntaxException | IOException e) {
+                        Toast.makeText(MountainForecastActivity.this,
+                            getString(R.string.toast_facebook_post_fail), Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                } else {
+//                    Toast.makeText(MountainForecastActivity.this,
+//                            getString(R.string.toast_line_not_installed), Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MountainForecastActivity.this, R.style.YamaDialog);
+                    builder.setMessage("LINEがインストールされていません。インストールしますか？")
+                            .setPositiveButton("はい", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=jp.naver.line.android"));
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("いいえ", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    builder.create().show();
+                }
+            }
+        });
         ImageView iconTwitter = (ImageView) findViewById(R.id.icon_twitter);
         ImageView iconMail = (ImageView) findViewById(R.id.icon_mail);
         ImageView iconMaps = (ImageView) findViewById(R.id.icon_maps);
@@ -543,6 +582,8 @@ public class MountainForecastActivity extends Activity {
                         .addPhoto(photo)
                         .build();
                 ShareApi.share(content, null);
+                Toast.makeText(MountainForecastActivity.this,
+                        getString(R.string.toast_facebook_post_success), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -553,9 +594,34 @@ public class MountainForecastActivity extends Activity {
             @Override
             public void onError(FacebookException exception) {
                 Toast.makeText(MountainForecastActivity.this,
-                        "Could not post to Facebook now, please try again later.", Toast.LENGTH_SHORT).show();
+                        getString(R.string.toast_facebook_post_fail), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void shareWithLINE() throws URISyntaxException, IOException {
+        Bitmap bitmap = createForecastComposite();
+        File shareImage = new File(getExternalCacheDir(), "forecast.png");
+        OutputStream outputStream = new FileOutputStream(shareImage);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        outputStream.close();
+        outputStream.flush();
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("line://msg/image" + shareImage.getAbsolutePath()));
+        startActivity(intent);
+    }
+
+    // アプリがインストールされているかチェック
+    private boolean isInstalledLINE() {
+        try {
+            PackageManager pm = getPackageManager();
+            pm.getApplicationInfo("jp.naver.line.android", PackageManager.GET_META_DATA);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 
     @Override

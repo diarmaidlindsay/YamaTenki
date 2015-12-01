@@ -103,5 +103,8 @@
     <string name="text_powered_by">Powered by 山てんき</string>
     <string name="item_desc_facebook_preview">Facebook image preview</string>
     <string name="dialog_facebook">Facebook</string>
-    <string name="button_post">ポスト</string>
+    <string name="button_post">投稿する</string>
+    <string name="toast_facebook_post_success">投稿に成功しました！</string>
+    <string name="toast_facebook_post_fail">投稿に失敗しました。。。</string>
+    <string name="toast_line_not_installed">LINEがインストールされていません。</string>
 </resources>
