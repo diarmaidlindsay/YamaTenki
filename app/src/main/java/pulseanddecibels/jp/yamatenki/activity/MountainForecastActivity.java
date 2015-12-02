@@ -533,9 +533,9 @@ public class MountainForecastActivity extends Activity {
     private void displayInstallSNSDialog(String sns, final String playStorePackage) {
         final Dialog dialog = new Dialog(MountainForecastActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_install_sns);
+        dialog.setContentView(R.layout.dialog_alert);
         String installTextString = String.format(getString(R.string.text_dialog_sns_not_installed), sns);
-        TextView installText = (TextView) dialog.findViewById(R.id.install_text);
+        TextView installText = (TextView) dialog.findViewById(R.id.alert_text);
         installText.setText(installTextString);
         dialog.setCanceledOnTouchOutside(true);
         Button yes = (Button) dialog.findViewById(R.id.yes_button);

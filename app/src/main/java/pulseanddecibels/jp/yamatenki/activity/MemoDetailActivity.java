@@ -1,14 +1,13 @@
 package pulseanddecibels.jp.yamatenki.activity;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -87,10 +86,10 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
         rating.setKeyListener(null);
         memo = (EditText) findViewById(R.id.memo_memo);
         buttonConfirm = (Button) findViewById(R.id.button_confirm);
-        buttonConfirm.setOnClickListener(getConfirmButtonOnClickListener(memoId));
+        buttonConfirm.setOnClickListener(getConfirmButtonOnClickListener());
 
         buttonDelete = (Button) findViewById(R.id.button_delete);
-        buttonDelete.setOnClickListener(getDeleteButtonOnClickListener(memoId));
+        buttonDelete.setOnClickListener(getDeleteButtonOnClickListener());
         buttonEdit = (Button) findViewById(R.id.button_edit);
         buttonEdit.setOnClickListener(getEditButtonOnClickListener());
 
@@ -322,7 +321,7 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
         };
     }
 
-    private View.OnClickListener getConfirmButtonOnClickListener(final Long memoId) {
+    private View.OnClickListener getConfirmButtonOnClickListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -368,34 +367,39 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
         };
     }
 
-    private View.OnClickListener getDeleteButtonOnClickListener(final Long memoId) {
+    private View.OnClickListener getDeleteButtonOnClickListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(MemoDetailActivity.this);
-                builder
-                        .setMessage(getResources().getString(R.string.dialog_delete_message))
-                        .setPositiveButton(getResources().getString(R.string.button_confirm_delete), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                MyMemoDao dao = Database.getInstance(MemoDetailActivity.this).getMyMemoDao();
-                                MyMemo memo = dao.queryBuilder().where(MyMemoDao.Properties.Id.eq(memoId)).unique();
-                                dao.delete(memo);
-                                //going back to the memo list so we should trigger an update
-                                Intent intent = getIntent();
-                                intent.putExtra("changedMemo", memoId);
-                                setResult(RESULT_OK, intent);
-                                finish();
-                            }
-                        })
-                        .setNegativeButton(getResources().getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        })
-                        .show();
+                final Dialog dialog = new Dialog(MemoDetailActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_alert);
+                TextView alertText = (TextView) dialog.findViewById(R.id.alert_text);
+                alertText.setText(R.string.dialog_delete_message);
+                dialog.setCanceledOnTouchOutside(true);
+                Button yes = (Button) dialog.findViewById(R.id.yes_button);
+                yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MyMemoDao dao = Database.getInstance(MemoDetailActivity.this).getMyMemoDao();
+                        MyMemo memo = dao.queryBuilder().where(MyMemoDao.Properties.Id.eq(memoId)).unique();
+                        dao.delete(memo);
+                        //going back to the memo list so we should trigger an update
+                        Intent intent = getIntent();
+                        intent.putExtra("changedMemo", memoId);
+                        setResult(RESULT_OK, intent);
+                        dialog.dismiss();
+                        finish();
+                    }
+                });
+                Button no = (Button) dialog.findViewById(R.id.no_button);
+                no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
             }
         };
     }
