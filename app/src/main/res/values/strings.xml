@@ -109,4 +109,5 @@
     <string name="yes">はい</string>
     <string name="no">いいえ</string>
     <string name="text_dialog_sns_not_installed">%sがインストールされていません。インストールしますか？</string>
+    <string name="text_first_time_run_message">注意喚起\n\n気象情報ご利用上の注意\n高度別の値は気象予測の数値計算結果です。\n天気予報ではありませんので、地形や日射などの影響により山岳では\n値が大きく異なる場合がありますので十分ご注意ください。</string>
 </resources>

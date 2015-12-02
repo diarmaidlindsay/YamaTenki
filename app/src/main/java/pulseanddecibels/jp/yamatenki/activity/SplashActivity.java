@@ -1,12 +1,18 @@
 package pulseanddecibels.jp.yamatenki.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.Window;
+import android.widget.TextView;
 
 import com.facebook.FacebookSdk;
 
@@ -40,6 +46,9 @@ import pulseanddecibels.jp.yamatenki.utils.Settings;
  */
 public class SplashActivity extends Activity {
 
+    private boolean databaseTaskRunning = false;
+    private boolean firstTimeDialogOpen = false;
+
     static {
         //change to Japan Time Zone
         DateUtils.setDefaultTimeZone();
@@ -55,6 +64,7 @@ public class SplashActivity extends Activity {
         if (new Settings(this).isFirstTimeRun()) {
             new DatabaseSetupTask().execute();
             writeDefaultSettings();
+            displayFirstTimeMessage();
         } else {
             displayNormalSplash();
         }
@@ -79,6 +89,29 @@ public class SplashActivity extends Activity {
                 finish();
             }
         }, SPLASH_TIME_OUT);
+    }
+
+    private void displayFirstTimeMessage() {
+        final Dialog dialog = new Dialog(SplashActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_help);
+        TextView helpText = (TextView) dialog.findViewById(R.id.help_text);
+        helpText.setText(R.string.text_first_time_run_message);
+        dialog.setCanceledOnTouchOutside(true);
+        Drawable d = new ColorDrawable(getResources().getColor(R.color.yama_brown));
+        d.setAlpha(200);
+        dialog.getWindow().setBackgroundDrawable(d);
+        dialog.show();
+        firstTimeDialogOpen = true;
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                firstTimeDialogOpen = false;
+                if (!databaseTaskRunning) {
+                    startMainActivity();
+                }
+            }
+        });
     }
 
     private void goFullScreen() {
@@ -180,19 +213,27 @@ public class SplashActivity extends Activity {
         settings.setSetting("setting_reset_checklist", false);
     }
 
+    private void startMainActivity() {
+        Intent i = new Intent(SplashActivity.this, MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
     private class DatabaseSetupTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
+            databaseTaskRunning = true;
             insertSampleData();
             return null;
         }
 
         @Override
         protected void onPostExecute(Void v) {
-            Intent i = new Intent(SplashActivity.this, MainActivity.class);
-            startActivity(i);
-            finish();
+            databaseTaskRunning = false;
+            if(!firstTimeDialogOpen) {
+                startMainActivity();
+            }
         }
     }
 }
