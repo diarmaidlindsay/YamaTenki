@@ -106,5 +106,7 @@
     <string name="button_post">投稿する</string>
     <string name="toast_facebook_post_success">投稿に成功しました！</string>
     <string name="toast_facebook_post_fail">投稿に失敗しました。。。</string>
-    <string name="toast_line_not_installed">LINEがインストールされていません。</string>
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
+    <string name="text_dialog_sns_not_installed">%sがインストールされていません。インストールしますか？</string>
 </resources>

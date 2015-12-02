@@ -1,9 +1,7 @@
 package pulseanddecibels.jp.yamatenki.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -143,19 +141,7 @@ public class MountainForecastActivity extends Activity {
                         e.printStackTrace();
                     }
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MountainForecastActivity.this);
-                    builder.setMessage("LINEがインストールされていません。インストールしますか？")
-                            .setPositiveButton("はい", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=jp.naver.line.android"));
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton("いいえ", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                }
-                            });
-                    builder.create().show();
+                    displayInstallSNSDialog("LINE", "market://details?id=jp.naver.line.android");
                 }
             }
         });
@@ -172,19 +158,7 @@ public class MountainForecastActivity extends Activity {
                         e.printStackTrace();
                     }
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MountainForecastActivity.this);
-                    builder.setMessage("Twitterがインストールされていません。インストールしますか？")
-                            .setPositiveButton("はい", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.twitter.android"));
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton("いいえ", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                }
-                            });
-                    builder.create().show();
+                    displayInstallSNSDialog("Twitter", "market://details?id=com.twitter.android");
                 }
             }
         });
@@ -549,6 +523,37 @@ public class MountainForecastActivity extends Activity {
             }
         });
 
+        dialog.show();
+    }
+
+    /**
+     * When user hasn't got Twitter or LINE installed
+     * Prompt them to download
+     */
+    private void displayInstallSNSDialog(String sns, final String playStorePackage) {
+        final Dialog dialog = new Dialog(MountainForecastActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_install_sns);
+        String installTextString = String.format(getString(R.string.text_dialog_sns_not_installed), sns);
+        TextView installText = (TextView) dialog.findViewById(R.id.install_text);
+        installText.setText(installTextString);
+        dialog.setCanceledOnTouchOutside(true);
+        Button yes = (Button) dialog.findViewById(R.id.yes_button);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(playStorePackage));
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        Button no = (Button) dialog.findViewById(R.id.no_button);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         dialog.show();
     }
 
