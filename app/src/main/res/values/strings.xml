@@ -109,5 +109,9 @@
     <string name="yes">はい</string>
     <string name="no">いいえ</string>
     <string name="text_dialog_sns_not_installed">%sがインストールされていません。インストールしますか？</string>
-    <string name="text_first_time_run_message">注意喚起\n\n気象情報ご利用上の注意\n高度別の値は気象予測の数値計算結果です。\n天気予報ではありませんので、地形や日射などの影響により山岳では\n値が大きく異なる場合がありますので十分ご注意ください。</string>
+    <string name="text_license_agreement">山てんき（気象情報）ご利用上の注意\n高度別の値は気象予測の数値計算結果です。天気予報ではありませんので、地形や日射などの影響により山岳では値が大きく異なる場合がありますので十分ご注意ください。\n\n山行指数は登山の快適さを保証するものではありません気温・積算降水量・風速を元に計算された指標なので、各自の判断が重要となります。\n\n自然と向き合うという事は決して安全な行為とは言えません、軽装備や装備不足、体調不良など、安易な判断での登山は控えましょう。</string>
+    <string name="text_license_agreement_title">注意喚起</string>
+    <string name="checkbox_license_agreement">上記の文章を理解しました</string>
+    <string name="button_license_agreement_disagree">同意しない</string>
+    <string name="button_license_agreement_agree">同意する</string>
 </resources>

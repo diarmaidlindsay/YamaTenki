@@ -12,8 +12,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.view.Window;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.CheckBox;
 
 import com.facebook.FacebookSdk;
 
@@ -29,7 +29,9 @@ import pulseanddecibels.jp.yamatenki.utils.Settings;
 public class SplashActivity extends Activity {
 
     private boolean databaseTaskRunning = false;
-    private boolean firstTimeDialogOpen = false;
+    private boolean licenseAgreementDialogOpen = false;
+    private boolean agreeButtonPressed = false;
+    Settings settings;
 
     static {
         //change to Japan Time Zone
@@ -39,16 +41,20 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        settings = new Settings(this);
         setContentView(R.layout.activity_splash);
         FacebookSdk.sdkInitialize(getApplicationContext());
         goFullScreen();
 
-        if (new Settings(this).isFirstTimeRun()) {
+        if (settings.isFirstTimeRun()) {
             new DatabaseSetupTask().execute();
             writeDefaultSettings();
-            displayFirstTimeMessage();
         } else {
             displayNormalSplash();
+        }
+
+        if(!settings.isAgreedToLicense()) {
+            displayUserLicenseAgreement();
         }
     }
 
@@ -66,31 +72,85 @@ public class SplashActivity extends Activity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent i = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(i);
-                finish();
+                if (!licenseAgreementDialogOpen && settings.isAgreedToLicense()) {
+                    startMainActivity();
+                } else if(!licenseAgreementDialogOpen) {
+                    finish();
+                }
+
             }
         }, SPLASH_TIME_OUT);
     }
 
-    private void displayFirstTimeMessage() {
+    private void displayUserLicenseAgreement() {
         final Dialog dialog = new Dialog(SplashActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_help);
-        TextView helpText = (TextView) dialog.findViewById(R.id.help_text);
-        helpText.setText(R.string.text_first_time_run_message);
-        dialog.setCanceledOnTouchOutside(true);
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_license_agreement);
+        dialog.setTitle(getString(R.string.text_license_agreement_title));
+        dialog.setCanceledOnTouchOutside(false);
         Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.yama_brown));
-        d.setAlpha(200);
         dialog.getWindow().setBackgroundDrawable(d);
         dialog.show();
-        firstTimeDialogOpen = true;
+        licenseAgreementDialogOpen = true;
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if(!agreeButtonPressed) {
+                    licenseAgreementDialogOpen = false;
+                    settings.setAgreedToLicense(false);
+                    if (!databaseTaskRunning) {
+                        finish();
+                    }
+                }
+            }
+        });
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                firstTimeDialogOpen = false;
+                licenseAgreementDialogOpen = false;
+                settings.setAgreedToLicense(false);
+                if(!databaseTaskRunning) {
+                    finish();
+                }
+            }
+        });
+
+        final Button agreeButton = (Button) dialog.findViewById(R.id.agree_button);
+        agreeButton.setEnabled(false);
+        agreeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                settings.setAgreedToLicense(true);
+                agreeButtonPressed = true;
+                dialog.dismiss();
                 if (!databaseTaskRunning) {
                     startMainActivity();
+                }
+            }
+        });
+        Button disagreeButton = (Button) dialog.findViewById(R.id.disagree_button);
+        disagreeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                settings.setAgreedToLicense(false);
+                dialog.dismiss();
+                if(!databaseTaskRunning) {
+                    finish();
+                }
+            }
+        });
+
+        CheckBox agreementCheckbox = (CheckBox) dialog.findViewById(R.id.agreement_checkbox);
+        agreementCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox checkbox = (CheckBox) v;
+                if(checkbox.isChecked()) {
+                    agreeButton.setVisibility(View.VISIBLE);
+                    agreeButton.setEnabled(true);
+                } else {
+                    agreeButton.setVisibility(View.INVISIBLE);
+                    agreeButton.setEnabled(false);
                 }
             }
         });
@@ -109,7 +169,6 @@ public class SplashActivity extends Activity {
     }
 
     private void writeDefaultSettings() {
-        Settings settings = new Settings(this);
         settings.setSetting("setting_display_warning", true);
         settings.setSetting("setting_download_mobile", true);
         settings.setSetting("setting_reset_checklist", false);
@@ -133,9 +192,12 @@ public class SplashActivity extends Activity {
         @Override
         protected void onPostExecute(Void v) {
             databaseTaskRunning = false;
-            if (!firstTimeDialogOpen) {
+            if (!licenseAgreementDialogOpen && settings.isAgreedToLicense()) {
                 startMainActivity();
+            } else if(!licenseAgreementDialogOpen) {
+                finish();
             }
+            //else do nothing, dialog is still open for user to make a choice
         }
     }
 }

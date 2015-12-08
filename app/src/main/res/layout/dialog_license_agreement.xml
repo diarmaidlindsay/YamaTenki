@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/yama_background"
+              android:orientation="vertical">
+
+    <TextView
+        style="@style/SmallBrownText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_license_agreement"
+        android:padding="30dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_gravity="center"
+            android:id="@+id/agreement_label"
+            android:text="@string/checkbox_license_agreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/MediumBrownText"
+            android:padding="10dp"/>
+
+        <CheckBox
+            android:id="@+id/agreement_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:layout_gravity="center"
+            android:button="@drawable/btn_check"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/disagree_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:background="@color/yama_brown"
+            android:padding="10dp"
+            android:text="@string/button_license_agreement_disagree"
+            android:textColor="@android:color/white"/>
+        <Button
+            android:id="@+id/agree_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:background="@color/yama_brown"
+            android:padding="10dp"
+            android:visibility="invisible"
+            android:text="@string/button_license_agreement_agree"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -38,6 +38,14 @@ public class Settings {
         settings.edit().putBoolean(key, value).apply();
     }
 
+    public boolean isAgreedToLicense() {
+        return settings.getBoolean("agreed_to_license", false);
+    }
+
+    public void setAgreedToLicense(boolean value) {
+        settings.edit().putBoolean("agreed_to_license", value).apply();
+    }
+
     public boolean isNewEtag(String etag) {
         return !settings.getString("last_list_etag", "").equals(etag);
     }
