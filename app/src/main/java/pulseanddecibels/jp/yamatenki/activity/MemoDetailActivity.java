@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -171,9 +172,9 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
         rating.setEnabled(enable);
         memo.setEnabled(enable);
 
-        int yamaBackground = getResources().getColor(R.color.yama_background);
-        int yamaBrown = getResources().getColor(R.color.yama_brown);
-        int hintTextColor = getResources().getColor(R.color.hint_text);
+        int yamaBackground = ContextCompat.getColor(this, R.color.yama_background);
+        int yamaBrown = ContextCompat.getColor(this, R.color.yama_brown);
+        int hintTextColor = ContextCompat.getColor(this, R.color.hint_text);
         int roundEditText = R.drawable.round_edittext;
 
         activityTimeLabel.setBackgroundColor(yamaBrown);

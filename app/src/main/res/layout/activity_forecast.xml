@@ -25,7 +25,6 @@
             android:layout_below="@id/text_forecast_header"
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/text_search_table_header_difficulty"
-            android:src="@drawable/difficulty_large_a"
             android:adjustViewBounds="true"/>
 
         <ImageView

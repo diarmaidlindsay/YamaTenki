@@ -14,19 +14,19 @@
             android:text="@string/text_forecast_atmospheric_temperature"/>
 
         <TextView
-            android:id="@+id/forecast_temp_00"
+            android:id="@+id/forecast_temp_0"
             style="@style/ForecastTableText"/>
 
         <TextView
-            android:id="@+id/forecast_temp_03"
+            android:id="@+id/forecast_temp_1"
             style="@style/ForecastTableText"/>
 
         <TextView
-            android:id="@+id/forecast_temp_06"
+            android:id="@+id/forecast_temp_2"
             style="@style/ForecastTableText"/>
 
         <TextView
-            android:id="@+id/forecast_temp_09"
+            android:id="@+id/forecast_temp_3"
             style="@style/ForecastTableText"/>
     </LinearLayout>
 </TableRow>

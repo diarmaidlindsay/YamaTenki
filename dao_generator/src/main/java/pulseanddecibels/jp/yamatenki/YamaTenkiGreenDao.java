@@ -16,6 +16,8 @@ public class YamaTenkiGreenDao {
         Entity mountain = schema.addEntity("Mountain");
         Entity coordinate = schema.addEntity("Coordinate");
         Entity forecast = schema.addEntity("Forecast");
+        Entity windAndTemperature = schema.addEntity("WindAndTemperature");
+        Entity pressure = schema.addEntity("Pressure");
         Entity area = schema.addEntity("Area");
         Entity prefecture = schema.addEntity("Prefecture");
         Entity myMountain = schema.addEntity("MyMountain");
@@ -52,26 +54,44 @@ public class YamaTenkiGreenDao {
         coordinate.setHasKeepSections(true);
 
         /**
+         Pressure
+         */
+        pressure.addIdProperty();
+        pressure.addIntProperty("height");
+        pressure.addIntProperty("pressure");
+        Property mountainIdPressure = pressure.addLongProperty("mountainId").notNull().getProperty();
+        //One mountain, many Pressures
+        pressure.addToOne(mountain, mountainIdPressure);
+        mountain.addToMany(pressure, mountainIdPressure);
+
+        /**
          Forecast
          **/
         forecast.addIdProperty();
-        forecast.addLongProperty("timestamp");
-        forecast.addIntProperty("peakTemp");
-        forecast.addIntProperty("peakVelocity");
-        forecast.addIntProperty("peakDirection");
-        forecast.addIntProperty("baseTemp");
-        forecast.addIntProperty("baseVelocity");
-        forecast.addIntProperty("baseDirection");
-        forecast.addIntProperty("weather");
-        forecast.addIntProperty("temperature");
-        forecast.addFloatProperty("precipitation");
-        forecast.addIntProperty("temperatureHigh");
-        forecast.addIntProperty("temperatureLow");
+        forecast.addDoubleProperty("temperature");
+        forecast.addDoubleProperty("precipitation");
+        forecast.addDoubleProperty("totalCloudCover");
+        forecast.addIntProperty("mountainStatus");
+        forecast.addStringProperty("dateTime");
         Property mountainIdForecast = forecast.addLongProperty("mountainId").notNull().getProperty(); //which mountain it belongs to
         //One mountain, Many forecasts
         forecast.addToOne(mountain, mountainIdForecast);
         mountain.addToMany(forecast, mountainIdForecast);
         forecast.setHasKeepSections(true);
+
+        /**
+         WindAndTemperature
+         **/
+        windAndTemperature.addIdProperty();
+        windAndTemperature.addIntProperty("height"); //low (0), mid (1), high (2)
+        windAndTemperature.addDoubleProperty("temperature");
+        windAndTemperature.addDoubleProperty("windVelocity");
+        windAndTemperature.addDoubleProperty("windDirection");
+        Property forecastIdWindAndTemperature = windAndTemperature.addLongProperty("forecastId").notNull().getProperty();
+        //One forecast, many WindAndTemperatures
+        windAndTemperature.addToOne(forecast, forecastIdWindAndTemperature);
+        forecast.addToMany(windAndTemperature, forecastIdWindAndTemperature);
+        windAndTemperature.setHasKeepSections(true);
 
         /**
          Area

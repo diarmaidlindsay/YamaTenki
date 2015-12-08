@@ -2,22 +2,42 @@ package pulseanddecibels.jp.yamatenki.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.SparseIntArray;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import pulseanddecibels.jp.yamatenki.database.dao.Area;
+import pulseanddecibels.jp.yamatenki.database.dao.AreaDao;
+import pulseanddecibels.jp.yamatenki.database.dao.CheckListItem;
+import pulseanddecibels.jp.yamatenki.database.dao.CheckListItemDao;
+import pulseanddecibels.jp.yamatenki.database.dao.Coordinate;
+import pulseanddecibels.jp.yamatenki.database.dao.CoordinateDao;
 import pulseanddecibels.jp.yamatenki.database.dao.DaoMaster;
 import pulseanddecibels.jp.yamatenki.database.dao.DaoSession;
+import pulseanddecibels.jp.yamatenki.database.dao.Forecast;
+import pulseanddecibels.jp.yamatenki.database.dao.ForecastDao;
+import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
+import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
+import pulseanddecibels.jp.yamatenki.database.dao.Prefecture;
+import pulseanddecibels.jp.yamatenki.database.dao.PrefectureDao;
+import pulseanddecibels.jp.yamatenki.database.dao.Pressure;
+import pulseanddecibels.jp.yamatenki.database.dao.PressureDao;
+import pulseanddecibels.jp.yamatenki.database.dao.Status;
+import pulseanddecibels.jp.yamatenki.database.dao.StatusDao;
+import pulseanddecibels.jp.yamatenki.database.dao.WindAndTemperature;
+import pulseanddecibels.jp.yamatenki.database.dao.WindAndTemperatureDao;
+import pulseanddecibels.jp.yamatenki.model.ForecastArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
-import pulseanddecibels.jp.yamatenki.model.MountainListCSVEntry;
-import pulseanddecibels.jp.yamatenki.model.MountainListJSON;
-import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
-import pulseanddecibels.jp.yamatenki.utils.JSONParser;
-import pulseanddecibels.jp.yamatenki.utils.Utils;
+import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
+import pulseanddecibels.jp.yamatenki.model.WindAndTemperatureElement;
 
 /**
  * Created by Diarmaid Lindsay on 2015/10/14.
@@ -41,42 +61,6 @@ public class Database {
             daoSession = daoMaster.newSession();
         }
         return daoSession;
-    }
-
-    public static List<MountainListCSVEntry> parseMountainCSV(Context context) throws IOException {
-        List<MountainListCSVEntry> csvEntries = new ArrayList<>();
-
-        InputStream inputStream = context.getAssets().open("databases/mountainList.csv");
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        String line;
-        String csvSplitBy = ",";
-
-        while ((line = br.readLine()) != null) {
-            String[] row = line.split(csvSplitBy, 10);
-            //first line is header, we should ignore
-            if (row.length == 10 && Utils.isNumeric(row[4].trim())) {
-                Integer height = null;
-                Float latitude = null;
-                Float longitude = null;
-                try {
-                    height = Integer.parseInt(row[4].trim());
-                    latitude = Float.parseFloat(row[7]);
-                    longitude = Float.parseFloat(row[8]);
-                } catch (NumberFormatException e) {
-                    //do nothing
-                }
-                csvEntries.add(new MountainListCSVEntry(row[0], row[1], row[2], row[3], height,
-                        row[5], row[6], latitude, longitude, row[9]));
-            }
-        }
-
-        return csvEntries;
-    }
-
-    public static List<MountainArrayElement> parseMountainJSON(Context context) throws IOException {
-        MountainListJSON mountainList = JSONParser.parseMountainsFromMountainList(JSONDownloader.getMockMountainList(context));
-
-        return mountainList.getMountainArrayElements();
     }
 
     public static List<String> parsePrefectureCSV(Context context) throws IOException {
@@ -103,5 +87,167 @@ public class Database {
         }
 
         return csvEntries;
+    }
+
+    public static void initialiseData(Context context) {
+        AreaDao areaDao = Database.getInstance(context).getAreaDao();
+        PrefectureDao prefectureDao = Database.getInstance(context).getPrefectureDao();
+        CheckListItemDao checkListItemDao = Database.getInstance(context).getCheckListItemDao();
+
+        areaDao.deleteAll();
+        prefectureDao.deleteAll();
+        checkListItemDao.deleteAll();
+
+        try {
+            List<String> prefecturesListRaw = Database.parsePrefectureCSV(context);
+            List<Prefecture> prefectureList = new ArrayList<>();
+            for (String prefecture : prefecturesListRaw) {
+                prefectureList.add(new Prefecture(null, prefecture));
+            }
+            prefectureDao.insertInTx(prefectureList);
+
+            List<String> areasListRaw = Database.parseAreaCSV(context);
+            List<Area> areaList = new ArrayList<>();
+            //start from zero to match the specifications (0 = 北海道, etc)
+            for (int i = 0; i < areasListRaw.size(); i++) {
+                areaList.add(new Area((long) i, areasListRaw.get(i)));
+            }
+            areaDao.insertInTx(areaList);
+
+            List<String> checklistListRaw = Database.parseChecklistCSV(context);
+            List<CheckListItem> checkList = new ArrayList<>();
+            for (String item : checklistListRaw) {
+                checkList.add(new CheckListItem(null, item, false));
+            }
+            checkListItemDao.insertInTx(checkList);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void insertMountainList(Context context, List<MountainArrayElement> jsonEntries) {
+        MountainDao mountainDao = Database.getInstance(context).getMountainDao();
+        CoordinateDao coordinateDao = Database.getInstance(context).getCoordinateDao();
+        StatusDao statusDao = Database.getInstance(context).getStatusDao();
+        AreaDao areaDao = Database.getInstance(context).getAreaDao();
+        PrefectureDao prefectureDao = Database.getInstance(context).getPrefectureDao();
+        mountainDao.deleteAll();
+        coordinateDao.deleteAll();
+        statusDao.deleteAll();
+
+        List<String> yids = new ArrayList<>();
+
+        Map<String, Coordinate> coordinateMap = new HashMap<>();
+        Map<String, Status> statusMap = new HashMap<>();
+        List<Mountain> mountainList = new ArrayList<>();
+
+        for (MountainArrayElement element : jsonEntries) {
+            String key = element.getYid();
+            yids.add(key);
+            Area area = areaDao.queryBuilder().where(AreaDao.Properties.Id.eq(element.getArea())).unique();
+            Prefecture prefecture = prefectureDao.queryBuilder().where(PrefectureDao.Properties.Name.eq(element.getPrefecture().trim())).unique();
+            Mountain mountain = new Mountain(null, element.getYid(), element.getTitle(), element.getTitleExt(), element.getTitleEnglish(), element.getKana(),
+                    prefecture.getId(), area.getId(), element.getHeight());
+            mountainList.add(mountain);
+            Coordinate coordinate = new Coordinate(null, (float) element.getCoordinate().getLatitude(), (float) element.getCoordinate().getLongitude());
+            coordinateMap.put(key, coordinate);
+            Status status = new Status(null, element.getCurrentMountainStatus());
+            statusMap.put(key, status);
+        }
+
+        mountainDao.insertInTx(mountainList);
+
+        for (String yid : yids) {
+            Mountain mountain = mountainDao.queryBuilder().where(MountainDao.Properties.Yid.eq(yid)).unique();
+            Long mountainId = mountain.getId();
+            Status status = statusMap.get(yid);
+            status.setMountainId(mountainId);
+            Coordinate coordinate = coordinateMap.get(yid);
+            coordinate.setMountainId(mountainId);
+        }
+
+        statusDao.insertInTx(statusMap.values());
+        coordinateDao.insertInTx(coordinateMap.values());
+    }
+
+    public static void insertMountainForecast(Context context, MountainForecastJSON forecastJSON) {
+        MountainDao mountainDao = Database.getInstance(context).getMountainDao();
+        final ForecastDao forecastDao = Database.getInstance(context).getForecastDao();
+        WindAndTemperatureDao windAndTemperatureDao = Database.getInstance(context).getWindAndTemperatureDao();
+        PressureDao pressureDao = Database.getInstance(context).getPressureDao();
+
+        MountainArrayElement mountainArrayElement = forecastJSON.getMountainArrayElement();
+        String yid = mountainArrayElement.getYid();
+        Mountain mountain = mountainDao.queryBuilder().where(MountainDao.Properties.Yid.eq(yid)).unique();
+        long mountainId = mountain.getId();
+
+        //delete existing forecasts and wind/temperatures
+        List<Forecast> existingForecasts = mountain.getForecastList();
+        for(Forecast forecast : existingForecasts) {
+            List<WindAndTemperature> existingWindAndTemperatures = forecast.getWindAndTemperatureList();
+            windAndTemperatureDao.deleteInTx(existingWindAndTemperatures);
+        }
+        forecastDao.deleteInTx(existingForecasts);
+
+        //delete existing heights/pressures
+        List<Pressure> existingPressures = mountain.getPressureList();
+        pressureDao.deleteInTx(existingPressures);
+
+        Map<String, ForecastArrayElement> forecastMap = forecastJSON.getForecasts();
+        Set<String> timestamps = forecastMap.keySet();
+
+        final List<Forecast> newForecasts = new ArrayList<>();
+
+        for (String dateTime : timestamps) {
+            ForecastArrayElement element = forecastMap.get(dateTime);
+            Double outerTemperature = element.getTemperature();
+            Double precipitation = element.getPrecipitation();
+            Double totalCloudCover = element.getTotalCloudCover();
+            Integer mountainStatus = element.getMountainStatus();
+            String timeStamp = element.getTimeStamp(); //should be same as "dateTime"
+            Forecast forecast = new Forecast(null, outerTemperature, precipitation, totalCloudCover, mountainStatus, timeStamp, mountainId);
+            newForecasts.add(forecast);
+        }
+
+        forecastDao.insertInTx(newForecasts);
+
+        //after the forecasts get assigned ids from the database, retrieve them and bind them to their WindAndTemperatures
+        List<Forecast> forecastList = forecastDao.queryBuilder().where(ForecastDao.Properties.MountainId.eq(mountainId)).list();
+        Map<String, Long> forecastIdsByDateTime = new HashMap<>();
+
+        for(Forecast forecast : forecastList) {
+            forecastIdsByDateTime.put(forecast.getDateTime(), forecast.getId());
+        }
+
+        for (String dateTime : timestamps) {
+            ForecastArrayElement element = forecastMap.get(dateTime);
+            String timeStamp = element.getTimeStamp();
+            Long forecastId = forecastIdsByDateTime.get(timeStamp);
+            List<WindAndTemperature> windAndTemperatures = new ArrayList<>();
+            List<WindAndTemperatureElement> windAndTemperatureElements = element.getWindAndTemperatures();
+            for(int i=0; i < windAndTemperatureElements.size(); i++) {
+
+                WindAndTemperatureElement windAndTemperatureElement = windAndTemperatureElements.get(i);
+                Integer height = i;
+                Double temperature = windAndTemperatureElement.getTemperature();
+                Double windVelocity = windAndTemperatureElement.getWindVelocity();
+                Double windDirection = windAndTemperatureElement.getWindDirection();
+
+                WindAndTemperature windAndTemperature = new WindAndTemperature(null, height, temperature, windVelocity, windDirection, forecastId);
+                windAndTemperatures.add(windAndTemperature);
+            }
+            windAndTemperatureDao.insertInTx(windAndTemperatures);
+        }
+
+        List<Pressure> pressureList = new ArrayList<>();
+        SparseIntArray heightsPressures = forecastJSON.getHeights();
+        for(int i = 0; i < heightsPressures.size(); i++) {
+            int height = heightsPressures.keyAt(i);
+            // get the object by the key.
+            int pressure = heightsPressures.get(height);
+            pressureList.add(new Pressure(null, height, pressure, mountainId));
+        }
+        pressureDao.insertInTx(pressureList);
     }
 }

@@ -3,6 +3,7 @@ package pulseanddecibels.jp.yamatenki.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,9 +78,9 @@ public class MemoListAdapter extends BaseAdapter {
 
         //check first bit, if set then it is an odd number. We'll give alternate rows different backgrounds
         if ((position % 2) == 0) {
-            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.table_bg_alt));
+            convertView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.table_bg_alt));
         } else {
-            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.yama_background));
+            convertView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.yama_background));
         }
 
         final MyMemo memo = (MyMemo) getItem(position);

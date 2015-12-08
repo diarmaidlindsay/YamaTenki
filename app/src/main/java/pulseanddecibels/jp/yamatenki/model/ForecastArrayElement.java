@@ -4,6 +4,8 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
+import pulseanddecibels.jp.yamatenki.utils.DateUtils;
+
 /**
  * Created by Diarmaid Lindsay on 2015/09/30.
  * Copyright Pulse and Decibels 2015
@@ -14,15 +16,15 @@ import java.util.List;
  * in a json file
  */
 public class ForecastArrayElement {
-    private final DateTime dateTime;
+    private final String timeStamp;
     private final int mountainStatus;
     private final List<WindAndTemperatureElement> windAndTemperatures;
     private final double temperature;
     private final double precipitation;
-    private final int totalCloudCover;
+    private final double totalCloudCover;
 
-    public ForecastArrayElement(DateTime dateTime, int mountainStatus, List<WindAndTemperatureElement> windAndTemperatures, Integer temperature, float precipitation, int totalCloudCover) {
-        this.dateTime = dateTime;
+    public ForecastArrayElement(String timeStamp, int mountainStatus, List<WindAndTemperatureElement> windAndTemperatures, Integer temperature, float precipitation, int totalCloudCover) {
+        this.timeStamp = timeStamp;
         this.mountainStatus = mountainStatus;
         this.windAndTemperatures = windAndTemperatures;
         this.temperature = temperature;
@@ -31,26 +33,30 @@ public class ForecastArrayElement {
     }
 
     public DateTime getDateTime() {
-        return dateTime;
+        return DateUtils.getDateTimeFromForecast(timeStamp);
     }
 
     public List<WindAndTemperatureElement> getWindAndTemperatures() {
         return windAndTemperatures;
     }
 
-    public String getTemperature() { //what is this for?
-        return "" + (int) temperature;
+    public Double getTemperature() {
+        return temperature;
     }
 
-    public String getPrecipitation() {
-        return "" + (int) precipitation;
+    public Double getPrecipitation() {
+        return precipitation;
     }
 
     public int getMountainStatus() {
         return mountainStatus;
     }
 
-    public String getTotalCloudCover() {
-        return "" + totalCloudCover / 10;
+    public Double getTotalCloudCover() {
+        return totalCloudCover;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
     }
 }

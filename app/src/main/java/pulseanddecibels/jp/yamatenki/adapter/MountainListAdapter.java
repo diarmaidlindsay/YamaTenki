@@ -3,6 +3,7 @@ package pulseanddecibels.jp.yamatenki.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -112,9 +113,9 @@ public class MountainListAdapter extends BaseAdapter {
 
         //check first bit, if set then it is an odd number. We'll give alternate rows different backgrounds
         if ((position % 2) == 0) {
-            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.table_bg_alt));
+            convertView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.table_bg_alt));
         } else {
-            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.yama_background));
+            convertView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.yama_background));
         }
         Mountain mountain = (Mountain) getItem(position);
         viewHolder.name.setText(mountain.getTitle());
@@ -132,11 +133,6 @@ public class MountainListAdapter extends BaseAdapter {
         });
 
         return convertView;
-    }
-
-    private Coordinate getMountainCoordinants(Mountain mountain) {
-        CoordinateDao coordinateDao = Database.getInstance(mContext).getCoordinateDao();
-        return coordinateDao.queryBuilder().where(CoordinateDao.Properties.MountainId.eq(mountain.getId())).unique();
     }
 
     private double getDistanceFromHere(GeoLocation there) {

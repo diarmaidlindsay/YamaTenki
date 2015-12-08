@@ -1,9 +1,5 @@
 package pulseanddecibels.jp.yamatenki.database.dao;
 
-import android.support.annotation.Nullable;
-
-import org.joda.time.DateTime;
-
 import java.util.List;
 
 import de.greenrobot.dao.DaoException;
@@ -39,6 +35,7 @@ public class Mountain {
     private Prefecture prefecture;
     private Long prefecture__resolvedKey;
 
+    private List<Pressure> pressureList;
     private List<Forecast> forecastList;
 
     // KEEP FIELDS - put your custom fields here
@@ -198,6 +195,28 @@ public class Mountain {
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<Pressure> getPressureList() {
+        if (pressureList == null) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            PressureDao targetDao = daoSession.getPressureDao();
+            List<Pressure> pressureListNew = targetDao._queryMountain_PressureList(id);
+            synchronized (this) {
+                if(pressureList == null) {
+                    pressureList = pressureListNew;
+                }
+            }
+        }
+        return pressureList;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetPressureList() {
+        pressureList = null;
+    }
+
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
     public List<Forecast> getForecastList() {
         if (forecastList == null) {
             if (daoSession == null) {
@@ -223,7 +242,7 @@ public class Mountain {
     public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }
+        }    
         myDao.delete(this);
     }
 
@@ -231,7 +250,7 @@ public class Mountain {
     public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }
+        }    
         myDao.update(this);
     }
 
@@ -239,7 +258,7 @@ public class Mountain {
     public void refresh() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }
+        }    
         myDao.refresh(this);
     }
 
@@ -251,6 +270,7 @@ public class Mountain {
      * which matches t
      * he milliseconds range.
      */
+    /*
     @Nullable
     public Forecast getLatestForecast() {
         DateTime now = new DateTime();
@@ -262,15 +282,16 @@ public class Mountain {
         long maxMillis = now.withTime(maxHour, 59, 59, 999).getMillis();
 
         ForecastDao targetDao = daoSession.getForecastDao();
+        //This has to be refactored because time is kept in String form now not in millis
         List<Forecast> forecastList =
-                targetDao.queryBuilder().where(ForecastDao.Properties.Timestamp.between(minMillis, maxMillis)).list();
+                targetDao.queryBuilder().where(ForecastDao.Properties.DateTime.between(minMillis, maxMillis)).list();
         if (forecastList.size() == 1) {
             return forecastList.get(0);
         }
         return null;
     }
+    */
 
-    @Nullable
     public Integer getCurrentStatus() {
         StatusDao statusDao = daoSession.getStatusDao();
         Status status = statusDao.queryBuilder().where(StatusDao.Properties.MountainId.eq(getId())).unique();

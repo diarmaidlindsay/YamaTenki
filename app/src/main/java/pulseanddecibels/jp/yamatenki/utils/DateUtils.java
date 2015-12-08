@@ -35,6 +35,9 @@ public class DateUtils {
     private static final String[] JAPANESE_TIME_OF_DAY = {"午前", "午後"};
     private static final DateTimeZone JAPAN_TIME_ZONE = DateTimeZone.forOffsetHours(9);
 
+    static final String[] TIME_INCREMENTS_AM = {"00", "03", "06", "09"}; // column headers
+    static final String[] TIME_INCREMENTS_PM = {"12", "15", "18", "21"}; // column headers
+
     public static String getFormattedHeader(int index) {
         DateTime dateTime = new DateTime();
         //don't cause IndexOutOfBoundsException
@@ -127,29 +130,41 @@ public class DateUtils {
         return dateTime;
     }
 
+    public static String getColumnHeadingFor(int scrollViewIndex, int columnId) {
+        String[] timePeriod;
+        switch (scrollViewIndex) {
+            case 0 :
+            case 2 : timePeriod = TIME_INCREMENTS_AM; break;
+            case 1 :
+            default :  timePeriod = TIME_INCREMENTS_PM; break;
+        }
+
+        return timePeriod[columnId];
+    }
+
     /**
      * Get key to match a scroll view column with the correct forecast
      *
-     * @param dayIndex 0 = today, 1 = tomorrow etc
-     * @param columnId corresponds to hours of the day : 00, 03, 06, 09 etc
+     * @param scrollViewIndex 0 = today AM, 1 = today PM, 2 = tomorrow AM, 3 = tomorrow PM
+     * @param columnId corresponds to index of hour of the day : [00, 03, 06, 09] or [12, 15, 18, 21]
      */
-    public static String timeToMapKey(int dayIndex, String columnId) {
+    public static String getWidgetToForecastKey(int scrollViewIndex, int columnId) {
         DateTime dateTime = new DateTime();
-        if (dayIndex > 0) {
-            dateTime = dateTime.plusDays(dayIndex);
+        if (scrollViewIndex >= 2) {
+            dateTime = dateTime.plusDays(1);
         }
         return
                 Utils.num2DigitString(dateTime.getMonthOfYear()) +
                         "/" +
                         Utils.num2DigitString(dateTime.getDayOfMonth()) +
                         "-" +
-                        columnId;
+                        getColumnHeadingFor(scrollViewIndex, columnId);
     }
 
     /**
      * Derive key for storing forecasts in HashMap from its TimeStamp
      */
-    public static String timeStampToMapKey(DateTime dateTime) {
+    public static String getDateToForecastKey(DateTime dateTime) {
         return
                 Utils.num2DigitString(dateTime.getMonthOfYear()) +
                         "/" +

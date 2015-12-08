@@ -7,27 +7,23 @@ package pulseanddecibels.jp.yamatenki.model;
 public class WindAndTemperatureElement {
     private final double temperature;
     private final double windVelocity;
-    private final int windDirection;
+    private final double windDirection;
 
-    public WindAndTemperatureElement(double temperature, double windVelocity, int windDirection) {
+    public WindAndTemperatureElement(double temperature, double windVelocity, double windDirection) {
         this.temperature = temperature;
         this.windVelocity = windVelocity;
         this.windDirection = windDirection;
     }
 
-    public String getTemperature() {
-        return "" + (int) temperature;
+    public Double getTemperature() {
+        return temperature;
     }
 
-    public String getWindVelocityString() {
-        return "" + (int) windVelocity;
+    public Double getWindVelocity() {
+        return windVelocity;
     }
 
-    public int getWindVelocity() {
-        return (int) windVelocity;
-    }
-
-    public int getWindDirection() {
+    public Double getWindDirection() {
         return windDirection;
     }
 }

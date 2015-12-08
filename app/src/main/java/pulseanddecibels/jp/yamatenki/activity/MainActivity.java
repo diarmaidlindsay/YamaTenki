@@ -16,6 +16,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import pulseanddecibels.jp.yamatenki.R;
+import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
@@ -25,16 +26,6 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    private TextView header;
-    private Button mountainNameSearchButton;
-    private Button nearMountainSearchButton;
-    private Button areaSearchButton;
-    private Button heightSearchButton;
-    private Button myMountainListButton;
-    private Button myMemoButton;
-    private Button settingsButton;
-    private Button checklistButton;
-
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private LocationRequest mLocationRequest;
@@ -43,23 +34,23 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        header = (TextView) findViewById(R.id.text_main_header);
+        TextView header = (TextView) findViewById(R.id.text_main_header);
         header.setTypeface(Utils.getHannariTypeFace(this));
-        mountainNameSearchButton = (Button) findViewById(R.id.button_main_mountain_name_search);
+        Button mountainNameSearchButton = (Button) findViewById(R.id.button_main_mountain_name_search);
         mountainNameSearchButton.setTypeface(Utils.getHannariTypeFace(this));
-        nearMountainSearchButton = (Button) findViewById(R.id.button_main_20_closest_search);
+        Button nearMountainSearchButton = (Button) findViewById(R.id.button_main_20_closest_search);
         nearMountainSearchButton.setTypeface(Utils.getHannariTypeFace(this));
-        areaSearchButton = (Button) findViewById(R.id.button_main_area_search);
+        Button areaSearchButton = (Button) findViewById(R.id.button_main_area_search);
         areaSearchButton.setTypeface(Utils.getHannariTypeFace(this));
-        heightSearchButton = (Button) findViewById(R.id.button_main_height_search);
+        Button heightSearchButton = (Button) findViewById(R.id.button_main_height_search);
         heightSearchButton.setTypeface(Utils.getHannariTypeFace(this));
-        myMountainListButton = (Button) findViewById(R.id.button_main_my_mountain_list);
+        Button myMountainListButton = (Button) findViewById(R.id.button_main_my_mountain_list);
         myMountainListButton.setTypeface(Utils.getHannariTypeFace(this));
-        myMemoButton = (Button) findViewById(R.id.button_main_memo);
+        Button myMemoButton = (Button) findViewById(R.id.button_main_memo);
         myMemoButton.setTypeface(Utils.getHannariTypeFace(this));
-        settingsButton = (Button) findViewById(R.id.button_main_settings);
+        Button settingsButton = (Button) findViewById(R.id.button_main_settings);
         settingsButton.setTypeface(Utils.getHannariTypeFace(this));
-        checklistButton = (Button) findViewById(R.id.button_main_tool_list);
+        Button checklistButton = (Button) findViewById(R.id.button_main_tool_list);
         checklistButton.setTypeface(Utils.getHannariTypeFace(this));
 
         mountainNameSearchButton.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +125,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         });
 
         buildGoogleApiClient();
+        JSONDownloader.getMountainListFromServer(this);
     }
 
     private void buildGoogleApiClient() {

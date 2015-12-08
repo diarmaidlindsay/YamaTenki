@@ -6,9 +6,9 @@ import android.content.SharedPreferences;
 /**
  * Created by Diarmaid Lindsay on 2015/11/24.
  * Copyright Pulse and Decibels 2015
- *
+ * <p/>
  * First time run
- *
+ * <p/>
  * Forecast Warning
  * Update over Mobile Network
  * Reset Checklist Automatically
@@ -36,5 +36,13 @@ public class Settings {
 
     public void setSetting(String key, boolean value) {
         settings.edit().putBoolean(key, value).apply();
+    }
+
+    public boolean isNewEtag(String etag) {
+        return !settings.getString("last_list_etag", "").equals(etag);
+    }
+
+    public void setEtag(String etag) {
+        settings.edit().putString("last_list_etag", etag).apply();
     }
 }

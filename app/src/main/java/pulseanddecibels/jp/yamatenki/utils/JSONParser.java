@@ -2,7 +2,7 @@ package pulseanddecibels.jp.yamatenki.utils;
 
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,7 +52,7 @@ public class JSONParser {
     }
 
     @Nullable
-    public static MountainForecastJSON parseMountainForecastFromFile(String json) {
+    public static MountainForecastJSON parseMountainForecast(String json) {
         MountainForecastJSON mountainForecastJSON = new MountainForecastJSON();
         if (json == null) {
             return null;
@@ -67,13 +67,13 @@ public class JSONParser {
             Map<String, ForecastArrayElement> forecastMap = new HashMap<>();
             for (int i = 0; i < forecasts.length(); i++) {
                 ForecastArrayElement element = parseForecast(forecasts.getJSONObject(i));
-                String key = DateUtils.timeStampToMapKey(element.getDateTime());
+                String key = DateUtils.getDateToForecastKey(element.getDateTime());
                 forecastMap.put(key, element);
             }
 
             String referenceCity = jsonRoot.optString("referenceCity");
             JSONArray heights = jsonRoot.optJSONArray("heights");
-            SparseArray<Integer> heightsMap = new SparseArray<>();
+            SparseIntArray heightsMap = new SparseIntArray();
             for (int i = 0; i < heights.length(); i++) {
                 JSONObject heightJSONObject = heights.getJSONObject(i);
                 heightsMap.append(heightJSONObject.optInt("height"), heightJSONObject.optInt("pressure"));
@@ -127,7 +127,7 @@ public class JSONParser {
         float precipitation = (float) forecast.optDouble("precipitation");
         Integer temperature = forecast.has("temperature") ? forecast.optInt("temperature") : null;
         int totalCloudCover = forecast.optInt("totalCloudCover");
-        return new ForecastArrayElement(DateUtils.getDateTimeFromForecast(dateTime), mountainStatus,
+        return new ForecastArrayElement(dateTime, mountainStatus,
                 windAndTemperaturesList, temperature, precipitation, totalCloudCover);
     }
 }

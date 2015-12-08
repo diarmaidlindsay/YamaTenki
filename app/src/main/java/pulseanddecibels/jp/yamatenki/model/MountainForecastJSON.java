@@ -1,6 +1,6 @@
 package pulseanddecibels.jp.yamatenki.model;
 
-import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import org.joda.time.DateTime;
 
@@ -17,17 +17,17 @@ import pulseanddecibels.jp.yamatenki.utils.DateUtils;
  */
 public class MountainForecastJSON {
     private final Map<String, ForecastArrayElement> forecasts;
-    private final SparseArray<Integer> heights;
+    private final SparseIntArray heights;
     private MountainArrayElement mountainArrayElement;
     private String referenceCity;
     private String timestamp;
 
     public MountainForecastJSON() {
         forecasts = new HashMap<>();
-        heights = new SparseArray<>();
+        heights = new SparseIntArray();
     }
 
-    public MountainForecastJSON(MountainArrayElement mountainArrayElement, Map<String, ForecastArrayElement> forecasts, String referenceCity, SparseArray<Integer> heights, String timestamp) {
+    public MountainForecastJSON(MountainArrayElement mountainArrayElement, Map<String, ForecastArrayElement> forecasts, String referenceCity, SparseIntArray heights, String timestamp) {
         this.mountainArrayElement = mountainArrayElement;
         this.forecasts = forecasts;
         this.referenceCity = referenceCity;
@@ -47,7 +47,7 @@ public class MountainForecastJSON {
         return referenceCity;
     }
 
-    public SparseArray<Integer> getHeights() {
+    public SparseIntArray getHeights() {
         return heights;
     }
 

@@ -38,38 +38,38 @@
         </RelativeLayout>
 
         <ImageView
-            android:id="@+id/forecast_wind_direction_00"
+            android:id="@+id/forecast_wind_direction_0"
             style="@style/ForecastTableSmallImage"/>
 
         <TextView
-            android:id="@+id/forecast_wind_00"
+            android:id="@+id/forecast_wind_0"
             style="@style/ForecastTableText"
             android:layout_weight="0.10"/>
 
         <ImageView
-            android:id="@+id/forecast_wind_direction_03"
+            android:id="@+id/forecast_wind_direction_1"
             style="@style/ForecastTableSmallImage"/>
 
         <TextView
-            android:id="@+id/forecast_wind_03"
+            android:id="@+id/forecast_wind_1"
             style="@style/ForecastTableText"
             android:layout_weight="0.10"/>
 
         <ImageView
-            android:id="@+id/forecast_wind_direction_06"
+            android:id="@+id/forecast_wind_direction_2"
             style="@style/ForecastTableSmallImage"/>
 
         <TextView
-            android:id="@+id/forecast_wind_06"
+            android:id="@+id/forecast_wind_2"
             style="@style/ForecastTableText"
             android:layout_weight="0.10"/>
 
         <ImageView
-            android:id="@+id/forecast_wind_direction_09"
+            android:id="@+id/forecast_wind_direction_3"
             style="@style/ForecastTableSmallImage"/>
 
         <TextView
-            android:id="@+id/forecast_wind_09"
+            android:id="@+id/forecast_wind_3"
             style="@style/ForecastTableText"
             android:layout_weight="0.10"/>
     </LinearLayout>

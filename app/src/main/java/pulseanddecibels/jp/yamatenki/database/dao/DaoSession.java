@@ -13,7 +13,7 @@ import de.greenrobot.dao.internal.DaoConfig;
 
 /**
  * {@inheritDoc}
- *
+ * 
  * @see de.greenrobot.dao.AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
@@ -21,6 +21,8 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig mountainDaoConfig;
     private final DaoConfig coordinateDaoConfig;
     private final DaoConfig forecastDaoConfig;
+    private final DaoConfig windAndTemperatureDaoConfig;
+    private final DaoConfig pressureDaoConfig;
     private final DaoConfig areaDaoConfig;
     private final DaoConfig prefectureDaoConfig;
     private final DaoConfig myMountainDaoConfig;
@@ -31,6 +33,8 @@ public class DaoSession extends AbstractDaoSession {
     private final MountainDao mountainDao;
     private final CoordinateDao coordinateDao;
     private final ForecastDao forecastDao;
+    private final WindAndTemperatureDao windAndTemperatureDao;
+    private final PressureDao pressureDao;
     private final AreaDao areaDao;
     private final PrefectureDao prefectureDao;
     private final MyMountainDao myMountainDao;
@@ -50,6 +54,12 @@ public class DaoSession extends AbstractDaoSession {
 
         forecastDaoConfig = daoConfigMap.get(ForecastDao.class).clone();
         forecastDaoConfig.initIdentityScope(type);
+
+        windAndTemperatureDaoConfig = daoConfigMap.get(WindAndTemperatureDao.class).clone();
+        windAndTemperatureDaoConfig.initIdentityScope(type);
+
+        pressureDaoConfig = daoConfigMap.get(PressureDao.class).clone();
+        pressureDaoConfig.initIdentityScope(type);
 
         areaDaoConfig = daoConfigMap.get(AreaDao.class).clone();
         areaDaoConfig.initIdentityScope(type);
@@ -72,6 +82,8 @@ public class DaoSession extends AbstractDaoSession {
         mountainDao = new MountainDao(mountainDaoConfig, this);
         coordinateDao = new CoordinateDao(coordinateDaoConfig, this);
         forecastDao = new ForecastDao(forecastDaoConfig, this);
+        windAndTemperatureDao = new WindAndTemperatureDao(windAndTemperatureDaoConfig, this);
+        pressureDao = new PressureDao(pressureDaoConfig, this);
         areaDao = new AreaDao(areaDaoConfig, this);
         prefectureDao = new PrefectureDao(prefectureDaoConfig, this);
         myMountainDao = new MyMountainDao(myMountainDaoConfig, this);
@@ -82,6 +94,8 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(Mountain.class, mountainDao);
         registerDao(Coordinate.class, coordinateDao);
         registerDao(Forecast.class, forecastDao);
+        registerDao(WindAndTemperature.class, windAndTemperatureDao);
+        registerDao(Pressure.class, pressureDao);
         registerDao(Area.class, areaDao);
         registerDao(Prefecture.class, prefectureDao);
         registerDao(MyMountain.class, myMountainDao);
@@ -89,11 +103,13 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(Status.class, statusDao);
         registerDao(CheckListItem.class, checkListItemDao);
     }
-
+    
     public void clear() {
         mountainDaoConfig.getIdentityScope().clear();
         coordinateDaoConfig.getIdentityScope().clear();
         forecastDaoConfig.getIdentityScope().clear();
+        windAndTemperatureDaoConfig.getIdentityScope().clear();
+        pressureDaoConfig.getIdentityScope().clear();
         areaDaoConfig.getIdentityScope().clear();
         prefectureDaoConfig.getIdentityScope().clear();
         myMountainDaoConfig.getIdentityScope().clear();
@@ -112,6 +128,14 @@ public class DaoSession extends AbstractDaoSession {
 
     public ForecastDao getForecastDao() {
         return forecastDao;
+    }
+
+    public WindAndTemperatureDao getWindAndTemperatureDao() {
+        return windAndTemperatureDao;
+    }
+
+    public PressureDao getPressureDao() {
+        return pressureDao;
     }
 
     public AreaDao getAreaDao() {
