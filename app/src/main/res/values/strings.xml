@@ -90,15 +90,15 @@
     <string name="text_setting_subscription_title">チケット購入状況</string>
     <string name="text_setting_subscription_subtitle_false">チケットの購入がありません。</string>
     <string name="text_setting_subscription_subtitle_true">現在のチケット有効日数は%d日です。</string>
-    <string name="text_setting_title_warning">Display forecast warning</string>
-    <string name="text_setting_subtitle_warning_false">"This is not a forecast" warning will not be displayed.</string>
-    <string name="text_setting_subtitle_warning_true">"This is not a forecast" warning will be displayed.</string>
-    <string name="text_setting_title_mobile">Update using Mobile Network</string>
-    <string name="text_setting_subtitle_mobile_false">Update using Wifi only.</string>
-    <string name="text_setting_subtitle_mobile_true">Update using Mobile Network or Wifi.</string>
-    <string name="text_setting_title_checklist_reset">Reset checklist automatically</string>
-    <string name="text_setting_subtitle_checklist_reset_false">Checklist will not reset automatically.</string>
-    <string name="text_setting_subtitle_checklist_reset_true">Checklist will reset the day after last use.</string>
+    <string name="text_setting_title_warning">予報注意を表示します</string>
+    <string name="text_setting_subtitle_warning_false">表示されません</string>
+    <string name="text_setting_subtitle_warning_true">表示されます</string>
+    <string name="text_setting_title_mobile">アップデート方法</string>
+    <string name="text_setting_subtitle_mobile_false">WIFIだけでアップデート</string>
+    <string name="text_setting_subtitle_mobile_true">WIFIと4Gでアップデート</string>
+    <string name="text_setting_title_checklist_reset">持ち物をリセット</string>
+    <string name="text_setting_subtitle_checklist_reset_false">持ち物は自動的にリセットしません。</string>
+    <string name="text_setting_subtitle_checklist_reset_true">持ち物は自動的にリセットします。</string>
     <string name="facebook_app_id">1676238312590862</string>
     <string name="text_powered_by">Powered by 山てんき</string>
     <string name="item_desc_facebook_preview">Facebook image preview</string>
@@ -116,4 +116,5 @@
     <string name="button_license_agreement_agree">同意する</string>
     <string name="dialog_downloading_list">山リストを更新中…</string>
     <string name="dialog_downloading_status">山行指数を更新中…</string>
+    <string name="dialog_updating_forecast">山情報を更新中…</string>
 </resources>

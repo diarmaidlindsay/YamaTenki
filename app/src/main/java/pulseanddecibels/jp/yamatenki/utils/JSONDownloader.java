@@ -252,24 +252,26 @@ public class JSONDownloader {
         }
     }
 
-    private static class DownloadMountainForecastTask extends AsyncTask<String, Integer, Boolean> {
-        final String MOUNTAIN_FORECAST_URL = "https://yamatenki.pulseanddecibels.jp/1/%s.json";
+    private static class DownloadMountainForecastTask extends ASyncTaskWithProgress {
         Mountain mountain;
         ETag existingETag;
         // Do the long-running work in here
         @Override
         protected Boolean doInBackground(String... params) {
             String yid = params[0];
-            String url = String.format(MOUNTAIN_FORECAST_URL, yid);
+            String url = String.format(getURL(), yid);
             existingETag = getExistingEtag(yid);
 
             String json = downloadJSON(url);
             if (json != null) {
+                publishProgress(33);
                 Log.i(JSONDownloader.class.getSimpleName(), "JSON "+yid+" Downloaded");
                 MountainForecastJSON mountainForecastJSON = parseJSON(json);
                 if (mountainForecastJSON!= null) {
                     Log.i(JSONDownloader.class.getSimpleName(), "JSON Parsed");
+                    publishProgress(66);
                     insertIntoDatabase(mountainForecastJSON);
+                    publishProgress(100);
                     Log.i(JSONDownloader.class.getSimpleName(), "Inserted into Database");
                     return true;
                 }
@@ -295,6 +297,7 @@ public class JSONDownloader {
 
         // This is called when doInBackground() is finished
         protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
             if(result) {
                 Log.i(JSONDownloader.class.getSimpleName(), "Successfully Updated Forecast.");
             } else {
@@ -302,6 +305,16 @@ public class JSONDownloader {
             }
 
             mDownloadComplete.downloadingCompleted(result);
+        }
+
+        @Override
+        protected String getDownloadMessage() {
+            return mContext.getString(R.string.dialog_updating_forecast);
+        }
+
+        @Override
+        protected String getURL() {
+            return "https://yamatenki.pulseanddecibels.jp/1/%s.json";
         }
 
         private String downloadJSON(String url) {
@@ -317,6 +330,7 @@ public class JSONDownloader {
                 HttpResponse response = httpclient.execute(httppost);
                 String serverEtag = response.getFirstHeader("etag").toString();
                 if(existingETag == null || !existingETag.getEtag().equals(serverEtag)) {
+                    publishProgress(0);
                     HttpEntity entity = response.getEntity();
 
                     inputStream = entity.getContent();
