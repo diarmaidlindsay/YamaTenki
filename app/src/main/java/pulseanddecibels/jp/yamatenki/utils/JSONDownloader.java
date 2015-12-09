@@ -20,6 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pulseanddecibels.jp.yamatenki.database.Database;
+import pulseanddecibels.jp.yamatenki.database.dao.ETag;
+import pulseanddecibels.jp.yamatenki.database.dao.ETagDao;
+import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
+import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
 import pulseanddecibels.jp.yamatenki.interfaces.OnDownloadComplete;
 import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
@@ -45,13 +49,10 @@ public class JSONDownloader {
     }
 
     public static void getMountainForecastFromServer(Context context, String yid, OnDownloadComplete downloadComplete) {
-        final String MOUNTAIN_FORECAST_URL = "https://yamatenki.pulseanddecibels.jp/1/%s.json";
         mDownloadComplete = downloadComplete;
-        String url = String.format(MOUNTAIN_FORECAST_URL, yid);
-
         mContext = context;
         DownloadMountainForecastTask downloadMountainForecastTask = new DownloadMountainForecastTask();
-        downloadMountainForecastTask.execute(url);
+        downloadMountainForecastTask.execute(yid);
     }
 
     private static String readJSONFile(InputStream inputStream) {
@@ -91,7 +92,7 @@ public class JSONDownloader {
                 ArrayList<MountainArrayElement> mountainArrayElements = parseJSON(json);
                 if (mountainArrayElements.size() > 0) {
                     insertIntoDatabase(mountainArrayElements);
-                    //update was successful, so update the etag
+                    //update was successful, so update the existingETag
                     new Settings(mContext).setEtag(etag);
                     return true;
                 }
@@ -160,13 +161,19 @@ public class JSONDownloader {
     }
 
     private static class DownloadMountainForecastTask extends AsyncTask<String, Integer, Boolean> {
+        final String MOUNTAIN_FORECAST_URL = "https://yamatenki.pulseanddecibels.jp/1/%s.json";
+        Mountain mountain;
+        ETag existingETag;
         // Do the long-running work in here
         @Override
         protected Boolean doInBackground(String... params) {
-            String url = params[0];
+            String yid = params[0];
+            String url = String.format(MOUNTAIN_FORECAST_URL, yid);
+            existingETag = getExistingEtag(yid);
+
             String json = downloadJSON(url);
             if (json != null) {
-                Log.i(JSONDownloader.class.getSimpleName(), "JSON Downloaded");
+                Log.i(JSONDownloader.class.getSimpleName(), "JSON "+yid+" Downloaded");
                 MountainForecastJSON mountainForecastJSON = parseJSON(json);
                 if (mountainForecastJSON!= null) {
                     Log.i(JSONDownloader.class.getSimpleName(), "JSON Parsed");
@@ -174,20 +181,35 @@ public class JSONDownloader {
                     Log.i(JSONDownloader.class.getSimpleName(), "Inserted into Database");
                     return true;
                 }
+            } else {
+                Log.i(JSONDownloader.class.getSimpleName(), "Using cached copy of Data");
+                return true;
             }
 
             Log.e(JSONDownloader.class.getSimpleName(), "Error while downloading, parsing and inserting JSON");
             return false;
         }
 
+        @Nullable
+        private ETag getExistingEtag(String yid) {
+            MountainDao mountainDao = Database.getInstance(mContext).getMountainDao();
+            mountain = mountainDao.queryBuilder().where(MountainDao.Properties.Yid.eq(yid)).unique();
+            if(mountain != null) {
+                return mountain.getETag();
+            }
+
+            return null;
+        }
+
         // This is called when doInBackground() is finished
         protected void onPostExecute(Boolean result) {
-            if (result) {
-                Toast.makeText(mContext, "Successfully updated.", Toast.LENGTH_SHORT).show();
-                mDownloadComplete.downloadingCompleted(result);
+            if(result) {
+                Log.i(JSONDownloader.class.getSimpleName(), "Successfully Updated Forecast.");
             } else {
-                Toast.makeText(mContext, "Failed to update.", Toast.LENGTH_SHORT).show();
+                Log.e(JSONDownloader.class.getSimpleName(), "Failed to Update Forecast");
             }
+
+            mDownloadComplete.downloadingCompleted(result);
         }
 
         private String downloadJSON(String url) {
@@ -201,20 +223,33 @@ public class JSONDownloader {
 
             try {
                 HttpResponse response = httpclient.execute(httppost);
+                String serverEtag = response.getFirstHeader("etag").toString();
+                if(existingETag == null || !existingETag.getEtag().equals(serverEtag)) {
+                    HttpEntity entity = response.getEntity();
 
-                HttpEntity entity = response.getEntity();
+                    inputStream = entity.getContent();
+                    // json is UTF-8 by default
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
+                    StringBuilder sb = new StringBuilder();
 
-                inputStream = entity.getContent();
-                // json is UTF-8 by default
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
-                StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                        sb.append("\n");
+                    }
+                    result = sb.toString();
 
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                    sb.append("\n");
+                    ETagDao eTagDao = Database.getInstance(mContext).getETagDao();
+                    if(existingETag == null) {
+                        Log.i(JSONDownloader.class.getSimpleName(), "Inserting new ETag");
+                        eTagDao.insert(new ETag(null, serverEtag, mountain.getId()));
+
+                    } else {
+                        Log.i(JSONDownloader.class.getSimpleName(), "Updating Existing ETag");
+                        existingETag.setEtag(serverEtag);
+                        eTagDao.update(existingETag);
+                    }
                 }
-                result = sb.toString();
 
             } catch (Exception e) {
                 Log.e(JSONDownloader.class.getSimpleName(), "Error when downloading JSON from server");

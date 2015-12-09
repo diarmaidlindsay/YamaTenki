@@ -120,7 +120,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         title.setTypeface(Utils.getHannariTypeFace(this));
         title.setText(mountain.getTitle());
         ImageView currentDifficultyImage = (ImageView) findViewById(R.id.mountain_forecast_current_difficulty);
-        currentDifficultyImage.setImageResource(DIFFICULTY_BIG_IMAGES.get(mountain.getCurrentStatus()));
+        currentDifficultyImage.setImageResource(DIFFICULTY_BIG_IMAGES.get(mountain.getStatus()));
         TextView currentDifficultyText = (TextView) findViewById(R.id.mountain_forecast_current_difficulty_text);
         currentDifficultyText.setTypeface(Utils.getHannariTypeFace(this));
         ImageView helpIconDifficulty = (ImageView) findViewById(R.id.mountain_forecast_difficulty_help);
@@ -581,7 +581,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         snPoweredByText.setTypeface(Utils.getHannariTypeFace(this));
 
         ImageView snCurrentDifficulty = (ImageView) snLayout.findViewById(R.id.sn_current_difficulty);
-        snCurrentDifficulty.setImageResource(DIFFICULTY_BIG_IMAGES.get(mountain.getCurrentStatus()));
+        snCurrentDifficulty.setImageResource(DIFFICULTY_BIG_IMAGES.get(mountain.getStatus()));
 
         TextView snDate = (TextView) snLayout.findViewById(R.id.sn_date);
         DateTime now = new DateTime();

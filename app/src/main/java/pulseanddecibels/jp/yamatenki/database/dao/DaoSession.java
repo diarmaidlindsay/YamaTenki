@@ -29,6 +29,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig myMemoDaoConfig;
     private final DaoConfig statusDaoConfig;
     private final DaoConfig checkListItemDaoConfig;
+    private final DaoConfig eTagDaoConfig;
 
     private final MountainDao mountainDao;
     private final CoordinateDao coordinateDao;
@@ -41,6 +42,7 @@ public class DaoSession extends AbstractDaoSession {
     private final MyMemoDao myMemoDao;
     private final StatusDao statusDao;
     private final CheckListItemDao checkListItemDao;
+    private final ETagDao eTagDao;
 
     public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
@@ -79,6 +81,9 @@ public class DaoSession extends AbstractDaoSession {
         checkListItemDaoConfig = daoConfigMap.get(CheckListItemDao.class).clone();
         checkListItemDaoConfig.initIdentityScope(type);
 
+        eTagDaoConfig = daoConfigMap.get(ETagDao.class).clone();
+        eTagDaoConfig.initIdentityScope(type);
+
         mountainDao = new MountainDao(mountainDaoConfig, this);
         coordinateDao = new CoordinateDao(coordinateDaoConfig, this);
         forecastDao = new ForecastDao(forecastDaoConfig, this);
@@ -90,6 +95,7 @@ public class DaoSession extends AbstractDaoSession {
         myMemoDao = new MyMemoDao(myMemoDaoConfig, this);
         statusDao = new StatusDao(statusDaoConfig, this);
         checkListItemDao = new CheckListItemDao(checkListItemDaoConfig, this);
+        eTagDao = new ETagDao(eTagDaoConfig, this);
 
         registerDao(Mountain.class, mountainDao);
         registerDao(Coordinate.class, coordinateDao);
@@ -102,6 +108,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(MyMemo.class, myMemoDao);
         registerDao(Status.class, statusDao);
         registerDao(CheckListItem.class, checkListItemDao);
+        registerDao(ETag.class, eTagDao);
     }
     
     public void clear() {
@@ -116,6 +123,7 @@ public class DaoSession extends AbstractDaoSession {
         myMemoDaoConfig.getIdentityScope().clear();
         statusDaoConfig.getIdentityScope().clear();
         checkListItemDaoConfig.getIdentityScope().clear();
+        eTagDaoConfig.getIdentityScope().clear();
     }
 
     public MountainDao getMountainDao() {
@@ -160,6 +168,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public CheckListItemDao getCheckListItemDao() {
         return checkListItemDao;
+    }
+
+    public ETagDao getETagDao() {
+        return eTagDao;
     }
 
 }

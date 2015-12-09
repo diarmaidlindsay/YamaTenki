@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.facebook.FacebookSdk;
 
@@ -95,7 +96,7 @@ public class SplashActivity extends Activity {
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                if(!agreeButtonPressed) {
+                if (!agreeButtonPressed) {
                     licenseAgreementDialogOpen = false;
                     settings.setAgreedToLicense(false);
                     if (!databaseTaskRunning) {
@@ -109,7 +110,7 @@ public class SplashActivity extends Activity {
             public void onCancel(DialogInterface dialog) {
                 licenseAgreementDialogOpen = false;
                 settings.setAgreedToLicense(false);
-                if(!databaseTaskRunning) {
+                if (!databaseTaskRunning) {
                     finish();
                 }
             }
@@ -140,12 +141,27 @@ public class SplashActivity extends Activity {
             }
         });
 
-        CheckBox agreementCheckbox = (CheckBox) dialog.findViewById(R.id.agreement_checkbox);
+        final CheckBox agreementCheckbox = (CheckBox) dialog.findViewById(R.id.agreement_checkbox);
         agreementCheckbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CheckBox checkbox = (CheckBox) v;
                 if(checkbox.isChecked()) {
+                    agreeButton.setVisibility(View.VISIBLE);
+                    agreeButton.setEnabled(true);
+                } else {
+                    agreeButton.setVisibility(View.INVISIBLE);
+                    agreeButton.setEnabled(false);
+                }
+            }
+        });
+
+        TextView agreementLabel = (TextView) dialog.findViewById(R.id.agreement_label);
+        agreementLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                agreementCheckbox.setChecked(!agreementCheckbox.isChecked());
+                if(agreementCheckbox.isChecked()) {
                     agreeButton.setVisibility(View.VISIBLE);
                     agreeButton.setEnabled(true);
                 } else {

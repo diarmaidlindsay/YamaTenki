@@ -52,7 +52,7 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'MOUNTAIN' (" + //
-                "'_id' INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'YID' TEXT," + // 1: yid
                 "'TITLE' TEXT," + // 2: title
                 "'TITLE_EXT' TEXT," + // 3: titleExt

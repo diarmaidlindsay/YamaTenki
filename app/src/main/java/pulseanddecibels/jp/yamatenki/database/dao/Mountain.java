@@ -37,6 +37,7 @@ public class Mountain {
 
     private List<Pressure> pressureList;
     private List<Forecast> forecastList;
+    private List<MyMemo> myMemoList;
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
@@ -238,6 +239,28 @@ public class Mountain {
         forecastList = null;
     }
 
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<MyMemo> getMyMemoList() {
+        if (myMemoList == null) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            MyMemoDao targetDao = daoSession.getMyMemoDao();
+            List<MyMemo> myMemoListNew = targetDao._queryMountain_MyMemoList(id);
+            synchronized (this) {
+                if(myMemoList == null) {
+                    myMemoList = myMemoListNew;
+                }
+            }
+        }
+        return myMemoList;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetMyMemoList() {
+        myMemoList = null;
+    }
+
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */
     public void delete() {
         if (myDao == null) {
@@ -263,40 +286,17 @@ public class Mountain {
     }
 
     // KEEP METHODS - put your custom methods here
-
-    /**
-     * Forecasts are given in 3 hour blocks, so given the time now
-     * find the matching 3 hour block and return the entry from the database
-     * which matches t
-     * he milliseconds range.
-     */
-    /*
-    @Nullable
-    public Forecast getLatestForecast() {
-        DateTime now = new DateTime();
-        int hourNow = now.getHourOfDay(); //0 ~ 23
-        int minHour = hourNow - (hourNow % 3); //0, 3, 6, 9 etc
-        int maxHour = minHour + 2; //2, 5, 8, 11 etc
-
-        long minMillis = now.withTime(minHour, 0, 0, 0).getMillis();
-        long maxMillis = now.withTime(maxHour, 59, 59, 999).getMillis();
-
-        ForecastDao targetDao = daoSession.getForecastDao();
-        //This has to be refactored because time is kept in String form now not in millis
-        List<Forecast> forecastList =
-                targetDao.queryBuilder().where(ForecastDao.Properties.DateTime.between(minMillis, maxMillis)).list();
-        if (forecastList.size() == 1) {
-            return forecastList.get(0);
-        }
-        return null;
-    }
-    */
-
-    public Integer getCurrentStatus() {
+    public Integer getStatus() {
         StatusDao statusDao = daoSession.getStatusDao();
         Status status = statusDao.queryBuilder().where(StatusDao.Properties.MountainId.eq(getId())).unique();
         return status.getStatus();
     }
+
+    public ETag getETag() {
+        ETagDao eTagDao = daoSession.getETagDao();
+        return eTagDao.queryBuilder().where(ETagDao.Properties.MountainId.eq(getId())).unique();
+    }
+
     // KEEP METHODS END
 
 }

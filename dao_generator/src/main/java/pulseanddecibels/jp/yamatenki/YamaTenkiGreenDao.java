@@ -24,11 +24,12 @@ public class YamaTenkiGreenDao {
         Entity myMemo = schema.addEntity("MyMemo");
         Entity status = schema.addEntity("Status");
         Entity checklistItem = schema.addEntity("CheckListItem");
+        Entity eTag = schema.addEntity("ETag");
 
         /**
          Mountain
          **/
-        mountain.addIdProperty().autoincrement();
+        Property mountainId = mountain.addIdProperty().getProperty();
         mountain.addStringProperty("yid");
         mountain.addStringProperty("title");
         mountain.addStringProperty("titleExt");
@@ -63,6 +64,14 @@ public class YamaTenkiGreenDao {
         //One mountain, many Pressures
         pressure.addToOne(mountain, mountainIdPressure);
         mountain.addToMany(pressure, mountainIdPressure);
+
+        /**
+         Etag
+         */
+        eTag.addIdProperty();
+        eTag.addStringProperty("etag");
+        Property mountainIdETag = eTag.addLongProperty("mountainId").notNull().getProperty();
+        eTag.addToOne(mountain, mountainIdETag);
 
         /**
          Forecast
@@ -119,6 +128,7 @@ public class YamaTenkiGreenDao {
         myMemo.addIdProperty();
         Property mountainIdMemo = myMemo.addLongProperty("mountainId").notNull().getProperty();
         myMemo.addToOne(mountain, mountainIdMemo);
+        mountain.addToMany(myMemo, mountainIdMemo);
         myMemo.addLongProperty("dateTimeFrom");
         myMemo.addLongProperty("dateTimeUntil");
         myMemo.addStringProperty("weather");
@@ -128,7 +138,7 @@ public class YamaTenkiGreenDao {
         /**
          * Current Mountain Status
          */
-        status.addIdProperty();
+        Property statusId = status.addIdProperty().getProperty();
         Property mountainIdStatus = status.addLongProperty("mountainId").notNull().getProperty();
         status.addToOne(mountain, mountainIdStatus);
         status.addIntProperty("status");
