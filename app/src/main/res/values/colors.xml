@@ -3,6 +3,7 @@
     <item name="yama_background" type="color">#F7EFD2</item>
     <item name="yama_brown" type="color">#51341c</item>
     <item name="table_bg_alt" type="color">#d9be94</item>
+    <item name="no_weather" type="color">#dbdbc0</item>
     <item name="bpWhite" type="color">#6a3906</item>
     <item name="memo_date_text" type="color">#6a3906</item>
     <item name="date_picker_year_selector" type="color">#6a3906</item>

@@ -126,6 +126,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
         buildGoogleApiClient();
         JSONDownloader.getMountainListFromServer(this);
+        JSONDownloader.getMountainStatusFromServer(this);
     }
 
     private void buildGoogleApiClient() {

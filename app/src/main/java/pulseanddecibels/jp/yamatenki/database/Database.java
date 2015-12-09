@@ -37,6 +37,7 @@ import pulseanddecibels.jp.yamatenki.database.dao.WindAndTemperatureDao;
 import pulseanddecibels.jp.yamatenki.model.ForecastArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
+import pulseanddecibels.jp.yamatenki.model.StatusArrayElement;
 import pulseanddecibels.jp.yamatenki.model.WindAndTemperatureElement;
 
 /**
@@ -129,17 +130,14 @@ public class Database {
     public static void insertMountainList(Context context, List<MountainArrayElement> jsonEntries) {
         MountainDao mountainDao = Database.getInstance(context).getMountainDao();
         CoordinateDao coordinateDao = Database.getInstance(context).getCoordinateDao();
-        StatusDao statusDao = Database.getInstance(context).getStatusDao();
         AreaDao areaDao = Database.getInstance(context).getAreaDao();
         PrefectureDao prefectureDao = Database.getInstance(context).getPrefectureDao();
         mountainDao.deleteAll();
         coordinateDao.deleteAll();
-        statusDao.deleteAll();
 
         List<String> yids = new ArrayList<>();
 
         Map<String, Coordinate> coordinateMap = new HashMap<>();
-        Map<String, Status> statusMap = new HashMap<>();
         List<Mountain> mountainList = new ArrayList<>();
 
         for (MountainArrayElement element : jsonEntries) {
@@ -152,8 +150,6 @@ public class Database {
             mountainList.add(mountain);
             Coordinate coordinate = new Coordinate(null, (float) element.getCoordinate().getLatitude(), (float) element.getCoordinate().getLongitude());
             coordinateMap.put(key, coordinate);
-            Status status = new Status(null, element.getCurrentMountainStatus());
-            statusMap.put(key, status);
         }
 
         mountainDao.insertInTx(mountainList);
@@ -161,14 +157,32 @@ public class Database {
         for (String yid : yids) {
             Mountain mountain = mountainDao.queryBuilder().where(MountainDao.Properties.Yid.eq(yid)).unique();
             Long mountainId = mountain.getId();
-            Status status = statusMap.get(yid);
-            status.setMountainId(mountainId);
             Coordinate coordinate = coordinateMap.get(yid);
             coordinate.setMountainId(mountainId);
         }
 
-        statusDao.insertInTx(statusMap.values());
         coordinateDao.insertInTx(coordinateMap.values());
+    }
+
+    public static void insertMountainStatusList(Context context, List<StatusArrayElement> jsonEntries) {
+        StatusDao statusDao = Database.getInstance(context).getStatusDao();
+        MountainDao mountainDao = Database.getInstance(context).getMountainDao();
+
+        statusDao.deleteAll();
+        //status json just has yid, but we need to find mountainId for all yids to make our status objects in database
+
+        Map<String, Long> yidToIdMap = new HashMap<>();
+        List<Mountain> allMountains = mountainDao.loadAll();
+        for(Mountain mountain : allMountains) {
+            yidToIdMap.put(mountain.getYid(), mountain.getId());
+        }
+
+        List<Status> statusList = new ArrayList<>();
+        for(StatusArrayElement element : jsonEntries) {
+            statusList.add(new Status(null, yidToIdMap.get(element.getYid()), element.getCms()));
+        }
+
+        statusDao.insertInTx(statusList);
     }
 
     public static void insertMountainForecast(Context context, MountainForecastJSON forecastJSON) {

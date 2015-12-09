@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -269,7 +268,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         Map<String, Forecast> forecastMap = new HashMap<>();
         ForecastDao forecastDao = Database.getInstance(this).getForecastDao();
         List<Forecast> forecastList = forecastDao.queryBuilder().where(ForecastDao.Properties.MountainId.eq(mountainId)).list();
-        for(Forecast forecast : forecastList) {
+        for (Forecast forecast : forecastList) {
             String dateTimeString = forecast.getDateTime();
             DateTime dateTime = DateUtils.getDateTimeFromForecast(dateTimeString);
             forecastMap.put(DateUtils.getDateToForecastKey(dateTime), forecast);
@@ -287,7 +286,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         Map<String, Forecast> forecastMap = getMappedForecasts();
         List<Pressure> heights = pressureDao.queryBuilder().where(PressureDao.Properties.MountainId.eq(mountainId)).list();
 
-        for(int i = 0; i < scrollViewElements.size(); i++) {
+        for (int i = 0; i < scrollViewElements.size(); i++) {
             ForecastScrollViewElement scrollViewElement = scrollViewElements.get(i);
             //set ScrollViewElement header
             scrollViewElement.getHeader().setText(DateUtils.getFormattedHeader(i));
@@ -321,7 +320,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
 
                 forecastColumn.getTime().setText(DateUtils.getColumnHeadingFor(i, forecastColumn.getColumnIndex()));
 
-                if(forecast != null) {
+                if (forecast != null) {
                     //we found a matching forecast
                     forecastColumn.getDifficulty().setImageResource(DIFFICULTY_SMALL_IMAGES.get(forecast.getMountainStatus()));
                     List<WindAndTemperature> windAndTemperatureList = forecast.getWindAndTemperatureList();
@@ -353,19 +352,20 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                     forecastColumn.getCloudCover().setText(String.format("%d", forecast.getTotalCloudCover().intValue() / 10));
 
                 } else {
+                    int plainBackground = ContextCompat.getColor(this, R.color.no_weather);
                     //set grey background and blank
-                    forecastColumn.getDifficulty().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getLowHeightTemperature().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getLowHeightWindDirection().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getLowHeightWind().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getMidHeightTemperature().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getMidHeightWindDirection().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getMidHeightWind().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getHighHeightTemperature().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getHighHeightWindDirection().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getHighHeightWind().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getRainLevel().setBackgroundColor(Color.GRAY);
-                    forecastColumn.getCloudCover().setBackgroundColor(Color.GRAY);
+                    forecastColumn.getDifficulty().setBackgroundColor(plainBackground);
+                    forecastColumn.getLowHeightTemperature().setBackgroundColor(plainBackground);
+                    forecastColumn.getLowHeightWindDirection().setBackgroundColor(plainBackground);
+                    forecastColumn.getLowHeightWind().setBackgroundColor(plainBackground);
+                    forecastColumn.getMidHeightTemperature().setBackgroundColor(plainBackground);
+                    forecastColumn.getMidHeightWindDirection().setBackgroundColor(plainBackground);
+                    forecastColumn.getMidHeightWind().setBackgroundColor(plainBackground);
+                    forecastColumn.getHighHeightTemperature().setBackgroundColor(plainBackground);
+                    forecastColumn.getHighHeightWindDirection().setBackgroundColor(plainBackground);
+                    forecastColumn.getHighHeightWind().setBackgroundColor(plainBackground);
+                    forecastColumn.getRainLevel().setBackgroundColor(plainBackground);
+                    forecastColumn.getCloudCover().setBackgroundColor(plainBackground);
                 }
             }
         }
@@ -801,7 +801,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
             cloudCoverHelp = (ImageView) forecastTable.findViewById(R.id.help_icon_cloud_cover);
             cloudCoverHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_cloud_cover));
 
-            for(int columnIndex = 0; columnIndex < 4; columnIndex++) {
+            for (int columnIndex = 0; columnIndex < 4; columnIndex++) {
                 columns.add(new ForecastColumn(forecastTable, lowTempRow, lowWindRow, midTempRow, midWindRow, highTempRow, highWindRow, columnIndex));
             }
 

@@ -1,10 +1,10 @@
 package pulseanddecibels.jp.yamatenki.utils;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,9 +16,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
+import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.database.Database;
 import pulseanddecibels.jp.yamatenki.database.dao.ETag;
 import pulseanddecibels.jp.yamatenki.database.dao.ETagDao;
@@ -28,6 +28,8 @@ import pulseanddecibels.jp.yamatenki.interfaces.OnDownloadComplete;
 import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
 import pulseanddecibels.jp.yamatenki.model.MountainListJSON;
+import pulseanddecibels.jp.yamatenki.model.MountainStatusJSON;
+import pulseanddecibels.jp.yamatenki.model.StatusArrayElement;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/28.
@@ -46,6 +48,12 @@ public class JSONDownloader {
         mContext = context;
         DownloadMountainListTask downloadMountainListTask = new DownloadMountainListTask();
         downloadMountainListTask.execute();
+    }
+
+    public static void getMountainStatusFromServer(Context context) {
+        mContext = context;
+        DownloadMountainStatusTask downloadMountainStatusTask = new DownloadMountainStatusTask();
+        downloadMountainStatusTask.execute();
     }
 
     public static void getMountainForecastFromServer(Context context, String yid, OnDownloadComplete downloadComplete) {
@@ -80,33 +88,25 @@ public class JSONDownloader {
         return null;
     }
 
-    private static class DownloadMountainListTask extends AsyncTask<Void, Integer, Boolean> {
-        final String MOUNTAIN_LIST_URL = "https://yamatenki.pulseanddecibels.jp/1/mountainList.json";
+    private static class DownloadMountainStatusTask extends ASyncTaskWithProgress {
         String etag;
 
-        // Do the long-running work in here
         @Override
-        protected Boolean doInBackground(Void... params) {
-            String json = downloadJSON(MOUNTAIN_LIST_URL);
+        protected Boolean doInBackground(String... params) {
+            String json = downloadJSON(getURL());
             if (json != null) {
-                ArrayList<MountainArrayElement> mountainArrayElements = parseJSON(json);
-                if (mountainArrayElements.size() > 0) {
-                    insertIntoDatabase(mountainArrayElements);
+                publishProgress(33);
+                List<StatusArrayElement> statusArrayElements = parseJSON(json);
+                if (statusArrayElements.size() > 0) {
+                    publishProgress(66);
+                    insertIntoDatabase(statusArrayElements);
+                    publishProgress(100);
                     //update was successful, so update the existingETag
-                    new Settings(mContext).setEtag(etag);
+                    new Settings(mContext).setStatusEtag(etag);
                     return true;
                 }
             }
             return false;
-        }
-
-        // This is called when doInBackground() is finished
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                Toast.makeText(mContext, "Mountain List updated.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(mContext, "No new data available.", Toast.LENGTH_SHORT).show();
-            }
         }
 
         private String downloadJSON(String url) {
@@ -121,8 +121,8 @@ public class JSONDownloader {
             try {
                 HttpResponse response = httpclient.execute(httppost);
                 etag = response.getFirstHeader("etag").toString();
-
-                if (new Settings(mContext).isNewEtag(etag)) {
+                if (new Settings(mContext).isNewStatusETag(etag)) {
+                    publishProgress(0);
                     HttpEntity entity = response.getEntity();
 
                     inputStream = entity.getContent();
@@ -139,7 +139,7 @@ public class JSONDownloader {
                 }
 
             } catch (Exception e) {
-                Log.e(JSONDownloader.class.getSimpleName(), "Error when downloading JSON from server");
+                Log.e(JSONDownloader.class.getSimpleName(), "Error when downloading Status JSON from server");
             } finally {
                 try {
                     if (inputStream != null) inputStream.close();
@@ -150,13 +150,105 @@ public class JSONDownloader {
             return result;
         }
 
-        private ArrayList<MountainArrayElement> parseJSON(String mountainListRaw) {
+        @Override
+        protected String getDownloadMessage() {
+            return mContext.getString(R.string.dialog_downloading_status);
+        }
+
+        @Override
+        protected String getURL() {
+            return "https://yamatenki.pulseanddecibels.jp/1/mountainStatus.json";
+        }
+
+        private List<StatusArrayElement> parseJSON(String statusListRaw) {
+            MountainStatusJSON mountainStatusJSON = JSONParser.parseStatusFromMountainStatus(statusListRaw);
+            return mountainStatusJSON.getList();
+        }
+
+        private void insertIntoDatabase(List<StatusArrayElement> statusList) {
+            Database.insertMountainStatusList(mContext, statusList);
+        }
+    }
+
+    private static class DownloadMountainListTask extends ASyncTaskWithProgress {
+        String etag;
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            String json = downloadJSON(getURL());
+            if (json != null) {
+                publishProgress(33);
+                List<MountainArrayElement> mountainArrayElements = parseJSON(json);
+                if (mountainArrayElements.size() > 0) {
+                    publishProgress(66);
+                    insertIntoDatabase(mountainArrayElements);
+                    publishProgress(100);
+                    //update was successful, so update the existingETag
+                    new Settings(mContext).setListEtag(etag);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private String downloadJSON(String url) {
+            DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
+            HttpPost httppost = new HttpPost(url);
+            // Depends on your web service
+            httppost.setHeader("Content-type", "application/json");
+
+            InputStream inputStream = null;
+            String result = null;
+
+            try {
+                HttpResponse response = httpclient.execute(httppost);
+                etag = response.getFirstHeader("etag").toString();
+                if (new Settings(mContext).isNewListEtag(etag)) {
+                    publishProgress(0);
+                    HttpEntity entity = response.getEntity();
+
+                    inputStream = entity.getContent();
+                    // json is UTF-8 by default
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
+                    StringBuilder sb = new StringBuilder();
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                        sb.append("\n");
+                    }
+                    result = sb.toString();
+                }
+
+            } catch (Exception e) {
+                Log.e(JSONDownloader.class.getSimpleName(), "Error when downloading Mountain List JSON from server");
+            } finally {
+                try {
+                    if (inputStream != null) inputStream.close();
+                } catch (Exception squish) {
+                    //do nothing
+                }
+            }
+            return result;
+        }
+
+        private List<MountainArrayElement> parseJSON(String mountainListRaw) {
             MountainListJSON mountainListJSON = JSONParser.parseMountainsFromMountainList(mountainListRaw);
             return mountainListJSON.getMountainArrayElements();
         }
 
         private void insertIntoDatabase(List<MountainArrayElement> mountains) {
             Database.insertMountainList(mContext, mountains);
+        }
+
+        @Override
+        protected String getDownloadMessage() {
+            return mContext.getString(R.string.dialog_downloading_list);
+        }
+
+        @Override
+        protected String getURL() {
+            return "https://yamatenki.pulseanddecibels.jp/1/mountainList.json";
         }
     }
 
@@ -270,5 +362,39 @@ public class JSONDownloader {
         private void insertIntoDatabase(MountainForecastJSON forecastJSON) {
             Database.insertMountainForecast(mContext, forecastJSON);
         }
+    }
+
+    private static abstract class ASyncTaskWithProgress extends AsyncTask<String, Integer, Boolean> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setIndeterminate(false);
+            progressDialog.setMax(100);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage(getDownloadMessage());
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            if(!progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+            progressDialog.setProgress(values[0]);
+        }
+
+        // This is called when doInBackground() is finished
+        protected void onPostExecute(Boolean result) {
+            if(progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+        }
+
+        protected abstract String getDownloadMessage();
+        protected abstract String getURL();
     }
 }

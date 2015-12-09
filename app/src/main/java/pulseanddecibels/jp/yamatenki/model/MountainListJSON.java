@@ -3,6 +3,7 @@ package pulseanddecibels.jp.yamatenki.model;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import pulseanddecibels.jp.yamatenki.utils.DateUtils;
 
@@ -13,7 +14,7 @@ import pulseanddecibels.jp.yamatenki.utils.DateUtils;
  * Representation of a mountain in the "mountain_list" JSON
  */
 public class MountainListJSON {
-    private final ArrayList<MountainArrayElement> mountainArrayElements;
+    private final List<MountainArrayElement> mountainArrayElements;
     private final String timestamp;
 
     public MountainListJSON() {
@@ -21,12 +22,12 @@ public class MountainListJSON {
         timestamp = "";
     }
 
-    public MountainListJSON(ArrayList<MountainArrayElement> mountainArrayElements, String timeStampString) {
+    public MountainListJSON(List<MountainArrayElement> mountainArrayElements, String timeStampString) {
         this.mountainArrayElements = mountainArrayElements;
         this.timestamp = timeStampString;
     }
 
-    public ArrayList<MountainArrayElement> getMountainArrayElements() {
+    public List<MountainArrayElement> getMountainArrayElements() {
         return mountainArrayElements;
     }
 

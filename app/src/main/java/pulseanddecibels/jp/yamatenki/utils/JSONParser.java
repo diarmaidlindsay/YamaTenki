@@ -18,6 +18,8 @@ import pulseanddecibels.jp.yamatenki.model.ForecastArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
 import pulseanddecibels.jp.yamatenki.model.MountainListJSON;
+import pulseanddecibels.jp.yamatenki.model.MountainStatusJSON;
+import pulseanddecibels.jp.yamatenki.model.StatusArrayElement;
 import pulseanddecibels.jp.yamatenki.model.WindAndTemperatureElement;
 
 /**
@@ -29,7 +31,7 @@ import pulseanddecibels.jp.yamatenki.model.WindAndTemperatureElement;
 public class JSONParser {
     public static MountainListJSON parseMountainsFromMountainList(String json) {
         MountainListJSON mountainListJSON = new MountainListJSON();
-        ArrayList<MountainArrayElement> mountains = new ArrayList<>();
+        List<MountainArrayElement> mountains = new ArrayList<>();
 
         try {
             JSONObject jsonRoot = new JSONObject(json);
@@ -49,6 +51,29 @@ public class JSONParser {
         }
 
         return mountainListJSON;
+    }
+
+    public static MountainStatusJSON parseStatusFromMountainStatus(String json) {
+        MountainStatusJSON mountainStatusJSON = new MountainStatusJSON();
+        List<StatusArrayElement> statusList = new ArrayList<>();
+
+        try {
+            JSONObject jsonRoot = new JSONObject(json);
+            JSONArray jsonArray = jsonRoot.optJSONArray("list");
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject status = jsonArray.getJSONObject(i);
+                statusList.add(parseStatus(status));
+            }
+
+            mountainStatusJSON = new MountainStatusJSON(statusList);
+        }
+        catch (JSONException e) {
+                Log.e(JSONParser.class.getSimpleName(), "Error while parsing Mountain Status JSON");
+                e.printStackTrace();
+            }
+
+        return mountainStatusJSON;
     }
 
     @Nullable
@@ -79,9 +104,10 @@ public class JSONParser {
                 heightsMap.append(heightJSONObject.optInt("height"), heightJSONObject.optInt("pressure"));
             }
             String dateTime = jsonRoot.optString("timestamp");
+            int currentMountainForecast = jsonRoot.optInt("currentMountainForecast");
 
             mountainForecastJSON = new MountainForecastJSON(mountain, forecastMap,
-                    referenceCity, heightsMap, dateTime);
+                    referenceCity, heightsMap, dateTime, currentMountainForecast);
 
         } catch (JSONException e) {
             Log.e(JSONParser.class.getSimpleName(), "Error while parsing Mountain Forecast JSON");
@@ -104,10 +130,16 @@ public class JSONParser {
         String prefecture = mountain.optString("prefecture");
         int area = mountain.optInt("area");
         int height = mountain.optInt("height");
-        int currentMountainIndex = mountain.optInt("currentMountainStatus");
 
         return new MountainArrayElement(yid, title, titleExt, titleEnglish, kana, coordinate, prefecture,
-                area, height, currentMountainIndex);
+                area, height);
+    }
+
+    private static StatusArrayElement parseStatus(JSONObject status) throws JSONException {
+        String yid = status.optString("yid");
+        Integer cms = status.optInt("cms");
+
+        return new StatusArrayElement(yid, cms);
     }
 
     private static ForecastArrayElement parseForecast(JSONObject forecast) throws JSONException {

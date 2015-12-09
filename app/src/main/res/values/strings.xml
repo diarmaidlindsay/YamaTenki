@@ -94,7 +94,7 @@
     <string name="text_setting_subtitle_warning_false">"This is not a forecast" warning will not be displayed.</string>
     <string name="text_setting_subtitle_warning_true">"This is not a forecast" warning will be displayed.</string>
     <string name="text_setting_title_mobile">Update using Mobile Network</string>
-    <string name="text_setting_subtitle_mobile_false">Update over Wifi only.</string>
+    <string name="text_setting_subtitle_mobile_false">Update using Wifi only.</string>
     <string name="text_setting_subtitle_mobile_true">Update using Mobile Network or Wifi.</string>
     <string name="text_setting_title_checklist_reset">Reset checklist automatically</string>
     <string name="text_setting_subtitle_checklist_reset_false">Checklist will not reset automatically.</string>
@@ -114,4 +114,6 @@
     <string name="checkbox_license_agreement">上記の文章を理解しました</string>
     <string name="button_license_agreement_disagree">同意しない</string>
     <string name="button_license_agreement_agree">同意する</string>
+    <string name="dialog_downloading_list">山リストを更新中…</string>
+    <string name="dialog_downloading_status">山行指数を更新中…</string>
 </resources>

@@ -21,18 +21,20 @@ public class MountainForecastJSON {
     private MountainArrayElement mountainArrayElement;
     private String referenceCity;
     private String timestamp;
+    private Integer currentMountainForecast;
 
     public MountainForecastJSON() {
         forecasts = new HashMap<>();
         heights = new SparseIntArray();
     }
 
-    public MountainForecastJSON(MountainArrayElement mountainArrayElement, Map<String, ForecastArrayElement> forecasts, String referenceCity, SparseIntArray heights, String timestamp) {
+    public MountainForecastJSON(MountainArrayElement mountainArrayElement, Map<String, ForecastArrayElement> forecasts, String referenceCity, SparseIntArray heights, String timestamp, Integer currentMountainForecast) {
         this.mountainArrayElement = mountainArrayElement;
         this.forecasts = forecasts;
         this.referenceCity = referenceCity;
         this.heights = heights;
         this.timestamp = timestamp;
+        this.currentMountainForecast = currentMountainForecast;
     }
 
     public MountainArrayElement getMountainArrayElement() {
@@ -53,5 +55,9 @@ public class MountainForecastJSON {
 
     public DateTime getTimestamp() {
         return DateUtils.getDateTimeFromForecast(timestamp);
+    }
+
+    public Integer getCurrentMountainForecast() {
+        return currentMountainForecast;
     }
 }

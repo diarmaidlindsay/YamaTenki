@@ -46,11 +46,25 @@ public class Settings {
         settings.edit().putBoolean("agreed_to_license", value).apply();
     }
 
-    public boolean isNewEtag(String etag) {
+    /**
+     * ETag for Mountain List
+     */
+    public boolean isNewListEtag(String etag) {
         return !settings.getString("last_list_etag", "").equals(etag);
     }
 
-    public void setEtag(String etag) {
+    public void setListEtag(String etag) {
         settings.edit().putString("last_list_etag", etag).apply();
+    }
+
+    /**
+     * ETag for Status List
+     */
+    public boolean isNewStatusETag(String etag) {
+        return !settings.getString("last_status_etag", "").equals(etag);
+    }
+
+    public void setStatusEtag(String etag) {
+        settings.edit().putString("last_status_etag", etag).apply();
     }
 }
