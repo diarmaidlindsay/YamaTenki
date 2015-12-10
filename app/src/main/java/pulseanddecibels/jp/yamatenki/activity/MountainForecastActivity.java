@@ -784,7 +784,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
     @Override
     public void downloadingCompleted(boolean result) {
         populateWidgetsFromDatabase();
-        if (new Settings(this).getSetting("setting_display_warning")) {
+        if (!new Settings(this).getSetting("setting_dont_display_warning")) {
             displayWarningDialog();
         }
         hideWidgetsWithOldData();

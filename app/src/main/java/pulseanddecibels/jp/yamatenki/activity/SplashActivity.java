@@ -185,8 +185,8 @@ public class SplashActivity extends Activity {
     }
 
     private void writeDefaultSettings() {
-        settings.setSetting("setting_display_warning", true);
-        settings.setSetting("setting_download_mobile", true);
+        settings.setSetting("setting_dont_display_warning", false);
+        settings.setSetting("setting_download_only_wifi", false);
         settings.setSetting("setting_reset_checklist", false);
     }
 
