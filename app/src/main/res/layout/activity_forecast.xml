@@ -146,7 +146,6 @@
         <include
             android:id="@+id/today_am_forecast"
             layout="@layout/scroll_item_forecast"
-            android:layout_marginTop="10dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/icon_facebook"
