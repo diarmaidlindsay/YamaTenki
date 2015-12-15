@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -207,6 +208,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         LinearLayout tomorrowAMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_am_forecast);
         LinearLayout tomorrowPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_pm_forecast);
         //add in correct order because index matters for looking up date
+        //maybe I could use a map instead? "todayAMForecast" as the key for example
         scrollViewElements.add(new ForecastScrollViewElement(todayAMForecast));
         scrollViewElements.add(new ForecastScrollViewElement(todayPMForecast));
         scrollViewElements.add(new ForecastScrollViewElement(tomorrowAMForecast));
@@ -271,7 +273,9 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         List<Forecast> forecastList = forecastDao.queryBuilder().where(ForecastDao.Properties.MountainId.eq(mountainId)).list();
         for (Forecast forecast : forecastList) {
             String dateTimeString = forecast.getDateTime();
+            Log.d("MFA : dateTimeString", dateTimeString);
             DateTime dateTime = DateUtils.getDateTimeFromForecast(dateTimeString);
+            Log.d("MFA : DateToForecastKey", DateUtils.getDateToForecastKey(dateTime));
             forecastMap.put(DateUtils.getDateToForecastKey(dateTime), forecast);
         }
 
@@ -349,11 +353,13 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
 
             for (ForecastColumn forecastColumn : scrollViewElement.getColumns()) {
                 String key = DateUtils.getWidgetToForecastKey(i, forecastColumn.getColumnIndex());
+                Log.d("getWidgetToForecastKey", key);
                 Forecast forecast = forecastMap.get(key);
 
                 forecastColumn.getTime().setText(DateUtils.getColumnHeadingFor(i, forecastColumn.getColumnIndex()));
 
                 if (forecast != null) {
+                    Log.d("getWidgetToForecastKey", "Found");
                     //we found a matching forecast
                     forecastColumn.getDifficulty().setImageResource(DIFFICULTY_SMALL_IMAGES.get(forecast.getMountainStatus()));
                     List<WindAndTemperature> windAndTemperatureList = forecast.getWindAndTemperatureList();
@@ -385,6 +391,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                     forecastColumn.getCloudCover().setText(String.format("%d", forecast.getTotalCloudCover().intValue() / 10));
 
                 } else {
+                    Log.d("getWidgetToForecastKey", "Not Found");
                     //set grey background and blank
                     forecastColumn.getDifficulty().setBackgroundColor(Color.LTGRAY);
                     forecastColumn.getLowHeightTemperature().setBackgroundColor(Color.LTGRAY);

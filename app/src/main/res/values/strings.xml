@@ -111,4 +111,7 @@
     <string name="dialog_downloading_list">山リストを更新中…</string>
     <string name="dialog_downloading_status">山行指数を更新中…</string>
     <string name="dialog_updating_forecast">山情報を更新中…</string>
+    <string name="button_1_month_sub">Purchase 1 month subscription</string>
+    <string name="button_6_month_sub">Purchase 6 month subscription</string>
+    <string name="button_1_year_sub">Purchase 1 year subscription</string>
 </resources>

@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationServices;
 
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
+import pulseanddecibels.jp.yamatenki.utils.SubscriptionSingleton;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
@@ -125,6 +126,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         });
 
         buildGoogleApiClient();
+        SubscriptionSingleton.getInstance(this).initGoogleBillingApi(this);
         JSONDownloader.getMountainListFromServer(this);
         JSONDownloader.getMountainStatusFromServer(this);
     }
@@ -200,5 +202,11 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             mGoogleApiClient.disconnect();
         }
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        SubscriptionSingleton.getInstance(this).disposeIabHelperInstance(this);
     }
 }
