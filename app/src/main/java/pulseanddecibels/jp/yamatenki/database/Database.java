@@ -220,7 +220,8 @@ public class Database {
             Double totalCloudCover = element.getTotalCloudCover();
             Integer mountainStatus = element.getMountainStatus();
             String timeStamp = element.getTimeStamp(); //should be same as "dateTime"
-            Forecast forecast = new Forecast(null, outerTemperature, precipitation, totalCloudCover, mountainStatus, timeStamp, mountainId);
+            boolean daily = element.isDaily();
+            Forecast forecast = new Forecast(null, outerTemperature, precipitation, totalCloudCover, mountainStatus, timeStamp, daily, mountainId);
             newForecasts.add(forecast);
         }
 

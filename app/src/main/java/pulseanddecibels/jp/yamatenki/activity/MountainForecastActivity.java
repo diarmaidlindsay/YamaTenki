@@ -207,19 +207,13 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         LinearLayout todayPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.today_pm_forecast);
         LinearLayout tomorrowAMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_am_forecast);
         LinearLayout tomorrowPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_pm_forecast);
+        LinearLayout weeklyForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.weekly_forecast);
         //add in correct order because index matters for looking up date
-        //maybe I could use a map instead? "todayAMForecast" as the key for example
-        scrollViewElements.add(new ForecastScrollViewElement(todayAMForecast));
-        scrollViewElements.add(new ForecastScrollViewElement(todayPMForecast));
-        scrollViewElements.add(new ForecastScrollViewElement(tomorrowAMForecast));
-        scrollViewElements.add(new ForecastScrollViewElement(tomorrowPMForecast));
-        /*
-        +2Forecast
-        +3Forecast
-        +4Forecast
-        +5Forecast
-        +6Forecast
-         */
+        scrollViewElements.add(new ForecastScrollViewElement(todayAMForecast, false));
+        scrollViewElements.add(new ForecastScrollViewElement(todayPMForecast, false));
+        scrollViewElements.add(new ForecastScrollViewElement(tomorrowAMForecast, false));
+        scrollViewElements.add(new ForecastScrollViewElement(tomorrowPMForecast, false));
+        scrollViewElements.add(new ForecastScrollViewElement(weeklyForecast, true));
     }
 
     /**
@@ -267,16 +261,24 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         };
     }
 
-    private Map<String, Forecast> getMappedForecasts() {
+    /**
+     * @param daily - true = weekly/long term forecasts (forecastsDaily in JSON) false = today and tomorrow/short term forecasts
+     */
+    private Map<String, Forecast> getMappedForecasts(boolean daily) {
         Map<String, Forecast> forecastMap = new HashMap<>();
         ForecastDao forecastDao = Database.getInstance(this).getForecastDao();
-        List<Forecast> forecastList = forecastDao.queryBuilder().where(ForecastDao.Properties.MountainId.eq(mountainId)).list();
+        List<Forecast> forecastList = forecastDao.queryBuilder().where(ForecastDao.Properties.MountainId.eq(mountainId), ForecastDao.Properties.Daily.eq(daily)).list();
         for (Forecast forecast : forecastList) {
             String dateTimeString = forecast.getDateTime();
             Log.d("MFA : dateTimeString", dateTimeString);
             DateTime dateTime = DateUtils.getDateTimeFromForecast(dateTimeString);
-            Log.d("MFA : DateToForecastKey", DateUtils.getDateToForecastKey(dateTime));
-            forecastMap.put(DateUtils.getDateToForecastKey(dateTime), forecast);
+            if(daily) {
+                forecastMap.put(DateUtils.getDateToLongTermForecastKey(dateTime), forecast);
+                Log.d("MFA : LongForecastKey", DateUtils.getDateToLongTermForecastKey(dateTime));
+            } else {
+                forecastMap.put(DateUtils.getDateToShortTermForecastKey(dateTime), forecast);
+                Log.d("MFA : ShortForecastKey", DateUtils.getDateToShortTermForecastKey(dateTime));
+            }
         }
 
         return forecastMap;
@@ -320,14 +322,16 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         final Mountain mountain = mountainDao.load(mountainId);
 
         title.setText(mountain.getTitle());
-        Map<String, Forecast> forecastMap = getMappedForecasts();
+        Map<String, Forecast> forecastMapShortTerm = getMappedForecasts(false);
+        Map<String, Forecast> forecastMapLongTerm = getMappedForecasts(true);
         List<Pressure> heights = pressureDao.queryBuilder().where(PressureDao.Properties.MountainId.eq(mountainId)).list();
 
         for (int i = 0; i < scrollViewElements.size(); i++) {
             ForecastScrollViewElement scrollViewElement = scrollViewElements.get(i);
             //set ScrollViewElement header
-            scrollViewElement.getHeader().setText(DateUtils.getFormattedHeader(i));
-
+            if(!scrollViewElement.isLongTermForecast()) {
+                scrollViewElement.getHeader().setText(DateUtils.getFormattedHeader(i));
+            }
             //now depending on the amount of heights, we will display a different amount of rows...
             String heightPressureTemplate = "高度 %s m付近（%shPa )";
             if (heights.size() == 3 || heights.size() == 2 || heights.size() == 1) {
@@ -352,11 +356,20 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
             }
 
             for (ForecastColumn forecastColumn : scrollViewElement.getColumns()) {
-                String key = DateUtils.getWidgetToForecastKey(i, forecastColumn.getColumnIndex());
-                Log.d("getWidgetToForecastKey", key);
-                Forecast forecast = forecastMap.get(key);
+                String key = scrollViewElement.isLongTermForecast() ?
+                        DateUtils.getColumnHeadingForLongTermForecast(forecastColumn.getColumnIndex()) :
+                        DateUtils.getWidgetToForecastKey(i, forecastColumn.getColumnIndex());
+                Log.d("WidgetToForecastKey", key);
+                //scrollViewElement 4 is the long term forecasts
+                Forecast forecast = i == 4 ?
+                        forecastMapLongTerm.get(key) :
+                        forecastMapShortTerm.get(key);
 
-                forecastColumn.getTime().setText(DateUtils.getColumnHeadingFor(i, forecastColumn.getColumnIndex()));
+                if(scrollViewElement.isLongTermForecast()) {
+                    forecastColumn.getTime().setText(DateUtils.getColumnHeadingForLongTermForecast(forecastColumn.getColumnIndex()));
+                } else {
+                    forecastColumn.getTime().setText(DateUtils.getColumnHeadingForShortTermForecast(i, forecastColumn.getColumnIndex()));
+                }
 
                 if (forecast != null) {
                     Log.d("getWidgetToForecastKey", "Found");
@@ -821,29 +834,37 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         private final ImageView highWindHelp;
         private final ImageView cloudCoverHelp;
 
-        public ForecastScrollViewElement(LinearLayout forecast) {
+        private final boolean longTermForecast;
+
+        public ForecastScrollViewElement(LinearLayout forecast, boolean longTerm) {
             layout = forecast;
             header = (TextView) forecast.findViewById(R.id.forecast_header);
+            longTermForecast = longTerm;
             TableLayout forecastTable = (TableLayout) forecast.findViewById(R.id.forecast_table);
 
             lowTempRow = (TableRow) forecastTable.findViewById(R.id.forecast_low_row_temperature);
             lowWindRow = (TableRow) forecastTable.findViewById(R.id.forecast_low_row_wind);
             lowWindHelp = (ImageView) lowWindRow.findViewById(R.id.help_icon_wind_speed);
-            lowWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
 
             midTempRow = (TableRow) forecastTable.findViewById(R.id.forecast_mid_row_temperature);
             midWindRow = (TableRow) forecastTable.findViewById(R.id.forecast_mid_row_wind);
             midWindHelp = (ImageView) midWindRow.findViewById(R.id.help_icon_wind_speed);
-            midWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
 
             highTempRow = (TableRow) forecastTable.findViewById(R.id.forecast_high_row_temperature);
             highWindRow = (TableRow) forecastTable.findViewById(R.id.forecast_high_row_wind);
             highWindHelp = (ImageView) highWindRow.findViewById(R.id.help_icon_wind_speed);
-            highWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
             cloudCoverHelp = (ImageView) forecastTable.findViewById(R.id.help_icon_cloud_cover);
-            cloudCoverHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_cloud_cover));
 
-            for (int columnIndex = 0; columnIndex < 4; columnIndex++) {
+            if(!longTerm) {
+                lowWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
+                midWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
+                highWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
+                cloudCoverHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_cloud_cover));
+            }
+
+            final int COLUMN_COUNT = longTermForecast ? 5 : 4;
+
+            for (int columnIndex = 0; columnIndex < COLUMN_COUNT; columnIndex++) {
                 columns.add(new ForecastColumn(forecastTable, lowTempRow, lowWindRow, midTempRow, midWindRow, highTempRow, highWindRow, columnIndex));
             }
 
@@ -880,6 +901,10 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
             highTempRow.setVisibility(visibility);
             highWindRow.setVisibility(visibility);
             highHeightPressureRow.setVisibility(visibility);
+        }
+
+        public boolean isLongTermForecast() {
+            return longTermForecast;
         }
 
         public TextView getHeader() {

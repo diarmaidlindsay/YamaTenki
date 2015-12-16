@@ -91,8 +91,15 @@ public class JSONParser {
             JSONArray forecasts = jsonRoot.optJSONArray("forecasts");
             Map<String, ForecastArrayElement> forecastMap = new HashMap<>();
             for (int i = 0; i < forecasts.length(); i++) {
-                ForecastArrayElement element = parseForecast(forecasts.getJSONObject(i));
-                String key = DateUtils.getDateToForecastKey(element.getDateTime());
+                ForecastArrayElement element = parseForecast(forecasts.getJSONObject(i), false);
+                String key = DateUtils.getDateToShortTermForecastKey(element.getDateTime());
+                forecastMap.put(key, element);
+            }
+
+            JSONArray forecastsDaily = jsonRoot.optJSONArray("forecastsDaily");
+            for (int i = 0; i < forecastsDaily.length(); i++) {
+                ForecastArrayElement element = parseForecast(forecastsDaily.getJSONObject(i), true);
+                String key = DateUtils.getDateToShortTermForecastKey(element.getDateTime());
                 forecastMap.put(key, element);
             }
 
@@ -142,7 +149,7 @@ public class JSONParser {
         return new StatusArrayElement(yid, cms);
     }
 
-    private static ForecastArrayElement parseForecast(JSONObject forecast) throws JSONException {
+    private static ForecastArrayElement parseForecast(JSONObject forecast, boolean daily) throws JSONException {
         String dateTime = forecast.optString("dateTime");
         int mountainStatus = forecast.optInt("mountainStatus");
         List<WindAndTemperatureElement> windAndTemperaturesList = new ArrayList<>();
@@ -160,6 +167,6 @@ public class JSONParser {
         Integer temperature = forecast.has("temperature") ? forecast.optInt("temperature") : null;
         int totalCloudCover = forecast.optInt("totalCloudCover");
         return new ForecastArrayElement(dateTime, mountainStatus,
-                windAndTemperaturesList, temperature, precipitation, totalCloudCover);
+                windAndTemperaturesList, temperature, precipitation, totalCloudCover, daily);
     }
 }

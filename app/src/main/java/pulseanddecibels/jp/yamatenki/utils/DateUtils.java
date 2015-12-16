@@ -130,7 +130,7 @@ public class DateUtils {
         return dateTime;
     }
 
-    public static String getColumnHeadingFor(int scrollViewIndex, int columnId) {
+    public static String getColumnHeadingForShortTermForecast(int scrollViewIndex, int columnId) {
         String[] timePeriod;
         switch (scrollViewIndex) {
             case 0 :
@@ -143,6 +143,15 @@ public class DateUtils {
     }
 
     /**
+     * column index 0 is 2 days from now
+     */
+    public static String getColumnHeadingForLongTermForecast(int columnId) {
+        DateTime dateTime = new DateTime();
+        dateTime = dateTime.plusDays(columnId + 2);
+        return String.format("%s/%s", Utils.num2DigitString(dateTime.getMonthOfYear()), Utils.num2DigitString(dateTime.getDayOfMonth()));
+    }
+
+    /**
      * Get key to match a scroll view column with the correct forecast
      *
      * @param scrollViewIndex 0 = today AM, 1 = today PM, 2 = tomorrow AM, 3 = tomorrow PM
@@ -150,7 +159,7 @@ public class DateUtils {
      */
     public static String getWidgetToForecastKey(int scrollViewIndex, int columnId) {
         DateTime dateTime = new DateTime();
-        if (scrollViewIndex >= 2) {
+        if (scrollViewIndex == 2 || scrollViewIndex == 3) {
             dateTime = dateTime.plusDays(1);
         }
         return
@@ -158,19 +167,29 @@ public class DateUtils {
                         "/" +
                         Utils.num2DigitString(dateTime.getDayOfMonth()) +
                         "-" +
-                        getColumnHeadingFor(scrollViewIndex, columnId);
+                        getColumnHeadingForShortTermForecast(scrollViewIndex, columnId);
     }
 
     /**
-     * Derive key for storing forecasts in HashMap from its TimeStamp
+     * Derive key for storing short term forecasts in HashMap from its TimeStamp
      */
-    public static String getDateToForecastKey(DateTime dateTime) {
+    public static String getDateToShortTermForecastKey(DateTime dateTime) {
         return
                 Utils.num2DigitString(dateTime.getMonthOfYear()) +
                         "/" +
                         Utils.num2DigitString(dateTime.getDayOfMonth()) +
                         "-" +
                         Utils.num2DigitString(dateTime.getHourOfDay());
+    }
+
+    /**
+     * Derive key for storing long term forecasts in HashMap from its TimeStamp
+     */
+    public static String getDateToLongTermForecastKey(DateTime dateTime) {
+        return
+                Utils.num2DigitString(dateTime.getMonthOfYear()) +
+                        "/" +
+                        Utils.num2DigitString(dateTime.getDayOfMonth());
     }
 
     /**

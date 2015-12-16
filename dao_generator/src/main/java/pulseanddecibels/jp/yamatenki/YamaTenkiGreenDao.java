@@ -29,7 +29,7 @@ public class YamaTenkiGreenDao {
         /**
          Mountain
          **/
-        Property mountainId = mountain.addIdProperty().getProperty();
+        mountain.addIdProperty().getProperty();
         mountain.addStringProperty("yid");
         mountain.addStringProperty("title");
         mountain.addStringProperty("titleExt");
@@ -82,6 +82,7 @@ public class YamaTenkiGreenDao {
         forecast.addDoubleProperty("totalCloudCover");
         forecast.addIntProperty("mountainStatus");
         forecast.addStringProperty("dateTime");
+        forecast.addBooleanProperty("daily");
         Property mountainIdForecast = forecast.addLongProperty("mountainId").notNull().getProperty(); //which mountain it belongs to
         //One mountain, Many forecasts
         forecast.addToOne(mountain, mountainIdForecast);
@@ -138,7 +139,7 @@ public class YamaTenkiGreenDao {
         /**
          * Current Mountain Status
          */
-        Property statusId = status.addIdProperty().getProperty();
+        status.addIdProperty().getProperty();
         Property mountainIdStatus = status.addLongProperty("mountainId").notNull().getProperty();
         status.addToOne(mountain, mountainIdStatus);
         status.addIntProperty("status");

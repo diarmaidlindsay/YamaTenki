@@ -22,14 +22,16 @@ public class ForecastArrayElement {
     private final double temperature;
     private final double precipitation;
     private final double totalCloudCover;
+    private final boolean daily;
 
-    public ForecastArrayElement(String timeStamp, int mountainStatus, List<WindAndTemperatureElement> windAndTemperatures, Integer temperature, float precipitation, int totalCloudCover) {
+    public ForecastArrayElement(String timeStamp, int mountainStatus, List<WindAndTemperatureElement> windAndTemperatures, Integer temperature, float precipitation, int totalCloudCover, boolean daily) {
         this.timeStamp = timeStamp;
         this.mountainStatus = mountainStatus;
         this.windAndTemperatures = windAndTemperatures;
         this.temperature = temperature;
         this.precipitation = precipitation;
         this.totalCloudCover = totalCloudCover;
+        this.daily = daily;
     }
 
     public DateTime getDateTime() {
@@ -45,7 +47,7 @@ public class ForecastArrayElement {
     }
 
     public Double getPrecipitation() {
-        return precipitation;
+        return precipitation == Double.NaN ? 0.0 : precipitation;
     }
 
     public int getMountainStatus() {
@@ -58,5 +60,9 @@ public class ForecastArrayElement {
 
     public String getTimeStamp() {
         return timeStamp;
+    }
+
+    public boolean isDaily() {
+        return daily;
     }
 }

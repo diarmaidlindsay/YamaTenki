@@ -17,6 +17,7 @@
     <string name="text_search_table_header_height">標高</string>
     <string name="text_unset">NA</string>
     <string name="text_forecast_table_time">時間</string>
+    <string name="text_forecast_table_day">月／日</string>
     <string name="text_forecast_table_difficulty">山行指数</string>
     <string name="text_forecast_atmospheric_temperature">気温（°C）</string>
     <string name="text_forecast_wind_speed">風（m/s）</string>
@@ -114,4 +115,6 @@
     <string name="button_1_month_sub">Purchase 1 month subscription</string>
     <string name="button_6_month_sub">Purchase 6 month subscription</string>
     <string name="button_1_year_sub">Purchase 1 year subscription</string>
+    <string name="text_weekly_forecast_header">週間予測</string>
+    <string name="text_weekly_forecast_subheader">各日 9 時時点の情報を表示しています。</string>
 </resources>

@@ -117,6 +117,10 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="ForecastTableLeftSideColumnWeekly" parent="ForecastTableLeftSideColumn">
+        <item name="android:layout_weight">0.20</item>
+    </style>
+
     <style name="ForecastTableSmallImage">
         <item name="android:layout_weight">0.05</item>
         <item name="android:layout_height">match_parent</item>
@@ -127,19 +131,37 @@
     <style name="ForecastTableText" parent="LargeBrownText">
         <item name="android:textStyle">bold</item>
         <item name="android:layout_weight">0.15</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ForecastTableTextMedium" parent="ForecastTableText">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ForecastTableTextMediumWeekly" parent="ForecastTableTextMedium">
+        <item name="android:layout_weight">0.14</item>
     </style>
 
     <style name="ForecastTableTextSmall" parent="ForecastTableText">
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="ForecastTableTextSmallWeekly" parent="ForecastTableTextSmall">
+        <item name="android:layout_weight">0.14</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+
     <style name="ForecastTableImage">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">0.15</item>
+    </style>
+
+    <style name="ForecastTableImageWeekly" parent="ForecastTableImage">
+        <item name="android:layout_weight">0.14</item>
     </style>
 
     <style name="CustomTimePickerDialogTheme">

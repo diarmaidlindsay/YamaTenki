@@ -7,11 +7,19 @@
               android:paddingTop="20dp">
 
     <TextView
-        android:id="@+id/forecast_header"
         style="@style/ForecastTableHeader"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/text_unset"/>
+        android:text="@string/text_weekly_forecast_header"/>
+
+    <TextView
+        style="@style/SmallBrownText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingTop="5dp"
+        android:text="@string/text_weekly_forecast_subheader"/>
 
     <TableLayout
         android:id="@+id/forecast_table"
@@ -28,24 +36,28 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/ForecastTableLeftSideColumn"
-                    android:text="@string/text_forecast_table_time"/>
+                    style="@style/ForecastTableLeftSideColumnWeekly"
+                    android:text="@string/text_forecast_table_day"/>
 
                 <TextView
                     android:id="@+id/forecast_time_0"
-                    style="@style/ForecastTableTextMedium"/>
+                    style="@style/ForecastTableTextMediumWeekly"/>
 
                 <TextView
                     android:id="@+id/forecast_time_1"
-                    style="@style/ForecastTableTextMedium"/>
+                    style="@style/ForecastTableTextMediumWeekly"/>
 
                 <TextView
                     android:id="@+id/forecast_time_2"
-                    style="@style/ForecastTableTextMedium"/>
+                    style="@style/ForecastTableTextMediumWeekly"/>
 
                 <TextView
                     android:id="@+id/forecast_time_3"
-                    style="@style/ForecastTableTextMedium"/>
+                    style="@style/ForecastTableTextMediumWeekly"/>
+
+                <TextView
+                    android:id="@+id/forecast_time_4"
+                    style="@style/ForecastTableTextMediumWeekly"/>
             </LinearLayout>
         </TableRow>
 
@@ -57,27 +69,32 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/ForecastTableLeftSideColumn"
+                    style="@style/ForecastTableLeftSideColumnWeekly"
                     android:text="@string/text_forecast_table_difficulty"/>
 
                 <ImageView
                     android:id="@+id/forecast_difficulty_0"
-                    style="@style/ForecastTableImage"
+                    style="@style/ForecastTableImageWeekly"
                     android:src="@drawable/difficulty_blank_small"/>
 
                 <ImageView
                     android:id="@+id/forecast_difficulty_1"
-                    style="@style/ForecastTableImage"
+                    style="@style/ForecastTableImageWeekly"
                     android:src="@drawable/difficulty_blank_small"/>
 
                 <ImageView
                     android:id="@+id/forecast_difficulty_2"
-                    style="@style/ForecastTableImage"
+                    style="@style/ForecastTableImageWeekly"
                     android:src="@drawable/difficulty_blank_small"/>
 
                 <ImageView
                     android:id="@+id/forecast_difficulty_3"
-                    style="@style/ForecastTableImage"
+                    style="@style/ForecastTableImageWeekly"
+                    android:src="@drawable/difficulty_blank_small"/>
+
+                <ImageView
+                    android:id="@+id/forecast_difficulty_4"
+                    style="@style/ForecastTableImageWeekly"
                     android:src="@drawable/difficulty_blank_small"/>
             </LinearLayout>
         </TableRow>
@@ -88,11 +105,11 @@
 
         <include
             android:id="@+id/forecast_low_row_temperature"
-            layout="@layout/row_forecast_temperature"/>
+            layout="@layout/row_forecast_temperature_weekly"/>
 
         <include
             android:id="@+id/forecast_low_row_wind"
-            layout="@layout/row_forecast_wind"/>
+            layout="@layout/row_forecast_wind_weekly"/>
 
         <include
             android:id="@+id/forecast_mid_row_height"
@@ -100,11 +117,11 @@
 
         <include
             android:id="@+id/forecast_mid_row_temperature"
-            layout="@layout/row_forecast_temperature"/>
+            layout="@layout/row_forecast_temperature_weekly"/>
 
         <include
             android:id="@+id/forecast_mid_row_wind"
-            layout="@layout/row_forecast_wind"/>
+            layout="@layout/row_forecast_wind_weekly"/>
 
         <include
             android:id="@+id/forecast_high_row_height"
@@ -112,38 +129,42 @@
 
         <include
             android:id="@+id/forecast_high_row_temperature"
-            layout="@layout/row_forecast_temperature"/>
+            layout="@layout/row_forecast_temperature_weekly"/>
 
         <include
             android:id="@+id/forecast_high_row_wind"
-            layout="@layout/row_forecast_wind"/>
+            layout="@layout/row_forecast_wind_weekly"/>
 
         <TableRow android:layout_marginTop="10dp">
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/ForecastTableLeftSideColumn"
+                    style="@style/ForecastTableLeftSideColumnWeekly"
                     android:text="@string/text_forecast_rain_level"/>
 
                 <TextView
                     android:id="@+id/forecast_rain_level_0"
-                    style="@style/ForecastTableText"/>
+                    style="@style/ForecastTableTextSmallWeekly"/>
 
                 <TextView
                     android:id="@+id/forecast_rain_level_1"
-                    style="@style/ForecastTableText"/>
+                    style="@style/ForecastTableTextSmallWeekly"/>
 
                 <TextView
                     android:id="@+id/forecast_rain_level_2"
-                    style="@style/ForecastTableText"/>
+                    style="@style/ForecastTableTextSmallWeekly"/>
 
                 <TextView
                     android:id="@+id/forecast_rain_level_3"
-                    style="@style/ForecastTableText"/>
+                    style="@style/ForecastTableTextSmallWeekly"/>
+
+                <TextView
+                    android:id="@+id/forecast_rain_level_4"
+                    style="@style/ForecastTableTextSmallWeekly"/>
             </LinearLayout>
         </TableRow>
 
@@ -154,49 +175,29 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="0.30"
-                    android:background="@color/table_bg_alt">
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="@string/text_forecast_cloud_cover"
-                        android:textColor="@color/yama_brown"/>
-
-                    <ImageView
-                        android:id="@+id/help_icon_cloud_cover"
-                        android:layout_width="15dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginStart="0dp"
-                        android:src="@drawable/question_mark"/>
-                </RelativeLayout>
+                <TextView
+                    style="@style/ForecastTableLeftSideColumnWeekly"
+                    android:text="@string/text_forecast_cloud_cover"/>
 
                 <TextView
                     android:id="@+id/forecast_cloud_cover_0"
-                    style="@style/ForecastTableText"/>
+                    style="@style/ForecastTableTextSmallWeekly"/>
 
                 <TextView
                     android:id="@+id/forecast_cloud_cover_1"
-                    style="@style/ForecastTableText"/>
+                    style="@style/ForecastTableTextSmallWeekly"/>
 
                 <TextView
                     android:id="@+id/forecast_cloud_cover_2"
-                    style="@style/ForecastTableText"/>
+                    style="@style/ForecastTableTextSmallWeekly"/>
 
                 <TextView
                     android:id="@+id/forecast_cloud_cover_3"
-                    style="@style/ForecastTableText"/>
+                    style="@style/ForecastTableTextSmallWeekly"/>
+
+                <TextView
+                    android:id="@+id/forecast_cloud_cover_4"
+                    style="@style/ForecastTableTextSmallWeekly"/>
             </LinearLayout>
         </TableRow>
     </TableLayout>

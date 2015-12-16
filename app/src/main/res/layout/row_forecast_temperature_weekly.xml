@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/ForecastTableLeftSideColumnWeekly"
+            android:text="@string/text_forecast_atmospheric_temperature"/>
+
+        <TextView
+            android:id="@+id/forecast_temp_0"
+            style="@style/ForecastTableTextSmallWeekly"/>
+
+        <TextView
+            android:id="@+id/forecast_temp_1"
+            style="@style/ForecastTableTextSmallWeekly"/>
+
+        <TextView
+            android:id="@+id/forecast_temp_2"
+            style="@style/ForecastTableTextSmallWeekly"/>
+
+        <TextView
+            android:id="@+id/forecast_temp_3"
+            style="@style/ForecastTableTextSmallWeekly"/>
+
+        <TextView
+            android:id="@+id/forecast_temp_4"
+            style="@style/ForecastTableTextSmallWeekly"/>
+    </LinearLayout>
+</TableRow>

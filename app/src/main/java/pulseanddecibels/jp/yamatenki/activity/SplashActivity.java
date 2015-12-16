@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.facebook.FacebookSdk;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.database.Database;
 import pulseanddecibels.jp.yamatenki.utils.DateUtils;
@@ -45,6 +47,7 @@ public class SplashActivity extends Activity {
         settings = new Settings(this);
         setContentView(R.layout.activity_splash);
         FacebookSdk.sdkInitialize(getApplicationContext());
+        JodaTimeAndroid.init(this);
         goFullScreen();
 
         if (settings.isFirstTimeRun()) {

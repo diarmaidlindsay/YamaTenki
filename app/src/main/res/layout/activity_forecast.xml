@@ -175,6 +175,14 @@
             android:layout_below="@id/tomorrow_am_forecast"
             />
 
+        <include
+            android:id="@+id/weekly_forecast"
+            layout="@layout/scroll_item_forecast_weekly"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tomorrow_pm_forecast"
+            />
+
     </android.support.percent.PercentRelativeLayout>
 
 </ScrollView>

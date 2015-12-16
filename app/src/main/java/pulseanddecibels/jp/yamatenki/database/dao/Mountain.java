@@ -296,7 +296,6 @@ public class Mountain {
         ETagDao eTagDao = daoSession.getETagDao();
         return eTagDao.queryBuilder().where(ETagDao.Properties.MountainId.eq(getId())).unique();
     }
-
     // KEEP METHODS END
 
 }

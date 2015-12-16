@@ -33,7 +33,8 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
         public final static Property TotalCloudCover = new Property(3, Double.class, "totalCloudCover", false, "TOTAL_CLOUD_COVER");
         public final static Property MountainStatus = new Property(4, Integer.class, "mountainStatus", false, "MOUNTAIN_STATUS");
         public final static Property DateTime = new Property(5, String.class, "dateTime", false, "DATE_TIME");
-        public final static Property MountainId = new Property(6, long.class, "mountainId", false, "MOUNTAIN_ID");
+        public final static Property Daily = new Property(6, Boolean.class, "daily", false, "DAILY");
+        public final static Property MountainId = new Property(7, long.class, "mountainId", false, "MOUNTAIN_ID");
     }
 
     private DaoSession daoSession;
@@ -59,7 +60,8 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
                 "'TOTAL_CLOUD_COVER' REAL," + // 3: totalCloudCover
                 "'MOUNTAIN_STATUS' INTEGER," + // 4: mountainStatus
                 "'DATE_TIME' TEXT," + // 5: dateTime
-                "'MOUNTAIN_ID' INTEGER NOT NULL );"); // 6: mountainId
+                "'DAILY' INTEGER," + // 6: daily
+                "'MOUNTAIN_ID' INTEGER NOT NULL );"); // 7: mountainId
     }
 
     /** Drops the underlying database table. */
@@ -102,7 +104,12 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
         if (dateTime != null) {
             stmt.bindString(6, dateTime);
         }
-        stmt.bindLong(7, entity.getMountainId());
+ 
+        Boolean daily = entity.getDaily();
+        if (daily != null) {
+            stmt.bindLong(7, daily ? 1l : 0l);
+        }
+        stmt.bindLong(8, entity.getMountainId());
     }
 
     @Override
@@ -127,7 +134,8 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
             cursor.isNull(offset + 3) ? null : cursor.getDouble(offset + 3), // totalCloudCover
             cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4), // mountainStatus
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // dateTime
-            cursor.getLong(offset + 6) // mountainId
+            cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0, // daily
+            cursor.getLong(offset + 7) // mountainId
         );
         return entity;
     }
@@ -141,7 +149,8 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
         entity.setTotalCloudCover(cursor.isNull(offset + 3) ? null : cursor.getDouble(offset + 3));
         entity.setMountainStatus(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));
         entity.setDateTime(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setMountainId(cursor.getLong(offset + 6));
+        entity.setDaily(cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0);
+        entity.setMountainId(cursor.getLong(offset + 7));
      }
     
     /** @inheritdoc */

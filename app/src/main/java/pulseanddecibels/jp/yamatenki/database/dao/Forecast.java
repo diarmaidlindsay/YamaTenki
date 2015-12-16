@@ -19,6 +19,7 @@ public class Forecast {
     private Double totalCloudCover;
     private Integer mountainStatus;
     private String dateTime;
+    private Boolean daily;
     private long mountainId;
 
     /** Used to resolve relations */
@@ -42,13 +43,14 @@ public class Forecast {
         this.id = id;
     }
 
-    public Forecast(Long id, Double temperature, Double precipitation, Double totalCloudCover, Integer mountainStatus, String dateTime, long mountainId) {
+    public Forecast(Long id, Double temperature, Double precipitation, Double totalCloudCover, Integer mountainStatus, String dateTime, Boolean daily, long mountainId) {
         this.id = id;
         this.temperature = temperature;
         this.precipitation = precipitation;
         this.totalCloudCover = totalCloudCover;
         this.mountainStatus = mountainStatus;
         this.dateTime = dateTime;
+        this.daily = daily;
         this.mountainId = mountainId;
     }
 
@@ -104,6 +106,14 @@ public class Forecast {
 
     public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public Boolean getDaily() {
+        return daily;
+    }
+
+    public void setDaily(Boolean daily) {
+        this.daily = daily;
     }
 
     public long getMountainId() {
