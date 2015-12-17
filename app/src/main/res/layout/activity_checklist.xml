@@ -8,7 +8,7 @@
         android:id="@+id/checklist_header"
         style="@style/ScreenTitle"
         android:layout_marginBottom="10dp"
-        android:text="@string/text_search_name_header"
+        android:text="@string/checklist_header"
         app:layout_heightPercent="10%"/>
 
     <TextView
