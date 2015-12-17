@@ -17,7 +17,6 @@
             android:id="@+id/search_my_mountain_searchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:background="@drawable/round_edittext"
             android:hint="@string/text_search_textbox_hint"
             android:inputType="textAutoComplete"
