@@ -3,12 +3,20 @@ package pulseanddecibels.jp.yamatenki.activity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.percent.PercentRelativeLayout;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TextAppearanceSpan;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.view.Window;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,9 +67,21 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
             @Override
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(SettingsActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.dialog_subscription);
                 dialog.setCanceledOnTouchOutside(true);
-                Button month1Sub = (Button) dialog.findViewById(R.id.button_1_month_sub);
+                Drawable d = new ColorDrawable(ContextCompat.getColor(SettingsActivity.this, R.color.yama_brown));
+                d.setAlpha(200);
+                dialog.getWindow().setBackgroundDrawable(d);
+
+                LinearLayout month1Sub = (LinearLayout) dialog.findViewById(R.id.item_1_month_sub);
+                LinearLayout month6Sub = (LinearLayout) dialog.findViewById(R.id.item_6_month_sub);
+                LinearLayout yearSub = (LinearLayout) dialog.findViewById(R.id.item_1_year_sub);
+
+                initialiseSubscriptionListItem(month1Sub, "１ヶ月", "120", "120", null, R.color.sub_1month);
+                initialiseSubscriptionListItem(month6Sub, "６ヶ月", "107", "640", R.drawable.discount10, R.color.sub_6month);
+                initialiseSubscriptionListItem(yearSub, "１年", "96", "1,150", R.drawable.discount20, R.color.sub_year);
+
                 month1Sub.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -69,7 +89,6 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
                         dialog.dismiss();
                     }
                 });
-                Button month6Sub = (Button) dialog.findViewById(R.id.button_6_month_sub);
                 month6Sub.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -77,8 +96,7 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
                         dialog.dismiss();
                     }
                 });
-                Button year1Sub = (Button) dialog.findViewById(R.id.button_1_year_sub);
-                year1Sub.setOnClickListener(new View.OnClickListener() {
+                yearSub.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mBillingHelper.launchSubscriptionPurchaseFlow(SettingsActivity.this, Subscription.YEARLY.getSku(), 100, SettingsActivity.this);
@@ -89,6 +107,39 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
                 dialog.show();
             }
         });
+    }
+
+    private void initialiseSubscriptionListItem(LinearLayout subItem, String periodText, String monthlyPriceText, String periodPriceText, Integer discountImageId, Integer colorId) {
+        LinearLayout subscriptionPeriod = (LinearLayout) subItem.findViewById(R.id.subscription_period);
+        subscriptionPeriod.setBackgroundColor(ContextCompat.getColor(this, colorId));
+        TextView period = (TextView) subItem.findViewById(R.id.period);
+        TextView monthlyPrice = (TextView) subItem.findViewById(R.id.price1);
+        TextView periodPrice = (TextView) subItem.findViewById(R.id.price2);
+
+        //number was smaller than kanji so I used span to even it out
+        final SpannableString periodSpan = new SpannableString(periodText);
+        periodSpan.setSpan(new TextAppearanceSpan(this, R.style.LargestSizeText), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        period.setText(periodSpan, TextView.BufferType.SPANNABLE);
+
+        if(discountImageId == null) {
+            monthlyPriceText = String.format(getString(R.string.text_monthly_cost), monthlyPriceText);
+        } else {
+            monthlyPriceText = String.format(getString(R.string.text_monthly_cost_approx), monthlyPriceText);
+        }
+        final SpannableString monthlyPriceTextSpan = new SpannableString(monthlyPriceText);
+        //all prices different lengths so...
+        int indexOfYen = monthlyPriceText.indexOf("¥");
+        int indexOfSlash = monthlyPriceText.indexOf("/");
+        monthlyPriceTextSpan.setSpan(new TextAppearanceSpan(this, R.style.VeryLargeText), indexOfYen + 1, indexOfSlash, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        monthlyPrice.setText(monthlyPriceTextSpan, TextView.BufferType.SPANNABLE);
+
+
+        periodPriceText = String.format(getString(R.string.text_payment_amount), periodPriceText);
+        periodPrice.setText(periodPriceText);
+        if(discountImageId != null) {
+            ImageView imageDiscount = (ImageView) subItem.findViewById(R.id.image_discount);
+            imageDiscount.setImageResource(discountImageId);
+        }
     }
 
     /**

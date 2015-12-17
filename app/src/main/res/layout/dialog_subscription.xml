@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+              android:padding="10dp"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <Button
-        android:id="@+id/button_1_month_sub"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/button_1_month_sub"/>
 
-    <Button
-        android:id="@+id/button_6_month_sub"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/button_6_month_sub"/>
+    <include
+        layout="@layout/list_item_subscription"
+        android:id="@+id/item_1_year_sub"/>
 
-    <Button
-        android:id="@+id/button_1_year_sub"
-        android:layout_width="match_parent"
+    <include
+        layout="@layout/list_item_subscription"
+        android:id="@+id/item_6_month_sub"/>
+
+    <include
+        layout="@layout/list_item_subscription"
+        android:id="@+id/item_1_month_sub"/>
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/button_1_year_sub"/>
+        style="@style/SmallBrownText"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:textColor="@color/yama_background"
+        android:text="@string/text_subscription_details"/>
+
 </LinearLayout>

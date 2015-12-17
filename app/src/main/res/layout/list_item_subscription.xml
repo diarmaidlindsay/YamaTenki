@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_marginBottom="10dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/yama_background"
+              android:baselineAligned="false">
+
+    <LinearLayout
+        android:id="@+id/subscription_period"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_width="0dp"
+        android:layout_weight="0.40"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/period"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:text="@string/text_subscription"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:text="@string/text_automatic_renewal"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@color/yama_background"
+        android:layout_width="0dp"
+        android:layout_weight="0.40"
+        android:gravity="center"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/price1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yama_brown"
+            android:textSize="20sp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="start"
+            android:text="@string/text_monthly_cost"/>
+
+        <TextView
+            android:id="@+id/price2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yama_brown"
+            android:textSize="13sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="start"
+            android:text="@string/text_payment_amount"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/image_discount"
+        android:background="@color/yama_background"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="0.20"
+        android:adjustViewBounds="true"
+        android:layout_gravity="top"/>
+
+</LinearLayout>

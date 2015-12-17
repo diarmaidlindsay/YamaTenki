@@ -11,4 +11,7 @@
     <item name="memo_date_bg" type="color">#fdf6d9</item>
     <item name="calendar_header" type="color">#fdf6d9</item>
     <item name="hint_text" type="color">@android:color/darker_gray</item>
+    <item name="sub_year" type="color">#98b240</item>
+    <item name="sub_6month" type="color">#2da0ed</item>
+    <item name="sub_1month" type="color">#175178</item>
 </resources>

@@ -104,6 +104,14 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="VeryLargeText">
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="LargestSizeText">
+        <item name="android:textSize">32sp</item>
+    </style>
+
     <style name="ForecastTableHeader">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@android:color/white</item>

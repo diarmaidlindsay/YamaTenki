@@ -117,4 +117,10 @@
     <string name="button_1_year_sub">Purchase 1 year subscription</string>
     <string name="text_weekly_forecast_header">週間予測</string>
     <string name="text_weekly_forecast_subheader">各日 9 時時点の情報を表示しています。</string>
+    <string name="text_subscription_details">すべてのチケットは自動更新となっております。更新しない場合やチケットの変更は更新日の前日までに利用の停止・変更を行ってください。詳しくはヘルプをご覧ください。</string>
+    <string name="text_subscription">チケット</string>
+    <string name="text_automatic_renewal">自動更新</string>
+    <string name="text_monthly_cost_approx">約¥%s/月</string>
+    <string name="text_monthly_cost">¥%s/月</string>
+    <string name="text_payment_amount">お支払金額¥%s</string>
 </resources>
