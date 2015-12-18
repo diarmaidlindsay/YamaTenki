@@ -10,8 +10,7 @@
         android:id="@+id/forecast_header"
         style="@style/ForecastTableHeader"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/text_unset"/>
+        android:layout_height="wrap_content"/>
 
     <TableLayout
         android:id="@+id/forecast_table"

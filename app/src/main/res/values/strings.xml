@@ -123,4 +123,10 @@
     <string name="text_monthly_cost_approx">約¥%s/月</string>
     <string name="text_monthly_cost">¥%s/月</string>
     <string name="text_payment_amount">お支払金額¥%s</string>
+    <string name="dialog_my_mountain_subscription">２件以上登録したい場合はチケットを購入してください。</string>
+    <string name="dialog_memo_subscription">２件以上登録したい場合はチケットを購入してください。</string>
+    <string name="text_subscription_not_subscribed">現在チケットの購入はありません</string>
+    <string name="text_subscription_subscribed">現在%sチケットを購入中</string>
+    <string name="button_view_subscription_plans">プランを見る</string>
+    <string name="text_go_to_subscription_screen">チケットを見に行く 月額¥96~</string>
 </resources>

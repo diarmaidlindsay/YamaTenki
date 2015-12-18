@@ -21,4 +21,17 @@
         style="@style/SmallBrownText"
         android:layout_below="@id/setting_title"/>
 
+    <Button
+        android:id="@+id/button_view_subscription_plans"
+        android:background="@drawable/round_button_brown"
+        android:text="@string/button_view_subscription_plans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/yama_background"
+        android:textSize="20sp"
+        android:padding="2dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
 </android.support.percent.PercentRelativeLayout>

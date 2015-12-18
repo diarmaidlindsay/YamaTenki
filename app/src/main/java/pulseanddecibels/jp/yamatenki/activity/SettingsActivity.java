@@ -14,6 +14,7 @@ import android.text.style.TextAppearanceSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -55,15 +56,30 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
         initialiseSettingCheckedNoSubtitle(downloadMobileSetting, R.string.text_setting_title_mobile, "setting_download_only_wifi");
         PercentRelativeLayout resetChecklistSetting = (PercentRelativeLayout) findViewById(R.id.setting_reset_checklist);
         initialiseSettingCheckedNoSubtitle(resetChecklistSetting, R.string.text_setting_title_checklist_reset, "setting_reset_checklist");
+
+        Bundle arguments = getIntent().getExtras();
+        if (arguments != null) {
+            boolean viewSub = arguments.getBoolean("view_subscription");
+            //if user came here from restrictions dialog intent, open subscription screen directly
+            if(viewSub) {
+                subscriptionSetting.callOnClick();
+            }
+        }
     }
 
     private void initialiseSubscription(PercentRelativeLayout setting) {
-        final IabHelper mBillingHelper = SubscriptionSingleton.getInstance(this).getIabHelperInstance(this);
         TextView title = (TextView) setting.findViewById(R.id.setting_title);
         title.setText(getResources().getString(R.string.text_setting_subscription_title));
         subscriptionSubtitle = (TextView) setting.findViewById(R.id.setting_subtitle);
         subscriptionSubtitle.setText(SubscriptionSingleton.getInstance(this).getSubscriptionStatus());
-        setting.setOnClickListener(new View.OnClickListener() {
+        Button subscriptionPlanButton = (Button) setting.findViewById(R.id.button_view_subscription_plans);
+        subscriptionPlanButton.setOnClickListener(getSubscriptionOnClickListener());
+        setting.setOnClickListener(getSubscriptionOnClickListener());
+    }
+
+    private View.OnClickListener getSubscriptionOnClickListener() {
+        final IabHelper mBillingHelper = SubscriptionSingleton.getInstance(this).getIabHelperInstance(this);
+        return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(SettingsActivity.this);
@@ -106,7 +122,7 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
 
                 dialog.show();
             }
-        });
+        };
     }
 
     private void initialiseSubscriptionListItem(LinearLayout subItem, String periodText, String monthlyPriceText, String periodPriceText, Integer discountImageId, Integer colorId) {

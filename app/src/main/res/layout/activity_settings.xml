@@ -19,7 +19,7 @@
 
             <include
                 android:id="@+id/setting_subscription"
-                layout="@layout/scroll_item_settings_nocheck"/>
+                layout="@layout/scroll_item_settings_subscription"/>
 
             <View style="@style/Divider"/>
 

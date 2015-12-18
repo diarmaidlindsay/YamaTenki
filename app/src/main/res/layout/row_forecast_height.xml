@@ -11,6 +11,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:gravity="start"
-        android:paddingTop="5dp"
-        android:text="@string/text_unset"/>
+        android:paddingTop="5dp"/>
 </TableRow>

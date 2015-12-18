@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/yama_background"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/restriction_text"
+        style="@style/MediumBrownText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="30dp"/>
+
+    <Button
+        android:id="@+id/go_to_subscription_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/yama_brown"
+        android:padding="10dp"
+        android:gravity="center"
+        android:text="@string/text_go_to_subscription_screen"
+        android:textColor="@android:color/white"/>
+
+</LinearLayout>

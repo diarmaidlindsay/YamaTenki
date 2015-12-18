@@ -66,11 +66,13 @@ import pulseanddecibels.jp.yamatenki.database.dao.Forecast;
 import pulseanddecibels.jp.yamatenki.database.dao.ForecastDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
+import pulseanddecibels.jp.yamatenki.database.dao.MyMemoDao;
 import pulseanddecibels.jp.yamatenki.database.dao.MyMountain;
 import pulseanddecibels.jp.yamatenki.database.dao.MyMountainDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Pressure;
 import pulseanddecibels.jp.yamatenki.database.dao.PressureDao;
 import pulseanddecibels.jp.yamatenki.database.dao.WindAndTemperature;
+import pulseanddecibels.jp.yamatenki.enums.Subscription;
 import pulseanddecibels.jp.yamatenki.interfaces.OnDownloadComplete;
 import pulseanddecibels.jp.yamatenki.model.ForecastArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
@@ -78,6 +80,7 @@ import pulseanddecibels.jp.yamatenki.utils.DateUtils;
 import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
 import pulseanddecibels.jp.yamatenki.utils.JSONParser;
 import pulseanddecibels.jp.yamatenki.utils.Settings;
+import pulseanddecibels.jp.yamatenki.utils.SubscriptionSingleton;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
@@ -214,6 +217,12 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         scrollViewElements.add(new ForecastScrollViewElement(tomorrowAMForecast, false));
         scrollViewElements.add(new ForecastScrollViewElement(tomorrowPMForecast, false));
         scrollViewElements.add(new ForecastScrollViewElement(weeklyForecast, true));
+        //Users without subscriptions can only see today's forecast
+        if (SubscriptionSingleton.getInstance(this).getSubscription() == Subscription.NONE) {
+            tomorrowAMForecast.setVisibility(View.GONE);
+            tomorrowPMForecast.setVisibility(View.GONE);
+            weeklyForecast.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -228,19 +237,25 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
      * When the user deletes, the button becomes an add button.
      */
     private View.OnClickListener getAddMyMountainListener() {
+        final MyMountainDao myMountainDao = Database.getInstance(MountainForecastActivity.this).getMyMountainDao();
+
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MyMountainDao myMountainDao = Database.getInstance(MountainForecastActivity.this).getMyMountainDao();
                 MyMountain myMountain = getMyMountainForMountainId();
-
-                //if the mountain is in the my mountain table, disable the add button
+                //if the mountain is in the my mountain table, disable the add button.
                 if (myMountain != null) {
                     myMountainDao.delete(myMountain);
                     addMyMountainButton.setText(getResources().getString(R.string.button_add_my_mountain));
                 } else {
-                    myMountainDao.insert(new MyMountain(null, mountainId));
-                    addMyMountainButton.setText(getResources().getString(R.string.button_remove_my_mountain));
+                    //users without a subscription can't add more than 2 mountains to "my mountain list"
+                    if (myMountainDao.loadAll().size() >= 2 &&
+                            SubscriptionSingleton.getInstance(MountainForecastActivity.this).getSubscription() == Subscription.NONE) {
+                        displayUserRestrictionDialog(R.string.dialog_my_mountain_subscription);
+                    } else {
+                        myMountainDao.insert(new MyMountain(null, mountainId));
+                        addMyMountainButton.setText(getResources().getString(R.string.button_remove_my_mountain));
+                    }
                 }
 
                 Intent intent = getIntent();
@@ -254,9 +269,16 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MemoDetailActivity.class);
-                intent.putExtra("mountainId", mountainId); //which mountain to make a memo for
-                startActivity(intent);
+                MyMemoDao myMemoDao = Database.getInstance(MountainForecastActivity.this).getMyMemoDao();
+                //users without a subscription can't add more than 2 memos to "my memo list"
+                if (myMemoDao.loadAll().size() >= 2 &&
+                        SubscriptionSingleton.getInstance(MountainForecastActivity.this).getSubscription() == Subscription.NONE) {
+                    displayUserRestrictionDialog(R.string.dialog_memo_subscription);
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), MemoDetailActivity.class);
+                    intent.putExtra("mountainId", mountainId); //which mountain to make a memo for
+                    startActivity(intent);
+                }
             }
         };
     }
@@ -272,7 +294,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
             String dateTimeString = forecast.getDateTime();
             Log.d("MFA : dateTimeString", dateTimeString);
             DateTime dateTime = DateUtils.getDateTimeFromForecast(dateTimeString);
-            if(daily) {
+            if (daily) {
                 forecastMap.put(DateUtils.getDateToLongTermForecastKey(dateTime), forecast);
                 Log.d("MFA : LongForecastKey", DateUtils.getDateToLongTermForecastKey(dateTime));
             } else {
@@ -288,24 +310,24 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
      * For example if it's 2pm we don't want to see this morning's forecast anymore
      */
     private void hideWidgetsWithOldData() {
-        for(ForecastScrollViewElement scrollViewElement : scrollViewElements) {
+        for (ForecastScrollViewElement scrollViewElement : scrollViewElements) {
             boolean allEmpty = true;
-            for(ForecastColumn column : scrollViewElement.getColumns()) {
-                if(!column.getLowHeightWind().getText().equals("") ||
+            for (ForecastColumn column : scrollViewElement.getColumns()) {
+                if (!column.getLowHeightWind().getText().equals("") ||
                         column.getLowHeightWindDirection().getDrawable() != null ||
                         !column.getLowHeightTemperature().getText().equals("")) {
                     allEmpty = false;
                     break;
                 }
             }
-            if(allEmpty) {
+            if (allEmpty) {
                 scrollViewElement.getLayout().setVisibility(View.GONE);
             }
         }
 
         //make the very top scrollview have a padding of 10
-        for(ForecastScrollViewElement scrollViewElement : scrollViewElements) {
-            if(scrollViewElement.getLayout().getVisibility() != View.GONE) {
+        for (ForecastScrollViewElement scrollViewElement : scrollViewElements) {
+            if (scrollViewElement.getLayout().getVisibility() != View.GONE) {
                 int left = scrollViewElement.getLayout().getPaddingLeft();
                 int right = scrollViewElement.getLayout().getPaddingRight();
                 int bottom = scrollViewElement.getLayout().getPaddingBottom();
@@ -329,7 +351,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         for (int i = 0; i < scrollViewElements.size(); i++) {
             ForecastScrollViewElement scrollViewElement = scrollViewElements.get(i);
             //set ScrollViewElement header
-            if(!scrollViewElement.isLongTermForecast()) {
+            if (!scrollViewElement.isLongTermForecast()) {
                 scrollViewElement.getHeader().setText(DateUtils.getFormattedHeader(i));
             }
             //now depending on the amount of heights, we will display a different amount of rows...
@@ -365,7 +387,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                         forecastMapLongTerm.get(key) :
                         forecastMapShortTerm.get(key);
 
-                if(scrollViewElement.isLongTermForecast()) {
+                if (scrollViewElement.isLongTermForecast()) {
                     forecastColumn.getTime().setText(DateUtils.getColumnHeadingForLongTermForecast(forecastColumn.getColumnIndex()));
                 } else {
                     forecastColumn.getTime().setText(DateUtils.getColumnHeadingForShortTermForecast(i, forecastColumn.getColumnIndex()));
@@ -508,6 +530,29 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                 dialog.show();
             }
         };
+    }
+
+    private void displayUserRestrictionDialog(int stringId) {
+        final Dialog dialog = new Dialog(MountainForecastActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_free_restriction);
+        dialog.setCanceledOnTouchOutside(true);
+        TextView restrictionText = (TextView) dialog.findViewById(R.id.restriction_text);
+        restrictionText.setText(getString(stringId));
+        Button goToSubscriptionButton = (Button) dialog.findViewById(R.id.go_to_subscription_button);
+        goToSubscriptionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MountainForecastActivity.this, SettingsActivity.class);
+                //clear the back stack, we want user to go from subscription back to Main Activity in case they purchase
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("view_subscription", true);
+                startActivity(intent);
+                dialog.dismiss();
+                finish();
+            }
+        });
+        dialog.show();
     }
 
     private void displayWarningDialog() {
@@ -855,7 +900,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
             highWindHelp = (ImageView) highWindRow.findViewById(R.id.help_icon_wind_speed);
             cloudCoverHelp = (ImageView) forecastTable.findViewById(R.id.help_icon_cloud_cover);
 
-            if(!longTerm) {
+            if (!longTerm) {
                 lowWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
                 midWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
                 highWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));

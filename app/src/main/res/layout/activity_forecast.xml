@@ -14,8 +14,7 @@
             android:id="@+id/text_forecast_header"
             style="@style/ScreenTitle"
             android:lines="2"
-            android:maxLines="2"
-            android:text="@string/text_unset"/>
+            android:maxLines="2"/>
 
         <ImageView
             android:id="@+id/mountain_forecast_current_difficulty"

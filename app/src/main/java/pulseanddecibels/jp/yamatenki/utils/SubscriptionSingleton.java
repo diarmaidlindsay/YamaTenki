@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
 
+import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.enums.Subscription;
 import pulseanddecibels.jp.yamatenki.utils.billing.IabHelper;
 import pulseanddecibels.jp.yamatenki.utils.billing.IabResult;
@@ -74,10 +75,9 @@ public class SubscriptionSingleton {
 
     public String getSubscriptionStatus() {
         if (subscription == Subscription.NONE) {
-            return "You are currently not subscribed";
+            return mContext.getString(R.string.text_subscription_not_subscribed);
         }
-        String template = "You currently have a %s subscription which you purchased on %s";
-        return String.format(template, subscription.getDisplaytext(), DateUtils.getMemoDateFromMillis(purchase.getPurchaseTime()));
+        return String.format(mContext.getString(R.string.text_subscription_subscribed), subscription.getDisplaytext());
     }
 
     public void initGoogleBillingApi(final Context context) {
