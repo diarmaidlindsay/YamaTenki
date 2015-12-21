@@ -137,9 +137,10 @@ public class JSONParser {
         String prefecture = mountain.optString("prefecture");
         int area = mountain.optInt("area");
         int height = mountain.optInt("height");
+        int topMountain = mountain.optInt("topMountain");
 
         return new MountainArrayElement(yid, title, titleExt, titleEnglish, kana, coordinate, prefecture,
-                area, height);
+                area, height, topMountain);
     }
 
     private static StatusArrayElement parseStatus(JSONObject status) throws JSONException {

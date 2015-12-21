@@ -107,7 +107,7 @@ public class ForecastDao extends AbstractDao<Forecast, Long> {
  
         Boolean daily = entity.getDaily();
         if (daily != null) {
-            stmt.bindLong(7, daily ? 1l : 0l);
+            stmt.bindLong(7, daily ? 1l: 0l);
         }
         stmt.bindLong(8, entity.getMountainId());
     }

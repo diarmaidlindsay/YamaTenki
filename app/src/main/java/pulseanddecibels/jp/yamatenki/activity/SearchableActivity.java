@@ -163,7 +163,7 @@ public class SearchableActivity extends Activity {
             tableHeaderHeight = (TextView) mountainListContainer.findViewById(R.id.table_header_height);
             tableHeaderHeight.setOnClickListener(getHeightHeaderOnClickListener());
             mountainListAdapter.sort(MountainListColumn.NAME);
-            mountainList.requestFocus(); //stop search box auto focusing
+            mountainListRequestFocus(); //stop search box auto focusing
         }
 
         updateTableHeaders();
@@ -264,7 +264,7 @@ public class SearchableActivity extends Activity {
 
                     mountainListAdapter.searchByHeight(minHeight, maxHeight);
                     hideKeyboard(minHeightSearchView); //only hide the keyboard if there is no error
-                    mountainList.requestFocus();
+                    mountainListRequestFocus();
                 }
             };
 
@@ -303,7 +303,7 @@ public class SearchableActivity extends Activity {
                 mHandler.removeCallbacks(mFilterTask);
                 mHandler.postDelayed(mFilterTask, 0);
                 hideKeyboard(searchView);
-                mountainList.requestFocus();
+                mountainListRequestFocus();
                 return true;
             }
 
@@ -314,7 +314,7 @@ public class SearchableActivity extends Activity {
                     text = newText;
                     mHandler.removeCallbacks(mFilterTask);
                     mHandler.postDelayed(mFilterTask, 0);
-                    mountainList.requestFocus();
+                    mountainListRequestFocus();
                 }
                 return true;
             }
@@ -339,7 +339,7 @@ public class SearchableActivity extends Activity {
                 mHandler.removeCallbacks(mFilterTask);
                 mHandler.postDelayed(mFilterTask, 0);
                 hideKeyboard(myMountainSearchView);
-                mountainList.requestFocus();
+                mountainListRequestFocus();
                 return true;
             }
 
@@ -350,7 +350,7 @@ public class SearchableActivity extends Activity {
                     text = newText;
                     mHandler.removeCallbacks(mFilterTask);
                     mHandler.postDelayed(mFilterTask, 0);
-                    mountainList.requestFocus();
+                    mountainListRequestFocus();
                 }
                 return true;
             }
@@ -548,5 +548,16 @@ public class SearchableActivity extends Activity {
             tableHeaderDifficulty.setText(difficultyString);
             tableHeaderHeight.setText(heightString);
         }
+    }
+
+    /**
+     * Stop search box getting focus and soft keyboard appearing
+     */
+    public void mountainListRequestFocus() {
+        if(minHeightSearchView != null && maxHeightSearchView != null) {
+            minHeightSearchView.clearFocus();
+            maxHeightSearchView.clearFocus();
+        }
+        mountainList.requestFocus();
     }
 }

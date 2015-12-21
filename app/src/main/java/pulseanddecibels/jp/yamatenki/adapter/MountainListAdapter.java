@@ -1,14 +1,21 @@
 package pulseanddecibels.jp.yamatenki.adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +30,8 @@ import java.util.Map;
 import de.greenrobot.dao.query.QueryBuilder;
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.activity.MountainForecastActivity;
+import pulseanddecibels.jp.yamatenki.activity.SearchableActivity;
+import pulseanddecibels.jp.yamatenki.activity.SettingsActivity;
 import pulseanddecibels.jp.yamatenki.database.Database;
 import pulseanddecibels.jp.yamatenki.database.dao.Area;
 import pulseanddecibels.jp.yamatenki.database.dao.AreaDao;
@@ -36,7 +45,9 @@ import pulseanddecibels.jp.yamatenki.database.dao.Status;
 import pulseanddecibels.jp.yamatenki.database.dao.StatusDao;
 import pulseanddecibels.jp.yamatenki.enums.MountainListColumn;
 import pulseanddecibels.jp.yamatenki.enums.SortOrder;
+import pulseanddecibels.jp.yamatenki.enums.Subscription;
 import pulseanddecibels.jp.yamatenki.utils.GeoLocation;
+import pulseanddecibels.jp.yamatenki.utils.SubscriptionSingleton;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
@@ -45,13 +56,24 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  */
 public class MountainListAdapter extends BaseAdapter {
 
-    private final SparseIntArray difficultyArray = new SparseIntArray() {
+    private final SparseIntArray DIFFICULTY_SMALL_IMAGES = new SparseIntArray() {
         {
+            append(0, R.drawable.difficulty_small_x);
             append(1, R.drawable.difficulty_small_a);
             append(2, R.drawable.difficulty_small_b);
             append(3, R.drawable.difficulty_small_c);
         }
     };
+
+    private final SparseIntArray LOCK_IMAGES = new SparseIntArray() {
+        {
+            append(1, R.drawable.lock_cover_01);
+            append(2, R.drawable.lock_cover_02);
+            append(3, R.drawable.lock_cover_03);
+            append(4, R.drawable.lock_cover_04);
+        }
+    };
+
     private final double EARTH_RADIUS = 6371.01;
     private final Context mContext;
     private final LayoutInflater layoutInflater;
@@ -61,24 +83,17 @@ public class MountainListAdapter extends BaseAdapter {
     private List mountainList = new ArrayList<>();
     private GeoLocation here;
     private String searchString; //in case we have to resubmit the query after update in child activity
+    private Subscription subscription;
 
     public MountainListAdapter(Context context) {
         this.mContext = context;
         layoutInflater = LayoutInflater.from(context);
-        initialiseDataSets();
         StatusDao statusDao = Database.getInstance(mContext).getStatusDao();
         List<Status> allStatus = statusDao.loadAll();
         for (Status status : allStatus) {
             currentMountainStatus.put(status.getMountainId(), status.getStatus());
         }
-    }
-
-    private void initialiseDataSets() {
-//        String json = JSONDownloader.getMockMountainList(mContext);
-//        //String json = JSONDownloader.getJsonFromServer(); // Future way
-//        //Will be stored in database eventually, in future will get from datasource
-//        MountainListJSON mountainListJSON = JSONParser.parseMountainsFromMountainList(json);
-//        mountainList = mountainListJSON.getMountainArrayElements();
+        subscription = SubscriptionSingleton.getInstance(context).getSubscription();
     }
 
     @Override
@@ -119,21 +134,89 @@ public class MountainListAdapter extends BaseAdapter {
         }
         Mountain mountain = (Mountain) getItem(position);
         viewHolder.name.setText(mountain.getTitle());
-        final long mountainId = mountain.getId();
-        viewHolder.difficulty.setImageResource(difficultyArray.get(currentMountainStatus.get(mountainId)));
         viewHolder.height.setText(String.format("%sm", String.valueOf(mountain.getHeight())));
 
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, MountainForecastActivity.class);
-                intent.putExtra("mountainId", mountainId);
-                ((Activity) mContext).startActivityForResult(intent, 100);
-            }
-        });
+        final long mountainId = mountain.getId();
+        if(subscription == Subscription.NONE && !mountain.getTopMountain()) {
+            viewHolder.difficulty.setImageResource(DIFFICULTY_SMALL_IMAGES.get(0));
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Dialog dialog = new Dialog(mContext);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.dialog_lock_image);
+                    dialog.setCanceledOnTouchOutside(true);
+                    Window window = dialog.getWindow();
+                    window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                    ImageView lockImageView = (ImageView) dialog.findViewById(R.id.lock_image);
+                    //display random lock image on press of each non-日本百名山
+                    lockImageView.setImageResource(LOCK_IMAGES.get(Utils.getRandomInRange(1, 4)));
+                    //the clear image with blue area to mark the area of the lock image which is clickable
+                    final ImageView targetImageView = (ImageView) dialog.findViewById(R.id.target_image);
+                    //store old alpha so we can set it temporarily before dumping image cache and looking if the touched pixel was blue
+                    final float oldAlpha = View.ALPHA.get(targetImageView);
+                    //if we set invisible it won't receive touch events, this workaround means our blue image is still "visible"
+                    targetImageView.setAlpha(0.0f);
+                    targetImageView.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                                int pixelColor = getHotspotColor(targetImageView, oldAlpha, (int)event.getX(), (int)event.getY());
+                                if(closeMatch(pixelColor, Color.BLUE)) {
+                                    Intent intent = new Intent(mContext, SettingsActivity.class);
+                                    intent.putExtra("view_subscription", true);
+                                    mContext.startActivity(intent);
+                                    dialog.dismiss();
+                                } else {
+                                    dialog.dismiss();
+                                    if (mContext instanceof SearchableActivity) {
+                                        ((SearchableActivity) mContext).mountainListRequestFocus();
+                                    }
+                                }
+                            }
+                            return true;
+                        }
+                    });
+                    dialog.show();
+                }
+            });
+
+        } else {
+            viewHolder.difficulty.setImageResource(DIFFICULTY_SMALL_IMAGES.get(currentMountainStatus.get(mountainId)));
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, MountainForecastActivity.class);
+                    intent.putExtra("mountainId", mountainId);
+                    ((Activity) mContext).startActivityForResult(intent, 100);
+                }
+            });
+        }
 
         return convertView;
     }
+
+    private int getHotspotColor (ImageView img, float oldAlpha, int x, int y) {
+        //temporarily make the image visible again
+        img.setAlpha(oldAlpha);
+        img.setDrawingCacheEnabled(true);
+        Bitmap hotspots = Bitmap.createBitmap(img.getDrawingCache());
+        img.setDrawingCacheEnabled(false);
+        //make image invisible again after dumping drawing cache
+        img.setAlpha(0.0f);
+        return hotspots.getPixel(x, y);
+    }
+
+    public boolean closeMatch (int color1, int color2) {
+        final int tolerance = 50;
+
+        if (Math.abs (Color.red (color1) - Color.red (color2)) > tolerance )
+            return false;
+        if (Math.abs (Color.green (color1) - Color.green (color2)) > tolerance )
+            return false;
+        return Math.abs(Color.blue(color1) - Color.blue(color2)) <= tolerance;
+    } // end match
 
     private double getDistanceFromHere(GeoLocation there) {
         double distance = -1;
@@ -212,7 +295,6 @@ public class MountainListAdapter extends BaseAdapter {
 
         mountainList = qb.list();
         notifyDataSetChanged();
-
     }
 
     public void searchByClosestMountains(double latitude, double longitude) {

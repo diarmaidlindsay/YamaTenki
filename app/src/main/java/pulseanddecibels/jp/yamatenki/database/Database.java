@@ -146,7 +146,7 @@ public class Database {
             Area area = areaDao.queryBuilder().where(AreaDao.Properties.Id.eq(element.getArea())).unique();
             Prefecture prefecture = prefectureDao.queryBuilder().where(PrefectureDao.Properties.Name.eq(element.getPrefecture().trim())).unique();
             Mountain mountain = new Mountain(null, element.getYid(), element.getTitle(), element.getTitleExt(), element.getTitleEnglish(), element.getKana(),
-                    prefecture.getId(), area.getId(), element.getHeight());
+                    prefecture.getId(), area.getId(), element.getHeight(), element.getTopMountain() == 1);
             mountainList.add(mountain);
             Coordinate coordinate = new Coordinate(null, (float) element.getCoordinate().getLatitude(), (float) element.getCoordinate().getLongitude());
             coordinateMap.put(key, coordinate);

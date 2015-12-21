@@ -1,205 +1,213 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/yama_background"
-              android:orientation="vertical"
-              android:paddingTop="20dp">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/yama_background"
+             android:orientation="vertical">
 
-    <TextView
-        style="@style/ForecastTableHeader"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/text_weekly_forecast_header"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/yama_background"
+        android:orientation="vertical"
+        android:paddingTop="20dp">
 
-    <TextView
-        style="@style/SmallBrownText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:paddingTop="5dp"
-        android:text="@string/text_weekly_forecast_subheader"/>
+        <TextView
+            style="@style/ForecastTableHeader"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_weekly_forecast_header"/>
 
-    <TableLayout
-        android:id="@+id/forecast_table"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:stretchColumns="0">
+        <TextView
+            style="@style/SmallBrownText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:text="@string/text_weekly_forecast_subheader"/>
 
-        <TableRow>
+        <TableLayout
+            android:id="@+id/forecast_table"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:stretchColumns="0">
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <TableRow>
 
-                <TextView
-                    style="@style/ForecastTableLeftSideColumnWeekly"
-                    android:text="@string/text_forecast_table_day"/>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/forecast_time_0"
-                    style="@style/ForecastTableTextMediumWeekly"/>
+                    <TextView
+                        style="@style/ForecastTableLeftSideColumnWeekly"
+                        android:text="@string/text_forecast_table_day"/>
 
-                <TextView
-                    android:id="@+id/forecast_time_1"
-                    style="@style/ForecastTableTextMediumWeekly"/>
+                    <TextView
+                        android:id="@+id/forecast_time_0"
+                        style="@style/ForecastTableTextMediumWeekly"/>
 
-                <TextView
-                    android:id="@+id/forecast_time_2"
-                    style="@style/ForecastTableTextMediumWeekly"/>
+                    <TextView
+                        android:id="@+id/forecast_time_1"
+                        style="@style/ForecastTableTextMediumWeekly"/>
 
-                <TextView
-                    android:id="@+id/forecast_time_3"
-                    style="@style/ForecastTableTextMediumWeekly"/>
+                    <TextView
+                        android:id="@+id/forecast_time_2"
+                        style="@style/ForecastTableTextMediumWeekly"/>
 
-                <TextView
-                    android:id="@+id/forecast_time_4"
-                    style="@style/ForecastTableTextMediumWeekly"/>
-            </LinearLayout>
-        </TableRow>
+                    <TextView
+                        android:id="@+id/forecast_time_3"
+                        style="@style/ForecastTableTextMediumWeekly"/>
 
-        <TableRow>
+                    <TextView
+                        android:id="@+id/forecast_time_4"
+                        style="@style/ForecastTableTextMediumWeekly"/>
+                </LinearLayout>
+            </TableRow>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <TableRow>
 
-                <TextView
-                    style="@style/ForecastTableLeftSideColumnWeekly"
-                    android:text="@string/text_forecast_table_difficulty"/>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/forecast_difficulty_0"
-                    style="@style/ForecastTableImageWeekly"
-                    android:src="@drawable/difficulty_blank_small"/>
+                    <TextView
+                        style="@style/ForecastTableLeftSideColumnWeekly"
+                        android:text="@string/text_forecast_table_difficulty"/>
 
-                <ImageView
-                    android:id="@+id/forecast_difficulty_1"
-                    style="@style/ForecastTableImageWeekly"
-                    android:src="@drawable/difficulty_blank_small"/>
+                    <ImageView
+                        android:id="@+id/forecast_difficulty_0"
+                        style="@style/ForecastTableImageWeekly"
+                        android:src="@drawable/difficulty_blank_small"/>
 
-                <ImageView
-                    android:id="@+id/forecast_difficulty_2"
-                    style="@style/ForecastTableImageWeekly"
-                    android:src="@drawable/difficulty_blank_small"/>
+                    <ImageView
+                        android:id="@+id/forecast_difficulty_1"
+                        style="@style/ForecastTableImageWeekly"
+                        android:src="@drawable/difficulty_blank_small"/>
 
-                <ImageView
-                    android:id="@+id/forecast_difficulty_3"
-                    style="@style/ForecastTableImageWeekly"
-                    android:src="@drawable/difficulty_blank_small"/>
+                    <ImageView
+                        android:id="@+id/forecast_difficulty_2"
+                        style="@style/ForecastTableImageWeekly"
+                        android:src="@drawable/difficulty_blank_small"/>
 
-                <ImageView
-                    android:id="@+id/forecast_difficulty_4"
-                    style="@style/ForecastTableImageWeekly"
-                    android:src="@drawable/difficulty_blank_small"/>
-            </LinearLayout>
-        </TableRow>
+                    <ImageView
+                        android:id="@+id/forecast_difficulty_3"
+                        style="@style/ForecastTableImageWeekly"
+                        android:src="@drawable/difficulty_blank_small"/>
 
-        <include
-            android:id="@+id/forecast_low_row_height"
-            layout="@layout/row_forecast_height"/>
+                    <ImageView
+                        android:id="@+id/forecast_difficulty_4"
+                        style="@style/ForecastTableImageWeekly"
+                        android:src="@drawable/difficulty_blank_small"/>
+                </LinearLayout>
+            </TableRow>
 
-        <include
-            android:id="@+id/forecast_low_row_temperature"
-            layout="@layout/row_forecast_temperature_weekly"/>
+            <include
+                android:id="@+id/forecast_low_row_height"
+                layout="@layout/row_forecast_height"/>
 
-        <include
-            android:id="@+id/forecast_low_row_wind"
-            layout="@layout/row_forecast_wind_weekly"/>
+            <include
+                android:id="@+id/forecast_low_row_temperature"
+                layout="@layout/row_forecast_temperature_weekly"/>
 
-        <include
-            android:id="@+id/forecast_mid_row_height"
-            layout="@layout/row_forecast_height"/>
+            <include
+                android:id="@+id/forecast_low_row_wind"
+                layout="@layout/row_forecast_wind_weekly"/>
 
-        <include
-            android:id="@+id/forecast_mid_row_temperature"
-            layout="@layout/row_forecast_temperature_weekly"/>
+            <include
+                android:id="@+id/forecast_mid_row_height"
+                layout="@layout/row_forecast_height"/>
 
-        <include
-            android:id="@+id/forecast_mid_row_wind"
-            layout="@layout/row_forecast_wind_weekly"/>
+            <include
+                android:id="@+id/forecast_mid_row_temperature"
+                layout="@layout/row_forecast_temperature_weekly"/>
 
-        <include
-            android:id="@+id/forecast_high_row_height"
-            layout="@layout/row_forecast_height"/>
+            <include
+                android:id="@+id/forecast_mid_row_wind"
+                layout="@layout/row_forecast_wind_weekly"/>
 
-        <include
-            android:id="@+id/forecast_high_row_temperature"
-            layout="@layout/row_forecast_temperature_weekly"/>
+            <include
+                android:id="@+id/forecast_high_row_height"
+                layout="@layout/row_forecast_height"/>
 
-        <include
-            android:id="@+id/forecast_high_row_wind"
-            layout="@layout/row_forecast_wind_weekly"/>
+            <include
+                android:id="@+id/forecast_high_row_temperature"
+                layout="@layout/row_forecast_temperature_weekly"/>
 
-        <TableRow android:layout_marginTop="10dp">
+            <include
+                android:id="@+id/forecast_high_row_wind"
+                layout="@layout/row_forecast_wind_weekly"/>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="35dp"
-                android:orientation="horizontal">
+            <TableRow android:layout_marginTop="10dp">
 
-                <TextView
-                    style="@style/ForecastTableLeftSideColumnWeekly"
-                    android:text="@string/text_forecast_rain_level"/>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="35dp"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/forecast_rain_level_0"
-                    style="@style/ForecastTableTextSmallWeekly"/>
+                    <TextView
+                        style="@style/ForecastTableLeftSideColumnWeekly"
+                        android:text="@string/text_forecast_rain_level"/>
 
-                <TextView
-                    android:id="@+id/forecast_rain_level_1"
-                    style="@style/ForecastTableTextSmallWeekly"/>
+                    <TextView
+                        android:id="@+id/forecast_rain_level_0"
+                        style="@style/ForecastTableTextSmallWeekly"/>
 
-                <TextView
-                    android:id="@+id/forecast_rain_level_2"
-                    style="@style/ForecastTableTextSmallWeekly"/>
+                    <TextView
+                        android:id="@+id/forecast_rain_level_1"
+                        style="@style/ForecastTableTextSmallWeekly"/>
 
-                <TextView
-                    android:id="@+id/forecast_rain_level_3"
-                    style="@style/ForecastTableTextSmallWeekly"/>
+                    <TextView
+                        android:id="@+id/forecast_rain_level_2"
+                        style="@style/ForecastTableTextSmallWeekly"/>
 
-                <TextView
-                    android:id="@+id/forecast_rain_level_4"
-                    style="@style/ForecastTableTextSmallWeekly"/>
-            </LinearLayout>
-        </TableRow>
+                    <TextView
+                        android:id="@+id/forecast_rain_level_3"
+                        style="@style/ForecastTableTextSmallWeekly"/>
 
-        <TableRow>
+                    <TextView
+                        android:id="@+id/forecast_rain_level_4"
+                        style="@style/ForecastTableTextSmallWeekly"/>
+                </LinearLayout>
+            </TableRow>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+            <TableRow>
 
-                <TextView
-                    style="@style/ForecastTableLeftSideColumnWeekly"
-                    android:text="@string/text_forecast_cloud_cover"/>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/forecast_cloud_cover_0"
-                    style="@style/ForecastTableTextSmallWeekly"/>
+                    <TextView
+                        style="@style/ForecastTableLeftSideColumnWeekly"
+                        android:text="@string/text_forecast_cloud_cover"/>
 
-                <TextView
-                    android:id="@+id/forecast_cloud_cover_1"
-                    style="@style/ForecastTableTextSmallWeekly"/>
+                    <TextView
+                        android:id="@+id/forecast_cloud_cover_0"
+                        style="@style/ForecastTableTextSmallWeekly"/>
 
-                <TextView
-                    android:id="@+id/forecast_cloud_cover_2"
-                    style="@style/ForecastTableTextSmallWeekly"/>
+                    <TextView
+                        android:id="@+id/forecast_cloud_cover_1"
+                        style="@style/ForecastTableTextSmallWeekly"/>
 
-                <TextView
-                    android:id="@+id/forecast_cloud_cover_3"
-                    style="@style/ForecastTableTextSmallWeekly"/>
+                    <TextView
+                        android:id="@+id/forecast_cloud_cover_2"
+                        style="@style/ForecastTableTextSmallWeekly"/>
 
-                <TextView
-                    android:id="@+id/forecast_cloud_cover_4"
-                    style="@style/ForecastTableTextSmallWeekly"/>
-            </LinearLayout>
-        </TableRow>
-    </TableLayout>
+                    <TextView
+                        android:id="@+id/forecast_cloud_cover_3"
+                        style="@style/ForecastTableTextSmallWeekly"/>
 
-</LinearLayout>
+                    <TextView
+                        android:id="@+id/forecast_cloud_cover_4"
+                        style="@style/ForecastTableTextSmallWeekly"/>
+                </LinearLayout>
+            </TableRow>
+        </TableLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

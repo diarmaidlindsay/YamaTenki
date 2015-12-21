@@ -14,11 +14,13 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -102,13 +104,22 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
             append(3, R.drawable.difficulty_large_c);
         }
     };
+    private final SparseIntArray LOCK_IMAGES = new SparseIntArray() {
+        {
+            append(1, R.drawable.lock_cover_01);
+            append(2, R.drawable.lock_cover_02);
+            append(3, R.drawable.lock_cover_03);
+            append(4, R.drawable.lock_cover_04);
+        }
+    };
+
+
     private final List<ForecastScrollViewElement> scrollViewElements = new ArrayList<>();
     private TextView title;
     private Button addMyMountainButton;
     private long mountainId;
     private MapView mMapView;
     private CallbackManager callbackManager;
-    private LoginManager loginManager;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -206,11 +217,11 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
 
     private void initialiseWidgets() {
         ScrollView mountainForecastScrollView = (ScrollView) findViewById(R.id.scroll_forecasts);
-        LinearLayout todayAMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.today_am_forecast);
-        LinearLayout todayPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.today_pm_forecast);
-        LinearLayout tomorrowAMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_am_forecast);
-        LinearLayout tomorrowPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_pm_forecast);
-        LinearLayout weeklyForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.weekly_forecast);
+        FrameLayout todayAMForecast = (FrameLayout) mountainForecastScrollView.findViewById(R.id.today_am_forecast);
+        FrameLayout todayPMForecast = (FrameLayout) mountainForecastScrollView.findViewById(R.id.today_pm_forecast);
+        FrameLayout tomorrowAMForecast = (FrameLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_am_forecast);
+        FrameLayout tomorrowPMForecast = (FrameLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_pm_forecast);
+        FrameLayout weeklyForecast = (FrameLayout) mountainForecastScrollView.findViewById(R.id.weekly_forecast);
         //add in correct order because index matters for looking up date
         scrollViewElements.add(new ForecastScrollViewElement(todayAMForecast, false));
         scrollViewElements.add(new ForecastScrollViewElement(todayPMForecast, false));
@@ -219,9 +230,9 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         scrollViewElements.add(new ForecastScrollViewElement(weeklyForecast, true));
         //Users without subscriptions can only see today's forecast
         if (SubscriptionSingleton.getInstance(this).getSubscription() == Subscription.NONE) {
-            tomorrowAMForecast.setVisibility(View.GONE);
-            tomorrowPMForecast.setVisibility(View.GONE);
-            weeklyForecast.setVisibility(View.GONE);
+            tomorrowAMForecast.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(1)));
+            tomorrowPMForecast.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(2)));
+            weeklyForecast.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(3)));
         }
     }
 
@@ -712,7 +723,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         callbackManager = CallbackManager.Factory.create();
         List<String> permissionNeeds = Collections.singletonList("publish_actions");
         //this loginManager helps you eliminate adding a LoginButton to your UI
-        loginManager = LoginManager.getInstance();
+        LoginManager loginManager = LoginManager.getInstance();
         loginManager.logInWithPublishPermissions(this, permissionNeeds);
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -855,9 +866,15 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         hideWidgetsWithOldData();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
+
+    }
+
     // For now this is used for "Today" and "Tomorrow", ie, short term forecasts
     private class ForecastScrollViewElement {
-        private final LinearLayout layout;
+        private final FrameLayout layout;
         private final TextView header;
         private final List<ForecastColumn> columns = new ArrayList<>();
         private final TextView lowHeightPressure; //1000m
@@ -881,7 +898,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
 
         private final boolean longTermForecast;
 
-        public ForecastScrollViewElement(LinearLayout forecast, boolean longTerm) {
+        public ForecastScrollViewElement(FrameLayout forecast, boolean longTerm) {
             layout = forecast;
             header = (TextView) forecast.findViewById(R.id.forecast_header);
             longTermForecast = longTerm;
@@ -972,7 +989,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
             return highHeightPressure;
         }
 
-        public LinearLayout getLayout() {
+        public FrameLayout getLayout() {
             return layout;
         }
     }

@@ -22,6 +22,7 @@ public class Mountain {
     private long prefectureId;
     private long areaId;
     private Integer height;
+    private Boolean topMountain;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -49,7 +50,7 @@ public class Mountain {
         this.id = id;
     }
 
-    public Mountain(Long id, String yid, String title, String titleExt, String titleEnglish, String kana, long prefectureId, long areaId, Integer height) {
+    public Mountain(Long id, String yid, String title, String titleExt, String titleEnglish, String kana, long prefectureId, long areaId, Integer height, Boolean topMountain) {
         this.id = id;
         this.yid = yid;
         this.title = title;
@@ -59,6 +60,7 @@ public class Mountain {
         this.prefectureId = prefectureId;
         this.areaId = areaId;
         this.height = height;
+        this.topMountain = topMountain;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -137,6 +139,14 @@ public class Mountain {
 
     public void setHeight(Integer height) {
         this.height = height;
+    }
+
+    public Boolean getTopMountain() {
+        return topMountain;
+    }
+
+    public void setTopMountain(Boolean topMountain) {
+        this.topMountain = topMountain;
     }
 
     /** To-one relationship, resolved on first access. */

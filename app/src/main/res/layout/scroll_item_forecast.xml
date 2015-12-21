@@ -1,203 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/yama_background"
-              android:orientation="vertical"
-              android:paddingTop="20dp">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/yama_background"
+             android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/forecast_header"
-        style="@style/ForecastTableHeader"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/yama_background"
+        android:orientation="vertical"
+        android:paddingTop="20dp">
 
-    <TableLayout
-        android:id="@+id/forecast_table"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:stretchColumns="0">
+        <TextView
+            android:id="@+id/forecast_header"
+            style="@style/ForecastTableHeader"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
 
-        <TableRow>
+        <TableLayout
+            android:id="@+id/forecast_table"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:stretchColumns="0">
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <TableRow>
 
-                <TextView
-                    style="@style/ForecastTableLeftSideColumn"
-                    android:text="@string/text_forecast_table_time"/>
-
-                <TextView
-                    android:id="@+id/forecast_time_0"
-                    style="@style/ForecastTableTextMedium"/>
-
-                <TextView
-                    android:id="@+id/forecast_time_1"
-                    style="@style/ForecastTableTextMedium"/>
-
-                <TextView
-                    android:id="@+id/forecast_time_2"
-                    style="@style/ForecastTableTextMedium"/>
-
-                <TextView
-                    android:id="@+id/forecast_time_3"
-                    style="@style/ForecastTableTextMedium"/>
-            </LinearLayout>
-        </TableRow>
-
-        <TableRow>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/ForecastTableLeftSideColumn"
-                    android:text="@string/text_forecast_table_difficulty"/>
-
-                <ImageView
-                    android:id="@+id/forecast_difficulty_0"
-                    style="@style/ForecastTableImage"
-                    android:src="@drawable/difficulty_blank_small"/>
-
-                <ImageView
-                    android:id="@+id/forecast_difficulty_1"
-                    style="@style/ForecastTableImage"
-                    android:src="@drawable/difficulty_blank_small"/>
-
-                <ImageView
-                    android:id="@+id/forecast_difficulty_2"
-                    style="@style/ForecastTableImage"
-                    android:src="@drawable/difficulty_blank_small"/>
-
-                <ImageView
-                    android:id="@+id/forecast_difficulty_3"
-                    style="@style/ForecastTableImage"
-                    android:src="@drawable/difficulty_blank_small"/>
-            </LinearLayout>
-        </TableRow>
-
-        <include
-            android:id="@+id/forecast_low_row_height"
-            layout="@layout/row_forecast_height"/>
-
-        <include
-            android:id="@+id/forecast_low_row_temperature"
-            layout="@layout/row_forecast_temperature"/>
-
-        <include
-            android:id="@+id/forecast_low_row_wind"
-            layout="@layout/row_forecast_wind"/>
-
-        <include
-            android:id="@+id/forecast_mid_row_height"
-            layout="@layout/row_forecast_height"/>
-
-        <include
-            android:id="@+id/forecast_mid_row_temperature"
-            layout="@layout/row_forecast_temperature"/>
-
-        <include
-            android:id="@+id/forecast_mid_row_wind"
-            layout="@layout/row_forecast_wind"/>
-
-        <include
-            android:id="@+id/forecast_high_row_height"
-            layout="@layout/row_forecast_height"/>
-
-        <include
-            android:id="@+id/forecast_high_row_temperature"
-            layout="@layout/row_forecast_temperature"/>
-
-        <include
-            android:id="@+id/forecast_high_row_wind"
-            layout="@layout/row_forecast_wind"/>
-
-        <TableRow android:layout_marginTop="10dp">
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/ForecastTableLeftSideColumn"
-                    android:text="@string/text_forecast_rain_level"/>
-
-                <TextView
-                    android:id="@+id/forecast_rain_level_0"
-                    style="@style/ForecastTableText"/>
-
-                <TextView
-                    android:id="@+id/forecast_rain_level_1"
-                    style="@style/ForecastTableText"/>
-
-                <TextView
-                    android:id="@+id/forecast_rain_level_2"
-                    style="@style/ForecastTableText"/>
-
-                <TextView
-                    android:id="@+id/forecast_rain_level_3"
-                    style="@style/ForecastTableText"/>
-            </LinearLayout>
-        </TableRow>
-
-        <TableRow>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="0.30"
-                    android:background="@color/table_bg_alt">
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="@string/text_forecast_cloud_cover"
-                        android:textColor="@color/yama_brown"/>
+                        style="@style/ForecastTableLeftSideColumn"
+                        android:text="@string/text_forecast_table_time"/>
+
+                    <TextView
+                        android:id="@+id/forecast_time_0"
+                        style="@style/ForecastTableTextMedium"/>
+
+                    <TextView
+                        android:id="@+id/forecast_time_1"
+                        style="@style/ForecastTableTextMedium"/>
+
+                    <TextView
+                        android:id="@+id/forecast_time_2"
+                        style="@style/ForecastTableTextMedium"/>
+
+                    <TextView
+                        android:id="@+id/forecast_time_3"
+                        style="@style/ForecastTableTextMedium"/>
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/ForecastTableLeftSideColumn"
+                        android:text="@string/text_forecast_table_difficulty"/>
 
                     <ImageView
-                        android:id="@+id/help_icon_cloud_cover"
-                        android:layout_width="15dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginStart="0dp"
-                        android:src="@drawable/question_mark"/>
-                </RelativeLayout>
+                        android:id="@+id/forecast_difficulty_0"
+                        style="@style/ForecastTableImage"
+                        android:src="@drawable/difficulty_blank_small"/>
 
-                <TextView
-                    android:id="@+id/forecast_cloud_cover_0"
-                    style="@style/ForecastTableText"/>
+                    <ImageView
+                        android:id="@+id/forecast_difficulty_1"
+                        style="@style/ForecastTableImage"
+                        android:src="@drawable/difficulty_blank_small"/>
 
-                <TextView
-                    android:id="@+id/forecast_cloud_cover_1"
-                    style="@style/ForecastTableText"/>
+                    <ImageView
+                        android:id="@+id/forecast_difficulty_2"
+                        style="@style/ForecastTableImage"
+                        android:src="@drawable/difficulty_blank_small"/>
 
-                <TextView
-                    android:id="@+id/forecast_cloud_cover_2"
-                    style="@style/ForecastTableText"/>
+                    <ImageView
+                        android:id="@+id/forecast_difficulty_3"
+                        style="@style/ForecastTableImage"
+                        android:src="@drawable/difficulty_blank_small"/>
+                </LinearLayout>
+            </TableRow>
 
-                <TextView
-                    android:id="@+id/forecast_cloud_cover_3"
-                    style="@style/ForecastTableText"/>
-            </LinearLayout>
-        </TableRow>
-    </TableLayout>
+            <include
+                android:id="@+id/forecast_low_row_height"
+                layout="@layout/row_forecast_height"/>
 
-</LinearLayout>
+            <include
+                android:id="@+id/forecast_low_row_temperature"
+                layout="@layout/row_forecast_temperature"/>
+
+            <include
+                android:id="@+id/forecast_low_row_wind"
+                layout="@layout/row_forecast_wind"/>
+
+            <include
+                android:id="@+id/forecast_mid_row_height"
+                layout="@layout/row_forecast_height"/>
+
+            <include
+                android:id="@+id/forecast_mid_row_temperature"
+                layout="@layout/row_forecast_temperature"/>
+
+            <include
+                android:id="@+id/forecast_mid_row_wind"
+                layout="@layout/row_forecast_wind"/>
+
+            <include
+                android:id="@+id/forecast_high_row_height"
+                layout="@layout/row_forecast_height"/>
+
+            <include
+                android:id="@+id/forecast_high_row_temperature"
+                layout="@layout/row_forecast_temperature"/>
+
+            <include
+                android:id="@+id/forecast_high_row_wind"
+                layout="@layout/row_forecast_wind"/>
+
+            <TableRow android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/ForecastTableLeftSideColumn"
+                        android:text="@string/text_forecast_rain_level"/>
+
+                    <TextView
+                        android:id="@+id/forecast_rain_level_0"
+                        style="@style/ForecastTableText"/>
+
+                    <TextView
+                        android:id="@+id/forecast_rain_level_1"
+                        style="@style/ForecastTableText"/>
+
+                    <TextView
+                        android:id="@+id/forecast_rain_level_2"
+                        style="@style/ForecastTableText"/>
+
+                    <TextView
+                        android:id="@+id/forecast_rain_level_3"
+                        style="@style/ForecastTableText"/>
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="0.30"
+                        android:background="@color/table_bg_alt">
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="@string/text_forecast_cloud_cover"
+                            android:textColor="@color/yama_brown"/>
+
+                        <ImageView
+                            android:id="@+id/help_icon_cloud_cover"
+                            android:layout_width="15dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginStart="0dp"
+                            android:src="@drawable/question_mark"/>
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/forecast_cloud_cover_0"
+                        style="@style/ForecastTableText"/>
+
+                    <TextView
+                        android:id="@+id/forecast_cloud_cover_1"
+                        style="@style/ForecastTableText"/>
+
+                    <TextView
+                        android:id="@+id/forecast_cloud_cover_2"
+                        style="@style/ForecastTableText"/>
+
+                    <TextView
+                        android:id="@+id/forecast_cloud_cover_3"
+                        style="@style/ForecastTableText"/>
+                </LinearLayout>
+            </TableRow>
+        </TableLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
