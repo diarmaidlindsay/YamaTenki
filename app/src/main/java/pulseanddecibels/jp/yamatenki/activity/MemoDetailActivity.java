@@ -48,8 +48,8 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
     private Button buttonConfirm;
     private Button buttonEdit;
     private Button buttonDelete;
-    private DateTime initialDateTimeFrom = new DateTime();
-    private DateTime initialDateTimeUntil = new DateTime();
+    private DateTime initialDateTimeFrom = new DateTime(DateUtils.JAPAN_TIME_ZONE);
+    private DateTime initialDateTimeUntil = new DateTime(DateUtils.JAPAN_TIME_ZONE);
     private TextView timeLabel;
     private TextView activityTimeLabel;
     private TextView activityTimeText;
@@ -132,11 +132,11 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
             Long memoDateTimeUntil = myMemo.getDateTimeUntil();
 
             if (memoDateTimeFrom != null) {
-                initialDateTimeFrom = new DateTime(memoDateTimeFrom);
+                initialDateTimeFrom = new DateTime(memoDateTimeFrom, DateUtils.JAPAN_TIME_ZONE);
                 dateFrom.setText(DateUtils.getMemoDateTimeFromMillis(memoDateTimeFrom));
             }
             if (memoDateTimeUntil != null) {
-                initialDateTimeUntil = new DateTime(memoDateTimeUntil);
+                initialDateTimeUntil = new DateTime(memoDateTimeUntil, DateUtils.JAPAN_TIME_ZONE);
                 dateUntil.setText(DateUtils.getMemoDateTimeFromMillis(memoDateTimeUntil));
             }
 

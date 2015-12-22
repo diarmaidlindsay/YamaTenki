@@ -33,13 +33,13 @@ public class DateUtils {
     //0 == today, 1 == tomorrow etc
     private static final String[] JAPANESE_DAY_NAMES = {"本日", "本日", "明日", "明日", "週間予測"};
     private static final String[] JAPANESE_TIME_OF_DAY = {"午前", "午後"};
-    private static final DateTimeZone JAPAN_TIME_ZONE = DateTimeZone.forOffsetHours(9);
+    public static final DateTimeZone JAPAN_TIME_ZONE = DateTimeZone.forOffsetHours(9);
 
     static final String[] TIME_INCREMENTS_AM = {"00", "03", "06", "09"}; // column headers
     static final String[] TIME_INCREMENTS_PM = {"12", "15", "18", "21"}; // column headers
 
     public static String getFormattedHeader(int index) {
-        DateTime dateTime = new DateTime();
+        DateTime dateTime = new DateTime(DateUtils.JAPAN_TIME_ZONE);
         //don't cause IndexOutOfBoundsException
         switch (index) {
             case 0:
@@ -83,7 +83,7 @@ public class DateUtils {
     }
 
     public static String getMemoDateFromMillis(long millis) {
-        DateTime dateTime = new DateTime(millis);
+        DateTime dateTime = new DateTime(millis, DateUtils.JAPAN_TIME_ZONE);
         return String.format("%d/%s/%s", dateTime.getYear(), Utils.num2DigitString(dateTime.getMonthOfYear()), Utils.num2DigitString(dateTime.getDayOfMonth()));
     }
 
@@ -94,7 +94,7 @@ public class DateUtils {
     }
 
     public static String getMemoDateTimeFromMillis(long millis) {
-        DateTime dateTime = new DateTime(millis);
+        DateTime dateTime = new DateTime(millis, DateUtils.JAPAN_TIME_ZONE);
         return getMemoDateTimeFromDateTime(dateTime);
     }
 
@@ -122,7 +122,7 @@ public class DateUtils {
         if (dateTimeString != null && dateTimeString.length() > 1) {
             try {
                 Date date = dateFormat.parse(dateTimeString);
-                dateTime = new DateTime(date.getTime());
+                dateTime = new DateTime(date.getTime(), JAPAN_TIME_ZONE);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -146,7 +146,7 @@ public class DateUtils {
      * column index 0 is 2 days from now
      */
     public static String getColumnHeadingForLongTermForecast(int columnId) {
-        DateTime dateTime = new DateTime();
+        DateTime dateTime = new DateTime(DateUtils.JAPAN_TIME_ZONE);
         dateTime = dateTime.plusDays(columnId + 2);
         return String.format("%s/%s", Utils.num2DigitString(dateTime.getMonthOfYear()), Utils.num2DigitString(dateTime.getDayOfMonth()));
     }
@@ -158,7 +158,7 @@ public class DateUtils {
      * @param columnId corresponds to index of hour of the day : [00, 03, 06, 09] or [12, 15, 18, 21]
      */
     public static String getWidgetToForecastKey(int scrollViewIndex, int columnId) {
-        DateTime dateTime = new DateTime();
+        DateTime dateTime = new DateTime(DateUtils.JAPAN_TIME_ZONE);
         if (scrollViewIndex == 2 || scrollViewIndex == 3) {
             dateTime = dateTime.plusDays(1);
         }

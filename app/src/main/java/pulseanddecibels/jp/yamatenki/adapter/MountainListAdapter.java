@@ -161,10 +161,12 @@ public class MountainListAdapter extends BaseAdapter {
                     targetImageView.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
-                            if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                                int pixelColor = getHotspotColor(targetImageView, oldAlpha, (int)event.getX(), (int)event.getY());
-                                if(closeMatch(pixelColor, Color.BLUE)) {
+                            if(event.getAction() == MotionEvent.ACTION_UP) {
+                                int pixelColor = getHotspotColor(targetImageView, oldAlpha, (int) event.getX(), (int) event.getY());
+                                if(Utils.isCloseColorMatch(pixelColor, Color.BLUE)) {
                                     Intent intent = new Intent(mContext, SettingsActivity.class);
+                                    //if user buys subscription we want them to start at main screen again
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.putExtra("view_subscription", true);
                                     mContext.startActivity(intent);
                                     dialog.dismiss();
@@ -207,16 +209,6 @@ public class MountainListAdapter extends BaseAdapter {
         img.setAlpha(0.0f);
         return hotspots.getPixel(x, y);
     }
-
-    public boolean closeMatch (int color1, int color2) {
-        final int tolerance = 50;
-
-        if (Math.abs (Color.red (color1) - Color.red (color2)) > tolerance )
-            return false;
-        if (Math.abs (Color.green (color1) - Color.green (color2)) > tolerance )
-            return false;
-        return Math.abs(Color.blue(color1) - Color.blue(color2)) <= tolerance;
-    } // end match
 
     private double getDistanceFromHere(GeoLocation there) {
         double distance = -1;
@@ -345,6 +337,7 @@ public class MountainListAdapter extends BaseAdapter {
         mountainList = mountainDao.queryBuilder()
                 .where(MountainDao.Properties.Height.between(min, max))
                 .list();
+        notifyDataSetChanged();
     }
 
     private Coordinate[] sortByDistanceFromHere(List<Coordinate> coordinatesList, GeoLocation here) {

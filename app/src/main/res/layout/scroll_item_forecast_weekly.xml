@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@color/yama_background"
-             android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/yama_background"
+              android:orientation="vertical"
+              android:paddingTop="20dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/yama_background"
-        android:orientation="vertical"
-        android:paddingTop="20dp">
+    <TextView
+        style="@style/ForecastTableHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_weekly_forecast_header"/>
 
-        <TextView
-            style="@style/ForecastTableHeader"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/text_weekly_forecast_header"/>
+    <TextView
+        style="@style/SmallBrownText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingTop="5dp"
+        android:text="@string/text_weekly_forecast_subheader"/>
 
-        <TextView
-            style="@style/SmallBrownText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:text="@string/text_weekly_forecast_subheader"/>
+    <FrameLayout
+        android:id="@+id/table_frame"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <TableLayout
             android:id="@+id/forecast_table"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:stretchColumns="0">
 
             <TableRow>
@@ -207,7 +206,6 @@
                 </LinearLayout>
             </TableRow>
         </TableLayout>
+    </FrameLayout>
 
-    </LinearLayout>
-
-</FrameLayout>
+</LinearLayout>

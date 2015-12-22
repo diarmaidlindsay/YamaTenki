@@ -1,6 +1,7 @@
 package pulseanddecibels.jp.yamatenki.utils;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 
 import java.util.List;
@@ -43,4 +44,14 @@ public class Utils {
             ret[i++] = e;
         return ret;
     }
+
+    public static boolean isCloseColorMatch (int color1, int color2) {
+        final int tolerance = 50;
+
+        if (Math.abs (Color.red(color1) - Color.red (color2)) > tolerance )
+            return false;
+        if (Math.abs (Color.green (color1) - Color.green (color2)) > tolerance )
+            return false;
+        return Math.abs(Color.blue(color1) - Color.blue(color2)) <= tolerance;
+    } // end match
 }

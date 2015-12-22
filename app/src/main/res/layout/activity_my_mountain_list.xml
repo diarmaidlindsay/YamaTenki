@@ -9,6 +9,8 @@
         android:text="@string/text_search_name_header"/>
 
     <LinearLayout
+        android:id="@+id/searchview_outer"
+        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">

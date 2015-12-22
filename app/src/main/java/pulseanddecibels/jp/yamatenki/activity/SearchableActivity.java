@@ -130,6 +130,7 @@ public class SearchableActivity extends Activity {
                 maxHeightSearchView.setOnQueryTextListener(getHeightTextListener());
                 minHeightSearchView.setQuery("" + MIN_HEIGHT, false); //set default values
                 maxHeightSearchView.setQuery("" + MAX_HEIGHT, false); //set default values
+                mountainListAdapter.searchByHeight(MIN_HEIGHT, MAX_HEIGHT);
                 minHeightSearchView.requestFocus();
             } else if (searchType != null && searchType.equals("name")) {
                 //we came here from Main Activity (Search by Name)
@@ -151,6 +152,9 @@ public class SearchableActivity extends Activity {
                 myMountainSearchView.setQueryHint(getResources().getString(R.string.text_search_textbox_hint));
                 myMountainSearchView.setOnQueryTextListener(getMyMountainTextListener());
                 mountainListAdapter.searchByMyMountainName("");
+                LinearLayout searchViewOuter = (LinearLayout) findViewById(R.id.searchview_outer);
+                //stop search box auto focusing even with blank my mountain list
+                searchViewOuter.requestFocus();
             }
 
             LinearLayout mountainListContainer = (LinearLayout) findViewById(R.id.mountain_list_container);

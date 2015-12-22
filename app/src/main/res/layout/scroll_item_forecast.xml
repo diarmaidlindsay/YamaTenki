@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@color/yama_background"
-             android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/yama_background"
+              android:orientation="vertical"
+              android:paddingTop="20dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/yama_background"
-        android:orientation="vertical"
-        android:paddingTop="20dp">
+    <TextView
+        android:id="@+id/forecast_header"
+        style="@style/ForecastTableHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/forecast_header"
-            style="@style/ForecastTableHeader"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+    <FrameLayout
+        android:id="@+id/table_frame"
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp">
 
         <TableLayout
             android:id="@+id/forecast_table"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:stretchColumns="0">
 
             <TableRow>
@@ -206,6 +205,8 @@
             </TableRow>
         </TableLayout>
 
-    </LinearLayout>
+    </FrameLayout>
 
-</FrameLayout>
+
+
+</LinearLayout>

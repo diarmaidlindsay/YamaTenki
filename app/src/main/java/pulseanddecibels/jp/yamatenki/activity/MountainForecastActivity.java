@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -106,6 +107,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
     };
     private final SparseIntArray LOCK_IMAGES = new SparseIntArray() {
         {
+            append(0, R.drawable.lock_cover_00);
             append(1, R.drawable.lock_cover_01);
             append(2, R.drawable.lock_cover_02);
             append(3, R.drawable.lock_cover_03);
@@ -217,11 +219,11 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
 
     private void initialiseWidgets() {
         ScrollView mountainForecastScrollView = (ScrollView) findViewById(R.id.scroll_forecasts);
-        FrameLayout todayAMForecast = (FrameLayout) mountainForecastScrollView.findViewById(R.id.today_am_forecast);
-        FrameLayout todayPMForecast = (FrameLayout) mountainForecastScrollView.findViewById(R.id.today_pm_forecast);
-        FrameLayout tomorrowAMForecast = (FrameLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_am_forecast);
-        FrameLayout tomorrowPMForecast = (FrameLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_pm_forecast);
-        FrameLayout weeklyForecast = (FrameLayout) mountainForecastScrollView.findViewById(R.id.weekly_forecast);
+        LinearLayout todayAMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.today_am_forecast);
+        LinearLayout todayPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.today_pm_forecast);
+        LinearLayout tomorrowAMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_am_forecast);
+        LinearLayout tomorrowPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_pm_forecast);
+        LinearLayout weeklyForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.weekly_forecast);
         //add in correct order because index matters for looking up date
         scrollViewElements.add(new ForecastScrollViewElement(todayAMForecast, false));
         scrollViewElements.add(new ForecastScrollViewElement(todayPMForecast, false));
@@ -230,10 +232,67 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         scrollViewElements.add(new ForecastScrollViewElement(weeklyForecast, true));
         //Users without subscriptions can only see today's forecast
         if (SubscriptionSingleton.getInstance(this).getSubscription() == Subscription.NONE) {
-            tomorrowAMForecast.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(1)));
-            tomorrowPMForecast.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(2)));
-            weeklyForecast.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(3)));
+            FrameLayout tomorrowAMForecastFrame = (FrameLayout) tomorrowAMForecast.findViewById(R.id.table_frame);
+            FrameLayout tomorrowPMForecastFrame = (FrameLayout) tomorrowPMForecast.findViewById(R.id.table_frame);
+            FrameLayout weeklyForecastFrame = (FrameLayout) weeklyForecast.findViewById(R.id.table_frame);
+
+            tomorrowAMForecastFrame.setOnTouchListener(getSubscriptionLockImageOnTouchListener());
+            tomorrowPMForecastFrame.setOnTouchListener(getSubscriptionLockImageOnTouchListener());
+            weeklyForecastFrame.setOnTouchListener(getSubscriptionLockImageOnTouchListener());
+
+            tomorrowAMForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1,4))));
+            tomorrowPMForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1,4))));
+            weeklyForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1,4))));
         }
+    }
+
+    private View.OnTouchListener getSubscriptionLockImageOnTouchListener() {
+        return new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    FrameLayout frame = (FrameLayout) v;
+                    Drawable oldForeground = frame.getForeground();
+                    Drawable targetForeground = ContextCompat.getDrawable(MountainForecastActivity.this, LOCK_IMAGES.get(0));
+
+                    Drawable oldBackground = frame.getBackground();
+                    Drawable targetBackground = ContextCompat.getDrawable(MountainForecastActivity.this, LOCK_IMAGES.get(0));
+
+                    //change background and foreground to blue target to capture click on subscription banner
+
+                    frame.setForeground(targetForeground);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        v.setBackground(targetBackground);
+                    } else {
+                        v.setBackgroundDrawable(targetBackground);
+                    }
+
+                    //capture image of background and look for blue colour target
+                    v.setDrawingCacheEnabled(true);
+                    Bitmap hotspots = Bitmap.createBitmap(v.getDrawingCache());
+                    v.setDrawingCacheEnabled(false);
+                    int pixelColor = hotspots.getPixel((int)event.getX(), (int)event.getY());
+
+                    //reset to previous background and foreground
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        frame.setBackground(oldBackground);
+                    } else {
+                        v.setBackgroundDrawable(oldBackground);
+                    }
+                    frame.setForeground(oldForeground);
+
+                    //check for blue colour target on pressed pixel
+                    if(Utils.isCloseColorMatch(pixelColor, Color.BLUE)) {
+                        Intent intent = new Intent(MountainForecastActivity.this, SettingsActivity.class);
+                        //if user buys subscription we want them to start at main screen again
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("view_subscription", true);
+                        MountainForecastActivity.this.startActivity(intent);
+                    }
+                }
+                return true;
+            }
+        };
     }
 
     /**
@@ -692,7 +751,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         snCurrentDifficulty.setImageResource(DIFFICULTY_BIG_IMAGES.get(mountain.getStatus()));
 
         TextView snDate = (TextView) snLayout.findViewById(R.id.sn_date);
-        DateTime now = new DateTime();
+        DateTime now = new DateTime(DateUtils.JAPAN_TIME_ZONE);
         snDate.setText(String.format("%s月%s日　本日の山行指数", Utils.num2DigitString(now.getMonthOfYear()), Utils.num2DigitString(now.getDayOfMonth())));
 
         MountainForecastJSON forecastJSON = JSONParser.parseMountainForecast(
@@ -874,7 +933,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
 
     // For now this is used for "Today" and "Tomorrow", ie, short term forecasts
     private class ForecastScrollViewElement {
-        private final FrameLayout layout;
+        private final LinearLayout layout;
         private final TextView header;
         private final List<ForecastColumn> columns = new ArrayList<>();
         private final TextView lowHeightPressure; //1000m
@@ -898,7 +957,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
 
         private final boolean longTermForecast;
 
-        public ForecastScrollViewElement(FrameLayout forecast, boolean longTerm) {
+        public ForecastScrollViewElement(LinearLayout forecast, boolean longTerm) {
             layout = forecast;
             header = (TextView) forecast.findViewById(R.id.forecast_header);
             longTermForecast = longTerm;
@@ -989,7 +1048,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
             return highHeightPressure;
         }
 
-        public FrameLayout getLayout() {
+        public LinearLayout getLayout() {
             return layout;
         }
     }
