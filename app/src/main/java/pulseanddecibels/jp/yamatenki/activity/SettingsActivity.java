@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -20,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.regex.Pattern;
 
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.enums.Subscription;
@@ -120,6 +123,10 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
                     }
                 });
 
+                //show google help on how to unsubscribe when "Help" is pressed in the TextView
+                Pattern pattern = Pattern.compile("ヘルプ");
+                TextView subscriptionHelp = (TextView) dialog.findViewById(R.id.subscription_help);
+                Linkify.addLinks(subscriptionHelp, pattern, "https://support.google.com/googleplay/answer/2476088?hl=ja");
                 dialog.show();
             }
         };

@@ -18,6 +18,7 @@
         android:id="@+id/item_1_month_sub"/>
 
     <TextView
+        android:id="@+id/subscription_help"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/SmallBrownText"
