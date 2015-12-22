@@ -79,6 +79,7 @@ public class JSONDownloader {
     }
 
     @Nullable
+    @Deprecated
     public static String getMockMountainForecast(Context context, String yid) {
         Integer forecastJSONFile = context.getResources().getIdentifier(yid, "raw", context.getPackageName());
         if (forecastJSONFile != 0) {

@@ -77,11 +77,8 @@ import pulseanddecibels.jp.yamatenki.database.dao.PressureDao;
 import pulseanddecibels.jp.yamatenki.database.dao.WindAndTemperature;
 import pulseanddecibels.jp.yamatenki.enums.Subscription;
 import pulseanddecibels.jp.yamatenki.interfaces.OnDownloadComplete;
-import pulseanddecibels.jp.yamatenki.model.ForecastArrayElement;
-import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
 import pulseanddecibels.jp.yamatenki.utils.DateUtils;
 import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
-import pulseanddecibels.jp.yamatenki.utils.JSONParser;
 import pulseanddecibels.jp.yamatenki.utils.Settings;
 import pulseanddecibels.jp.yamatenki.utils.SubscriptionSingleton;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
@@ -498,7 +495,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                 } else {
                     Log.d("getWidgetToForecastKey", "Not Found");
                     //set grey background and blank
-                    forecastColumn.getDifficulty().setBackgroundColor(Color.LTGRAY);
+                    forecastColumn.getDifficulty().setImageResource(R.drawable.difficulty_small_y);
                     forecastColumn.getLowHeightTemperature().setBackgroundColor(Color.LTGRAY);
                     forecastColumn.getLowHeightWindDirection().setBackgroundColor(Color.LTGRAY);
                     forecastColumn.getLowHeightWind().setBackgroundColor(Color.LTGRAY);
@@ -754,20 +751,19 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         DateTime now = new DateTime(DateUtils.JAPAN_TIME_ZONE);
         snDate.setText(String.format("%s月%s日　本日の山行指数", Utils.num2DigitString(now.getMonthOfYear()), Utils.num2DigitString(now.getDayOfMonth())));
 
-        MountainForecastJSON forecastJSON = JSONParser.parseMountainForecast(
-                JSONDownloader.getMockMountainForecast(this, mountain.getYid()));
-        if (forecastJSON != null) {
-            Map<String, ForecastArrayElement> forecasts = forecastJSON.getForecasts();
-            //TEMPORARY until we get realtime forecasts
-            ForecastArrayElement[] forecastArray = forecasts.values().toArray(new ForecastArrayElement[forecasts.values().size()]);
-            for (int i = 0; i < TIME_INTERVAL.length; i++) {
-                ForecastArrayElement forecast = forecastArray[i];
-                TextView time = (TextView) snLayout.findViewById(getResources().getIdentifier("sn_time_" + TIME_INTERVAL[i], "id", getPackageName()));
-                time.setText(TIME_INTERVAL[i]);
-                ImageView image = (ImageView) snLayout.findViewById(getResources().getIdentifier("sn_image_" + TIME_INTERVAL[i], "id", getPackageName()));
+        Map<String, Forecast> forecastMapShortTerm = getMappedForecasts(false);
+        for(String hour : TIME_INTERVAL) {
+            TextView time = (TextView) snLayout.findViewById(getResources().getIdentifier("sn_time_" + hour, "id", getPackageName()));
+            time.setText(hour);
+            Forecast forecast = forecastMapShortTerm.get(Utils.num2DigitString(now.getMonthOfYear())+"/"+Utils.num2DigitString(now.getDayOfMonth())+"-"+hour);
+            ImageView image = (ImageView) snLayout.findViewById(getResources().getIdentifier("sn_image_" + hour, "id", getPackageName()));
+            if(forecast != null) {
                 image.setImageResource(DIFFICULTY_SMALL_IMAGES.get(forecast.getMountainStatus()));
+            } else {
+                image.setImageResource(R.drawable.difficulty_small_y);
             }
         }
+
         snLayout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         snLayout.layout(0, 0, snLayout.getMeasuredWidth(), snLayout.getMeasuredHeight());
