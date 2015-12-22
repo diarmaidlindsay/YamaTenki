@@ -240,9 +240,9 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
             tomorrowPMForecastFrame.setOnTouchListener(getSubscriptionLockImageOnTouchListener());
             weeklyForecastFrame.setOnTouchListener(getSubscriptionLockImageOnTouchListener());
 
-            tomorrowAMForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1,4))));
-            tomorrowPMForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1,4))));
-            weeklyForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1,4))));
+            tomorrowAMForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1, 4))));
+            tomorrowPMForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1, 4))));
+            weeklyForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1, 4))));
         }
     }
 
@@ -250,7 +250,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         return new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
                     FrameLayout frame = (FrameLayout) v;
                     Drawable oldForeground = frame.getForeground();
                     Drawable targetForeground = ContextCompat.getDrawable(MountainForecastActivity.this, LOCK_IMAGES.get(0));
@@ -271,7 +271,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                     v.setDrawingCacheEnabled(true);
                     Bitmap hotspots = Bitmap.createBitmap(v.getDrawingCache());
                     v.setDrawingCacheEnabled(false);
-                    int pixelColor = hotspots.getPixel((int)event.getX(), (int)event.getY());
+                    int pixelColor = hotspots.getPixel((int) event.getX(), (int) event.getY());
 
                     //reset to previous background and foreground
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -282,7 +282,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                     frame.setForeground(oldForeground);
 
                     //check for blue colour target on pressed pixel
-                    if(Utils.isCloseColorMatch(pixelColor, Color.BLUE)) {
+                    if (Utils.isCloseColorMatch(pixelColor, Color.BLUE)) {
                         Intent intent = new Intent(MountainForecastActivity.this, SettingsActivity.class);
                         //if user buys subscription we want them to start at main screen again
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -976,7 +976,11 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
             highWindHelp = (ImageView) highWindRow.findViewById(R.id.help_icon_wind_speed);
             cloudCoverHelp = (ImageView) forecastTable.findViewById(R.id.help_icon_cloud_cover);
 
-            if (!longTerm) {
+            //if not weekly forecast AND not a free user's tomorrow's forecast elements then disable the help buttons
+            if (!longTerm &&
+                    !(SubscriptionSingleton.getInstance(MountainForecastActivity.this).getSubscription() == Subscription.NONE
+                            && (forecast.getId() == R.id.tomorrow_am_forecast || forecast.getId() == R.id.tomorrow_pm_forecast))
+                    ) {
                 lowWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
                 midWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
                 highWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
