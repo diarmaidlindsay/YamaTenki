@@ -4,7 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -390,6 +392,8 @@ public class JSONDownloader {
             progressDialog.setIndeterminate(false);
             progressDialog.setMax(100);
             progressDialog.setCancelable(false);
+            //change color of progress bar
+            progressDialog.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progress_bar));
             progressDialog.setMessage(getDownloadMessage());
         }
 
@@ -398,6 +402,9 @@ public class JSONDownloader {
             super.onProgressUpdate(values);
             if(!progressDialog.isShowing()) {
                 progressDialog.show();
+                TextView message = (TextView) progressDialog.findViewById(android.R.id.message);
+                //change color of progress text
+                message.setTextColor(ContextCompat.getColor(mContext, R.color.yama_background));
             }
             progressDialog.setProgress(values[0]);
         }
