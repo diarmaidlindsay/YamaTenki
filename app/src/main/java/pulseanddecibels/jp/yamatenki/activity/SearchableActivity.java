@@ -17,11 +17,16 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
+
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.adapter.MemoListAdapter;
 import pulseanddecibels.jp.yamatenki.adapter.MountainListAdapter;
 import pulseanddecibels.jp.yamatenki.enums.MemoListColumn;
 import pulseanddecibels.jp.yamatenki.enums.MountainListColumn;
+import pulseanddecibels.jp.yamatenki.enums.Subscription;
+import pulseanddecibels.jp.yamatenki.interfaces.OnInAppBillingServiceSetupComplete;
+import pulseanddecibels.jp.yamatenki.utils.SubscriptionSingleton;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
@@ -39,7 +44,7 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  * My Mountain List
  * My Mountain Memos
  */
-public class SearchableActivity extends Activity {
+public class SearchableActivity extends Activity implements OnInAppBillingServiceSetupComplete {
     private final int MIN_HEIGHT = 0;
     private final int MAX_HEIGHT = 3776; //Fuji-san's height
     private TextView header;
@@ -58,8 +63,24 @@ public class SearchableActivity extends Activity {
     private MemoListAdapter memoListAdapter;
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SubscriptionSingleton.getInstance(this).disposeIabHelperInstance(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mountainListAdapter = new MountainListAdapter(this);
+        if(savedInstanceState != null && savedInstanceState.getSerializable("subscription") != null) {
+            Serializable sub = savedInstanceState.getSerializable("subscription");
+            if(sub != null) {
+                mountainListAdapter.setSubscription((Subscription) sub);
+            }
+        } else {
+            SubscriptionSingleton.getInstance(this).initGoogleBillingApi(this, this);
+        }
+
         Bundle arguments = getIntent().getExtras();
         String searchType = "";
         int areaId = 0;
@@ -71,8 +92,6 @@ public class SearchableActivity extends Activity {
             longitude = arguments.getDouble("long");
             searchType = arguments.getString("searchType") == null ? "" : arguments.getString("searchType");
         }
-
-        mountainListAdapter = new MountainListAdapter(this);
 
         //memo searchView and headers are different than the other (mountain) searchable options
         //we came here from MainActivity (Climbed Mountain Memo was chosen)
@@ -563,5 +582,18 @@ public class SearchableActivity extends Activity {
             maxHeightSearchView.clearFocus();
         }
         mountainList.requestFocus();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putSerializable("subscription", mountainListAdapter.getSubscription());
+    }
+
+    @Override
+    public void iabSetupCompleted(Subscription subscription) {
+        if(mountainListAdapter != null) {
+            mountainListAdapter.setSubscription(subscription);
+        }
     }
 }

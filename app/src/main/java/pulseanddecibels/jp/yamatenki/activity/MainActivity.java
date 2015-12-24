@@ -126,7 +126,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         });
 
         buildGoogleApiClient();
-        SubscriptionSingleton.getInstance(this).initGoogleBillingApi(this);
         JSONDownloader.getMountainListFromServer(this);
         JSONDownloader.getMountainStatusFromServer(this);
     }

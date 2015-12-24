@@ -7,7 +7,7 @@ import pulseanddecibels.jp.yamatenki.utils.Constants;
  * Copyright Pulse and Decibels 2015
  */
 public enum Subscription {
-    NONE("", "no"),
+    FREE("", "No Subscription"),
     YEARLY(Constants.SUBSCRIPTION_1_YEAR, "1 year"),
     MONTH6(Constants.SUBSCRIPTION_6_MONTH, "6 month"),
     MONTHLY(Constants.SUBSCRIPTION_1_MONTH, "1 month");
@@ -30,7 +30,7 @@ public enum Subscription {
                 return sub;
             }
         }
-        return NONE;
+        return FREE;
     }
 
     public String getDisplaytext() {

@@ -47,7 +47,6 @@ import pulseanddecibels.jp.yamatenki.enums.MountainListColumn;
 import pulseanddecibels.jp.yamatenki.enums.SortOrder;
 import pulseanddecibels.jp.yamatenki.enums.Subscription;
 import pulseanddecibels.jp.yamatenki.utils.GeoLocation;
-import pulseanddecibels.jp.yamatenki.utils.SubscriptionSingleton;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
@@ -83,6 +82,7 @@ public class MountainListAdapter extends BaseAdapter {
     private List mountainList = new ArrayList<>();
     private GeoLocation here;
     private String searchString; //in case we have to resubmit the query after update in child activity
+
     private Subscription subscription;
 
     public MountainListAdapter(Context context) {
@@ -93,7 +93,6 @@ public class MountainListAdapter extends BaseAdapter {
         for (Status status : allStatus) {
             currentMountainStatus.put(status.getMountainId(), status.getStatus());
         }
-        subscription = SubscriptionSingleton.getInstance(context).getSubscription();
     }
 
     @Override
@@ -137,7 +136,7 @@ public class MountainListAdapter extends BaseAdapter {
         viewHolder.height.setText(String.format("%sm", String.valueOf(mountain.getHeight())));
 
         final long mountainId = mountain.getId();
-        if(subscription == Subscription.NONE && !mountain.getTopMountain()) {
+        if(subscription == Subscription.FREE && !mountain.getTopMountain()) {
             viewHolder.difficulty.setImageResource(DIFFICULTY_SMALL_IMAGES.get(0));
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -429,6 +428,14 @@ public class MountainListAdapter extends BaseAdapter {
                 }
             }
         };
+    }
+
+    public Subscription getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
     }
 
     public MountainListColumn getCurrentSorting() {

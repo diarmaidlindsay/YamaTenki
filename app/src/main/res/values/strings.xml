@@ -129,4 +129,5 @@
     <string name="text_subscription_subscribed">現在%sチケットを購入中</string>
     <string name="button_view_subscription_plans">プランを見る</string>
     <string name="text_go_to_subscription_screen">チケットを見に行く 月額¥96~</string>
+    <string name="text_dialog_please_wait">しばらくお待ちください</string>
 </resources>

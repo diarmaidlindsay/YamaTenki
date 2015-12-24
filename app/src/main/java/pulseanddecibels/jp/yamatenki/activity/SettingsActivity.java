@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.enums.Subscription;
+import pulseanddecibels.jp.yamatenki.interfaces.OnInAppBillingServiceSetupComplete;
 import pulseanddecibels.jp.yamatenki.utils.Settings;
 import pulseanddecibels.jp.yamatenki.utils.SubscriptionSingleton;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
@@ -37,7 +38,7 @@ import pulseanddecibels.jp.yamatenki.utils.billing.Purchase;
  * Created by Diarmaid Lindsay on 2015/11/20.
  * Copyright Pulse and Decibels 2015
  */
-public class SettingsActivity extends Activity implements IabHelper.OnIabPurchaseFinishedListener {
+public class SettingsActivity extends Activity implements IabHelper.OnIabPurchaseFinishedListener, OnInAppBillingServiceSetupComplete {
 
     Settings settings;
     TextView subscriptionSubtitle;
@@ -46,35 +47,14 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         settings = new Settings(this);
-        SubscriptionSingleton.getInstance(this).initGoogleBillingApi(this);
         setContentView(R.layout.activity_settings);
-
-        TextView header = (TextView) findViewById(R.id.text_settings_header);
-        header.setTypeface(Utils.getHannariTypeFace(this));
-        PercentRelativeLayout subscriptionSetting = (PercentRelativeLayout) findViewById(R.id.setting_subscription);
-        initialiseSubscription(subscriptionSetting);
-        PercentRelativeLayout displayWarningSetting = (PercentRelativeLayout) findViewById(R.id.setting_dont_display_warning);
-        initialiseSettingCheckedNoSubtitle(displayWarningSetting, R.string.text_setting_title_warning, "setting_dont_display_warning");
-        PercentRelativeLayout downloadMobileSetting = (PercentRelativeLayout) findViewById(R.id.setting_download_only_wifi);
-        initialiseSettingCheckedNoSubtitle(downloadMobileSetting, R.string.text_setting_title_mobile, "setting_download_only_wifi");
-        PercentRelativeLayout resetChecklistSetting = (PercentRelativeLayout) findViewById(R.id.setting_reset_checklist);
-        initialiseSettingCheckedNoSubtitle(resetChecklistSetting, R.string.text_setting_title_checklist_reset, "setting_reset_checklist");
-
-        Bundle arguments = getIntent().getExtras();
-        if (arguments != null) {
-            boolean viewSub = arguments.getBoolean("view_subscription");
-            //if user came here from restrictions dialog intent, open subscription screen directly
-            if(viewSub) {
-                subscriptionSetting.callOnClick();
-            }
-        }
+        SubscriptionSingleton.getInstance(this).initGoogleBillingApi(this, this);
     }
 
     private void initialiseSubscription(PercentRelativeLayout setting) {
         TextView title = (TextView) setting.findViewById(R.id.setting_title);
         title.setText(getResources().getString(R.string.text_setting_subscription_title));
         subscriptionSubtitle = (TextView) setting.findViewById(R.id.setting_subtitle);
-        subscriptionSubtitle.setText(SubscriptionSingleton.getInstance(this).getSubscriptionStatus());
         Button subscriptionPlanButton = (Button) setting.findViewById(R.id.button_view_subscription_plans);
         subscriptionPlanButton.setOnClickListener(getSubscriptionOnClickListener());
         setting.setOnClickListener(getSubscriptionOnClickListener());
@@ -242,5 +222,29 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
     protected void onDestroy() {
         super.onDestroy();
         SubscriptionSingleton.getInstance(this).disposeIabHelperInstance(this);
+    }
+
+    @Override
+    public void iabSetupCompleted(Subscription subscription) {
+        TextView header = (TextView) findViewById(R.id.text_settings_header);
+        header.setTypeface(Utils.getHannariTypeFace(this));
+        PercentRelativeLayout subscriptionSetting = (PercentRelativeLayout) findViewById(R.id.setting_subscription);
+        initialiseSubscription(subscriptionSetting);
+        PercentRelativeLayout displayWarningSetting = (PercentRelativeLayout) findViewById(R.id.setting_dont_display_warning);
+        initialiseSettingCheckedNoSubtitle(displayWarningSetting, R.string.text_setting_title_warning, "setting_dont_display_warning");
+        PercentRelativeLayout downloadMobileSetting = (PercentRelativeLayout) findViewById(R.id.setting_download_only_wifi);
+        initialiseSettingCheckedNoSubtitle(downloadMobileSetting, R.string.text_setting_title_mobile, "setting_download_only_wifi");
+        PercentRelativeLayout resetChecklistSetting = (PercentRelativeLayout) findViewById(R.id.setting_reset_checklist);
+        initialiseSettingCheckedNoSubtitle(resetChecklistSetting, R.string.text_setting_title_checklist_reset, "setting_reset_checklist");
+
+        Bundle arguments = getIntent().getExtras();
+        if (arguments != null) {
+            boolean viewSub = arguments.getBoolean("view_subscription");
+            //if user came here from restrictions dialog intent, open subscription screen directly
+            if(viewSub) {
+                subscriptionSetting.callOnClick();
+            }
+        }
+        subscriptionSubtitle.setText(SubscriptionSingleton.getInstance(this).getSubscriptionStatus());
     }
 }

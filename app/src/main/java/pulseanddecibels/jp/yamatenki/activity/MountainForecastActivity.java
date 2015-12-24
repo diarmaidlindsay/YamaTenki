@@ -54,6 +54,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -77,6 +78,7 @@ import pulseanddecibels.jp.yamatenki.database.dao.PressureDao;
 import pulseanddecibels.jp.yamatenki.database.dao.WindAndTemperature;
 import pulseanddecibels.jp.yamatenki.enums.Subscription;
 import pulseanddecibels.jp.yamatenki.interfaces.OnDownloadComplete;
+import pulseanddecibels.jp.yamatenki.interfaces.OnInAppBillingServiceSetupComplete;
 import pulseanddecibels.jp.yamatenki.utils.DateUtils;
 import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
 import pulseanddecibels.jp.yamatenki.utils.Settings;
@@ -87,7 +89,7 @@ import pulseanddecibels.jp.yamatenki.utils.Utils;
  * Created by Diarmaid Lindsay on 2015/09/29.
  * Copyright Pulse and Decibels 2015
  */
-public class MountainForecastActivity extends Activity implements OnDownloadComplete {
+public class MountainForecastActivity extends Activity implements OnDownloadComplete, OnInAppBillingServiceSetupComplete {
     private final SparseIntArray DIFFICULTY_SMALL_IMAGES = new SparseIntArray() {
         {
             append(1, R.drawable.difficulty_small_a);
@@ -117,19 +119,35 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
     private TextView title;
     private Button addMyMountainButton;
     private long mountainId;
+    private Mountain mountain;
     private MapView mMapView;
     private CallbackManager callbackManager;
+    private Subscription mSubscription;
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.d("MFA : onRestore", "Saving subscription - " + mSubscription.getDisplaytext());
+        savedInstanceState.putSerializable("subscription", mSubscription);
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
-
         Bundle arguments = getIntent().getExtras();
         mountainId = arguments.getLong("mountainId");
         MountainDao mountainDao = Database.getInstance(this).getMountainDao();
-        final Mountain mountain = mountainDao.load(mountainId);
-
+        mountain = mountainDao.load(mountainId);
+        if(savedInstanceState != null && savedInstanceState.getSerializable("subscription") != null) {
+            Serializable sub = savedInstanceState.getSerializable("subscription");
+            mSubscription = (Subscription) sub;
+            Log.d("MFA : onCreate", "Restoring old subscription");
+            iabSetupCompleted(mSubscription);
+        }
+        else {
+            SubscriptionSingleton.getInstance(this).initGoogleBillingApi(this, this);
+        }
         title = (TextView) findViewById(R.id.text_forecast_header);
         title.setTypeface(Utils.getHannariTypeFace(this));
         title.setText(mountain.getTitle());
@@ -210,8 +228,6 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         Button addMemoButton = (Button) findViewById(R.id.button_add_memo);
         addMemoButton.setTypeface(Utils.getHannariTypeFace(this));
         addMemoButton.setOnClickListener(getAddMemoListener());
-        initialiseWidgets();
-        JSONDownloader.getMountainForecastFromServer(this, mountain.getYid(), this);
     }
 
     private void initialiseWidgets() {
@@ -222,13 +238,14 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         LinearLayout tomorrowPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_pm_forecast);
         LinearLayout weeklyForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.weekly_forecast);
         //add in correct order because index matters for looking up date
+        scrollViewElements.clear();
         scrollViewElements.add(new ForecastScrollViewElement(todayAMForecast, false));
         scrollViewElements.add(new ForecastScrollViewElement(todayPMForecast, false));
         scrollViewElements.add(new ForecastScrollViewElement(tomorrowAMForecast, false));
         scrollViewElements.add(new ForecastScrollViewElement(tomorrowPMForecast, false));
         scrollViewElements.add(new ForecastScrollViewElement(weeklyForecast, true));
         //Users without subscriptions can only see today's forecast
-        if (SubscriptionSingleton.getInstance(this).getSubscription() == Subscription.NONE) {
+        if (mSubscription == Subscription.FREE) {
             FrameLayout tomorrowAMForecastFrame = (FrameLayout) tomorrowAMForecast.findViewById(R.id.table_frame);
             FrameLayout tomorrowPMForecastFrame = (FrameLayout) tomorrowPMForecast.findViewById(R.id.table_frame);
             FrameLayout weeklyForecastFrame = (FrameLayout) weeklyForecast.findViewById(R.id.table_frame);
@@ -317,7 +334,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                 } else {
                     //users without a subscription can't add more than 2 mountains to "my mountain list"
                     if (myMountainDao.loadAll().size() >= 2 &&
-                            SubscriptionSingleton.getInstance(MountainForecastActivity.this).getSubscription() == Subscription.NONE) {
+                            mSubscription == Subscription.FREE) {
                         displayUserRestrictionDialog(R.string.dialog_my_mountain_subscription);
                     } else {
                         myMountainDao.insert(new MyMountain(null, mountainId));
@@ -339,7 +356,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                 MyMemoDao myMemoDao = Database.getInstance(MountainForecastActivity.this).getMyMemoDao();
                 //users without a subscription can't add more than 2 memos to "my memo list"
                 if (myMemoDao.loadAll().size() >= 2 &&
-                        SubscriptionSingleton.getInstance(MountainForecastActivity.this).getSubscription() == Subscription.NONE) {
+                        mSubscription == Subscription.FREE) {
                     displayUserRestrictionDialog(R.string.dialog_memo_subscription);
                 } else {
                     Intent intent = new Intent(getApplicationContext(), MemoDetailActivity.class);
@@ -359,14 +376,14 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         List<Forecast> forecastList = forecastDao.queryBuilder().where(ForecastDao.Properties.MountainId.eq(mountainId), ForecastDao.Properties.Daily.eq(daily)).list();
         for (Forecast forecast : forecastList) {
             String dateTimeString = forecast.getDateTime();
-            Log.d("MFA : dateTimeString", dateTimeString);
+            Log.v("MFA : dateTimeString", dateTimeString);
             DateTime dateTime = DateUtils.getDateTimeFromForecast(dateTimeString);
             if (daily) {
                 forecastMap.put(DateUtils.getDateToLongTermForecastKey(dateTime), forecast);
-                Log.d("MFA : LongForecastKey", DateUtils.getDateToLongTermForecastKey(dateTime));
+                Log.v("MFA : LongForecastKey", DateUtils.getDateToLongTermForecastKey(dateTime));
             } else {
                 forecastMap.put(DateUtils.getDateToShortTermForecastKey(dateTime), forecast);
-                Log.d("MFA : ShortForecastKey", DateUtils.getDateToShortTermForecastKey(dateTime));
+                Log.v("MFA : ShortForecastKey", DateUtils.getDateToShortTermForecastKey(dateTime));
             }
         }
 
@@ -448,7 +465,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                 String key = scrollViewElement.isLongTermForecast() ?
                         DateUtils.getColumnHeadingForLongTermForecast(forecastColumn.getColumnIndex()) :
                         DateUtils.getWidgetToForecastKey(i, forecastColumn.getColumnIndex());
-                Log.d("WidgetToForecastKey", key);
+                Log.v("WidgetToForecastKey", key);
                 //scrollViewElement 4 is the long term forecasts
                 Forecast forecast = i == 4 ?
                         forecastMapLongTerm.get(key) :
@@ -461,7 +478,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                 }
 
                 if (forecast != null) {
-                    Log.d("getWidgetToForecastKey", "Found");
+                    Log.v("getWidgetToForecastKey", "Found");
                     //we found a matching forecast
                     forecastColumn.getDifficulty().setImageResource(DIFFICULTY_SMALL_IMAGES.get(forecast.getMountainStatus()));
                     List<WindAndTemperature> windAndTemperatureList = forecast.getWindAndTemperatureList();
@@ -493,7 +510,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                     forecastColumn.getCloudCover().setText(String.format("%d", forecast.getTotalCloudCover().intValue() / 10));
 
                 } else {
-                    Log.d("getWidgetToForecastKey", "Not Found");
+                    Log.v("getWidgetToForecastKey", "Not Found");
                     //set grey background and blank
                     forecastColumn.getDifficulty().setImageResource(R.drawable.difficulty_small_y);
                     forecastColumn.getLowHeightTemperature().setBackgroundColor(Color.LTGRAY);
@@ -895,7 +912,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         if (mMapView != null) {
             mMapView.onDestroy();
         }
-
+        SubscriptionSingleton.getInstance(this).disposeIabHelperInstance(this);
     }
 
     @Override
@@ -924,7 +941,13 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return super.onTouchEvent(event);
+    }
 
+    @Override
+    public void iabSetupCompleted(Subscription subscription) {
+        mSubscription = subscription;
+        initialiseWidgets();
+        JSONDownloader.getMountainForecastFromServer(this, mountain.getYid(), this);
     }
 
     // For now this is used for "Today" and "Tomorrow", ie, short term forecasts
@@ -974,7 +997,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
 
             //if not weekly forecast AND not a free user's tomorrow's forecast elements then disable the help buttons
             if (!longTerm &&
-                    !(SubscriptionSingleton.getInstance(MountainForecastActivity.this).getSubscription() == Subscription.NONE
+                    !(mSubscription == Subscription.FREE
                             && (forecast.getId() == R.id.tomorrow_am_forecast || forecast.getId() == R.id.tomorrow_pm_forecast))
                     ) {
                 lowWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
