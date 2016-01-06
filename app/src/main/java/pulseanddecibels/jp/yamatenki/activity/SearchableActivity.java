@@ -281,7 +281,7 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
                     }
 
                     if (minHeight > maxHeight) {
-                        Toast.makeText(SearchableActivity.this, "The minimum should be less than the maximum", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchableActivity.this, getString(R.string.toast_height_min_max_error), Toast.LENGTH_SHORT).show();
                         return;
                     }
 

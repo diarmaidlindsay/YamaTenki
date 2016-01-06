@@ -14,7 +14,8 @@ android {
     defaultConfig {
         applicationId "pulseanddecibels.jp.yamatenki"
         minSdkVersion 15
-        targetSdkVersion 23
+        //if we target 23+ it means we have to rework the permissions system completely for location and sd card access
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -34,7 +35,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:percent:23.1.1'
-    compile 'com.google.android.gms:play-services-location:8.3.0'
+    compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
     compile 'net.danlew:android.joda:2.8.2'
     compile 'de.greenrobot:greendao:2.0.0'

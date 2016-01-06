@@ -209,11 +209,13 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
         if(result.isSuccess()) {
             SubscriptionSingleton.getInstance(this).setPurchase(info);
             SubscriptionSingleton.getInstance(this).setSubscription(Subscription.getSubscriptionTypeForSKU(info.getSku()));
+            if(Settings.isDebugMode())
             Toast.makeText(this, SubscriptionSingleton.getInstance(this).getSubscriptionStatus(), Toast.LENGTH_SHORT).show();
             if(subscriptionSubtitle != null) {
                 subscriptionSubtitle.setText(SubscriptionSingleton.getInstance(this).getSubscriptionStatus());
             }
         } else {
+            if(Settings.isDebugMode())
             Toast.makeText(this, result.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }

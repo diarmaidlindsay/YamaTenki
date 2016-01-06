@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationServices;
 
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
+import pulseanddecibels.jp.yamatenki.utils.Settings;
 import pulseanddecibels.jp.yamatenki.utils.SubscriptionSingleton;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
@@ -79,7 +80,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                     intent.putExtra("long", mLastLocation.getLongitude());
                     startActivity(intent);
                 } else {
-                    Toast.makeText(MainActivity.this, "Waiting for current location", Toast.LENGTH_SHORT).show();
+                    if(Settings.isDebugMode())
+                        Toast.makeText(MainActivity.this, "Waiting for current location", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -154,13 +156,15 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     @Override
     public void onConnectionSuspended(int i) {
-        Toast.makeText(this, "Google Play Service Connection Suspended...", Toast.LENGTH_SHORT).show();
+        if(Settings.isDebugMode())
+            Toast.makeText(this, "Google Play Service Connection Suspended...", Toast.LENGTH_SHORT).show();
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(this, "Failed to connect to Google Play Service...", Toast.LENGTH_SHORT).show();
+        if(Settings.isDebugMode())
+            Toast.makeText(this, "Failed to connect to Google Play Service...", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -183,7 +187,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         } else {
-            Toast.makeText(this, "Couldn't connect to Google Play Service", Toast.LENGTH_SHORT).show();
+            if(Settings.isDebugMode())
+                Toast.makeText(this, "Couldn't connect to Google Play Service", Toast.LENGTH_SHORT).show();
         }
     }
 

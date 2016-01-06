@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 public class Settings {
     private final String PREFS_NAME = "YamaTenkiPrefs";
     private final SharedPreferences settings;
+    private static boolean DEBUG_MODE = false;
 
     public Settings(Context context) {
         settings = context.getSharedPreferences(PREFS_NAME, 0);
@@ -66,5 +67,13 @@ public class Settings {
 
     public void setStatusEtag(String etag) {
         settings.edit().putString("last_status_etag", etag).apply();
+    }
+
+    public static boolean isDebugMode() {
+        return DEBUG_MODE;
+    }
+
+    public static void setDebugMode(boolean debugMode) {
+        DEBUG_MODE = debugMode;
     }
 }

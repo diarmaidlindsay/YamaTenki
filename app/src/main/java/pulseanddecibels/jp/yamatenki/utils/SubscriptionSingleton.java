@@ -82,15 +82,14 @@ public class SubscriptionSingleton {
     }
 
     public void initGoogleBillingApi(final Context context, OnInAppBillingServiceSetupComplete billingSetupCompleteListener) {
-        //TODO : Disable for production
         // enable debug logging (for a production application, you should set this to false).
-        getIabHelperInstance(context).enableDebugLogging(true);
+        getIabHelperInstance(context).enableDebugLogging(false);
         mBillingSetupCompleteListener = billingSetupCompleteListener;
         if(mSubscription == null || context instanceof SettingsActivity) {
             progressDialog = new ProgressDialog(mContext);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setIndeterminate(true);
-            progressDialog.setCancelable(true);
+            progressDialog.setCancelable(false);
             progressDialog.setMessage(mContext.getString(R.string.text_dialog_please_wait));
             progressDialog.show();
 
