@@ -2,6 +2,7 @@ package pulseanddecibels.jp.yamatenki.utils;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -85,6 +86,12 @@ public class SubscriptionSingleton {
         // enable debug logging (for a production application, you should set this to false).
         getIabHelperInstance(context).enableDebugLogging(false);
         mBillingSetupCompleteListener = billingSetupCompleteListener;
+        //if this is the emulator then we can't use billing api, so just skip it and make the user subscribed
+        if("goldfish".equals(Build.HARDWARE)) {
+            setSubscription(Subscription.MONTHLY);
+            mBillingSetupCompleteListener.iabSetupCompleted(mSubscription);
+            return;
+        }
         if(mSubscription == null || context instanceof SettingsActivity) {
             progressDialog = new ProgressDialog(mContext);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
