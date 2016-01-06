@@ -113,6 +113,7 @@ public class JSONDownloader {
         }
 
         private String downloadJSON(String url) {
+            publishProgress(0);
             DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
             HttpPost httppost = new HttpPost(url);
             // Depends on your web service
@@ -125,7 +126,6 @@ public class JSONDownloader {
                 HttpResponse response = httpclient.execute(httppost);
                 etag = response.getFirstHeader("etag").toString();
                 if (new Settings(mContext).isNewStatusETag(etag)) {
-                    publishProgress(0);
                     HttpEntity entity = response.getEntity();
 
                     inputStream = entity.getContent();
@@ -195,6 +195,7 @@ public class JSONDownloader {
         }
 
         private String downloadJSON(String url) {
+            publishProgress(0);
             DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
             HttpPost httppost = new HttpPost(url);
             // Depends on your web service
@@ -207,7 +208,6 @@ public class JSONDownloader {
                 HttpResponse response = httpclient.execute(httppost);
                 etag = response.getFirstHeader("etag").toString();
                 if (new Settings(mContext).isNewListEtag(etag)) {
-                    publishProgress(0);
                     HttpEntity entity = response.getEntity();
 
                     inputStream = entity.getContent();
@@ -321,6 +321,7 @@ public class JSONDownloader {
         }
 
         private String downloadJSON(String url) {
+            publishProgress(0);
             DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
             HttpPost httppost = new HttpPost(url);
             // Depends on your web service
@@ -333,7 +334,6 @@ public class JSONDownloader {
                 HttpResponse response = httpclient.execute(httppost);
                 String serverEtag = response.getFirstHeader("etag").toString();
                 if(existingETag == null || !existingETag.getEtag().equals(serverEtag)) {
-                    publishProgress(0);
                     HttpEntity entity = response.getEntity();
 
                     inputStream = entity.getContent();
