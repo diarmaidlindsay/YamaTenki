@@ -88,7 +88,7 @@ public class SubscriptionSingleton {
         getIabHelperInstance(context).enableDebugLogging(false);
         mBillingSetupCompleteListener = billingSetupCompleteListener;
         //if this is the emulator then we can't use billing api, so just skip it and make the user subscribed
-        if(!"goldfish".equals(Build.HARDWARE)) {
+        if("goldfish".equals(Build.HARDWARE)) {
             setSubscription(Subscription.MONTHLY);
             mBillingSetupCompleteListener.iabSetupCompleted(mSubscription);
             return;
