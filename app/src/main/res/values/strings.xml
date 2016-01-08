@@ -131,4 +131,5 @@
     <string name="toast_google_account_not_setup">この携帯のGoogleアカウントが設定されていません。</string>
     <string name="toast_error_location_denied">位置情報の使用を許可しない場合は「近くの山20選」を使えません。</string>
     <string name="toast_error_location_dont_ask_again">「近くの山20選」を使う場合は位置情報の使用を許可してください。設定＞アプリ＞YamaTenki>許可＞位置情報</string>
+    <string name="button_main_map">山行地図\nで探す</string>
 </resources>

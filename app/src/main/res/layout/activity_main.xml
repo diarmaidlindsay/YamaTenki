@@ -17,38 +17,19 @@
         android:text="@string/button_main_name_search"/>
 
     <Button
-        android:id="@+id/button_main_20_closest_search"
+        android:id="@+id/button_main_map"
         style="@style/MainButtonLeft"
         android:layout_below="@id/button_main_mountain_name_search"
+        android:adjustViewBounds="false"
+        android:background="@drawable/round_button_lime_green"
+        android:text="@string/button_main_map"/>
+
+    <Button
+        android:id="@+id/button_main_20_closest_search"
+        style="@style/MainButtonLeft"
+        android:layout_below="@id/button_main_map"
         android:background="@drawable/round_button_yellow"
         android:text="@string/button_main_20_closest_search"/>
-
-    <Button
-        android:id="@+id/button_main_my_mountain_list"
-        style="@style/MainButtonLeft"
-        android:layout_below="@id/button_main_20_closest_search"
-        android:background="@drawable/round_button_orange"
-        android:text="@string/button_main_my_mountain_list"/>
-
-    <Button
-        android:id="@+id/button_main_tool_list"
-        style="@style/MainButtonLeft"
-        android:layout_below="@id/button_main_my_mountain_list"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/round_button_gray"
-        android:paddingBottom="0dp"
-        android:paddingTop="0dp"
-        android:text="@string/button_main_tool_list"
-        app:layout_heightPercent="10%"/>
-
-    <Button
-        android:id="@+id/button_main_area_search"
-        style="@style/MainButtonRight"
-        android:layout_below="@+id/text_main_header"
-        android:layout_toEndOf="@+id/button_main_mountain_name_search"
-        android:layout_toRightOf="@id/button_main_mountain_name_search"
-        android:background="@drawable/round_button_light_blue"
-        android:text="@string/button_main_area_search"/>
 
     <Button
         android:id="@+id/button_main_height_search"
@@ -60,21 +41,51 @@
         android:text="@string/button_main_height_search"/>
 
     <Button
-        android:id="@+id/button_main_memo"
+        android:id="@+id/button_main_my_mountain_list"
         style="@style/MainButtonRight"
         android:layout_below="@id/button_main_height_search"
-        android:layout_toEndOf="@id/button_main_my_mountain_list"
-        android:layout_toRightOf="@id/button_main_my_mountain_list"
+        android:layout_toEndOf="@+id/button_main_20_closest_search"
+        android:layout_toRightOf="@id/button_main_20_closest_search"
+        android:background="@drawable/round_button_orange"
+        android:text="@string/button_main_my_mountain_list"/>
+
+    <Button
+        android:id="@+id/button_main_tool_list"
+        style="@style/MainButtonRight"
+        android:layout_below="@id/button_main_my_mountain_list"
+        android:layout_toEndOf="@+id/button_main_memo"
+        android:layout_toRightOf="@id/button_main_memo"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/round_button_gray"
+        android:paddingBottom="0dp"
+        android:paddingTop="0dp"
+        android:text="@string/button_main_tool_list"/>
+
+    <Button
+        android:id="@+id/button_main_area_search"
+        style="@style/MainButtonRight"
+        android:layout_below="@+id/text_main_header"
+        android:layout_toEndOf="@+id/button_main_mountain_name_search"
+        android:layout_toRightOf="@id/button_main_mountain_name_search"
+        android:background="@drawable/round_button_light_blue"
+        android:text="@string/button_main_area_search"/>
+
+
+
+    <Button
+        android:id="@+id/button_main_memo"
+        style="@style/MainButtonLeft"
+        android:layout_below="@id/button_main_20_closest_search"
         android:background="@drawable/round_button_brown"
         android:text="@string/button_main_memo"/>
 
     <Button
         android:id="@+id/button_main_settings"
         style="@style/MainButtonRight"
-        android:layout_below="@id/button_main_memo"
+        android:layout_below="@id/button_main_tool_list"
         android:layout_marginBottom="10dp"
-        android:layout_toEndOf="@+id/button_main_tool_list"
-        android:layout_toRightOf="@+id/button_main_tool_list"
+        android:layout_toEndOf="@+id/button_main_memo"
+        android:layout_toRightOf="@+id/button_main_memo"
         android:background="@drawable/round_button_light_gray"
         android:text="@string/button_main_settings"
         app:layout_heightPercent="10%"/>

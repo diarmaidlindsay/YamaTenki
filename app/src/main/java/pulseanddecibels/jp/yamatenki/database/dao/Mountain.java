@@ -302,6 +302,11 @@ public class Mountain {
         return status.getStatus();
     }
 
+    public Coordinate getCoordinate() {
+        CoordinateDao coordinateDao = daoSession.getCoordinateDao();
+        return coordinateDao.queryBuilder().where(CoordinateDao.Properties.MountainId.eq(getId())).unique();
+    }
+
     public ETag getETag() {
         ETagDao eTagDao = daoSession.getETagDao();
         return eTagDao.queryBuilder().where(ETagDao.Properties.MountainId.eq(getId())).unique();

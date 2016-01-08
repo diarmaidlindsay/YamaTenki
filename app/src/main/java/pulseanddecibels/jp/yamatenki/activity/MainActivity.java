@@ -65,6 +65,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         settingsButton.setTypeface(Utils.getHannariTypeFace(this));
         Button checklistButton = (Button) findViewById(R.id.button_main_tool_list);
         checklistButton.setTypeface(Utils.getHannariTypeFace(this));
+        Button mapButton = (Button) findViewById(R.id.button_main_map);
+        mapButton.setTypeface(Utils.getHannariTypeFace(this));
 
         mountainNameSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +133,13 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+            }
+        });
+
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), MapActivity.class));
             }
         });
 

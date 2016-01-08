@@ -410,6 +410,7 @@ public class JSONDownloader {
         }
 
         // This is called when doInBackground() is finished
+        @Override
         protected void onPostExecute(Boolean result) {
             if(progressDialog.isShowing()) {
                 progressDialog.setProgress(progressDialog.getMax());

@@ -65,7 +65,6 @@ import java.util.Map;
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.database.Database;
 import pulseanddecibels.jp.yamatenki.database.dao.Coordinate;
-import pulseanddecibels.jp.yamatenki.database.dao.CoordinateDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Forecast;
 import pulseanddecibels.jp.yamatenki.database.dao.ForecastDao;
 import pulseanddecibels.jp.yamatenki.database.dao.Mountain;
@@ -690,10 +689,8 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         GoogleMap map = mMapView.getMap();
 
         MountainDao mountainDao = Database.getInstance(this).getMountainDao();
-        CoordinateDao coordinateDao = Database.getInstance(this).getCoordinateDao();
         Mountain mountain = mountainDao.load(mountainId);
-        Coordinate coordinate =
-                coordinateDao.queryBuilder().where(CoordinateDao.Properties.MountainId.eq(mountainId)).unique();
+        Coordinate coordinate = mountain.getCoordinate();
 
         LatLng latLng = new LatLng(coordinate.getLatitude(), coordinate.getLongitude());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
