@@ -1,5 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="pulseanddecibels.jp.yamatenki">
+<manifest package="pulseanddecibels.jp.yamatenki"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -7,43 +8,59 @@
     <!-- For generating image on external SD to share with LINE and Twitter through Intents -->
     <!-- "Beginning with Android 4.4 (API level 19), it's no longer necessary for your app to request the WRITE_EXTERNAL_STORAGE
     permission when your app wants to write to its own application-specific directories on external storage" -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
-    <uses-permission android:name="com.android.vending.BILLING" />\
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18"/>
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18"/>
+    <uses-permission android:name="com.android.vending.BILLING"/>\
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
-    <application android:allowBackup="true" android:fullBackupContent="true" android:label="@string/app_name"
-        android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme">
-        <meta-data android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+    <application
+        android:allowBackup="true"
+        android:fullBackupContent="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyAdPCD1-Iega7MlRRfMH-I_65ewXjGYvKQ"/>
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
         <!-- Splash Screen -->
         <activity
             android:name="pulseanddecibels.jp.yamatenki.activity.SplashActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <!-- Main activity -->
         <activity
             android:name="pulseanddecibels.jp.yamatenki.activity.MainActivity"
-            android:label="@string/app_name" >
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
         </activity>
 
         <!-- Mountain Search Activity -->
         <activity
             android:name=".activity.SearchableActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                android:resource="@xml/searchable"/>
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
@@ -52,46 +69,63 @@
         <!-- Mountain Forecast Activity -->
         <activity
             android:name=".activity.MountainForecastActivity"
-            android:label="@string/app_name">
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.SearchableActivity" />
+                android:value=".activity.SearchableActivity"/>
         </activity>
 
         <!-- Area Search Activity -->
-        <activity android:name=".activity.AreaSearchActivity"
-            android:label="@string/app_name">
+        <activity
+            android:name=".activity.AreaSearchActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="pulseanddecibels.jp.yamatenki.activity.MainActivity" />
+                android:value="pulseanddecibels.jp.yamatenki.activity.MainActivity"/>
         </activity>
 
         <!-- Memo Edit Activity -->
-        <activity android:name=".activity.MemoDetailActivity"
-                  android:label="@string/app_name">
+        <activity
+            android:name=".activity.MemoDetailActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
         </activity>
 
         <!-- Checklist Activity -->
-        <activity android:name=".activity.ChecklistActivity"
-                  android:label="@string/app_name">
+        <activity
+            android:name=".activity.ChecklistActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
         </activity>
 
         <!-- Settings Activity -->
-        <activity android:name=".activity.SettingsActivity"
-                  android:label="@string/app_name">
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+                android:value=".activity.MainActivity"/>
         </activity>
 
-        <activity android:name="com.facebook.FacebookActivity"
-                  android:configChanges=
-                      "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-                  android:theme="@android:style/Theme.Translucent.NoTitleBar"
-                  android:label="@string/app_name" />
-        <provider android:authorities="com.facebook.app.FacebookContentProvider1676238312590862"
-                  android:name="com.facebook.FacebookContentProvider"
-                  android:exported="true" />
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider1676238312590862"
+            android:exported="true"/>
 
     </application>
 

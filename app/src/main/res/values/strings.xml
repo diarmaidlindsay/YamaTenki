@@ -112,9 +112,6 @@
     <string name="dialog_downloading_list">山リストを更新中…</string>
     <string name="dialog_downloading_status">山行指数を更新中…</string>
     <string name="dialog_updating_forecast">山情報を更新中…</string>
-    <string name="button_1_month_sub">Purchase 1 month subscription</string>
-    <string name="button_6_month_sub">Purchase 6 month subscription</string>
-    <string name="button_1_year_sub">Purchase 1 year subscription</string>
     <string name="text_weekly_forecast_header">週間予測</string>
     <string name="text_weekly_forecast_subheader">各日 9 時時点の情報を表示しています。</string>
     <string name="text_subscription_details">すべてのチケットは自動更新となっております。更新しない場合やチケットの変更は更新日の前日までに利用の停止・変更を行ってください。詳しくはヘルプをご覧ください。</string>
@@ -131,4 +128,7 @@
     <string name="text_go_to_subscription_screen">チケットを見に行く 月額¥96~</string>
     <string name="text_dialog_please_wait">しばらくお待ちください</string>
     <string name="toast_height_min_max_error">標高は「最低値〜最高値」の順に入力してください。</string>
+    <string name="toast_google_account_not_setup">この携帯のGoogleアカウントが設定されていません。</string>
+    <string name="toast_error_location_denied">位置情報の使用を許可しない場合は「近くの山20選」を使えません。</string>
+    <string name="toast_error_location_dont_ask_again">「近くの山20選」を使う場合は位置情報の使用を許可してください。設定＞アプリ＞YamaTenki>許可＞位置情報</string>
 </resources>

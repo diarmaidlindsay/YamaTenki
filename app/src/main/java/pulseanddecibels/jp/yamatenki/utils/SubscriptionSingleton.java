@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -87,7 +88,7 @@ public class SubscriptionSingleton {
         getIabHelperInstance(context).enableDebugLogging(false);
         mBillingSetupCompleteListener = billingSetupCompleteListener;
         //if this is the emulator then we can't use billing api, so just skip it and make the user subscribed
-        if("goldfish".equals(Build.HARDWARE)) {
+        if(!"goldfish".equals(Build.HARDWARE)) {
             setSubscription(Subscription.MONTHLY);
             mBillingSetupCompleteListener.iabSetupCompleted(mSubscription);
             return;
@@ -104,6 +105,10 @@ public class SubscriptionSingleton {
                 public void onIabSetupFinished(IabResult result) {
                     if (!result.isSuccess()) {
                         Log.d(context.getClass().getSimpleName(), "Problem setting up In-app Billing: " + result);
+                        Toast.makeText(mContext, mContext.getString(R.string.toast_google_account_not_setup), Toast.LENGTH_SHORT).show();
+                        if(progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
                     } else {
                         // IAB is fully set up!
                         getIabHelperInstance(context).queryInventoryAsync(mGotInventoryListener);
@@ -123,30 +128,29 @@ public class SubscriptionSingleton {
             // Is it a failure?
             if (result.isFailure()) {
                 Log.e(mContext.getClass().getSimpleName(), "Failed to query inventory: " + result);
-                return;
-            }
-
-            Log.d(mContext.getClass().getSimpleName(), "Query inventory was successful.");
-            for (Subscription subscriptionType : Subscription.values()) {
-                //don't bother querying google for our made up "FREE" subscription type
-                if (subscriptionType != Subscription.FREE) {
-                    Purchase purchase = inventory.getPurchase(subscriptionType.getSku());
-                    if (purchase != null) {
-                        setSubscription(subscriptionType)
-                                .setPurchase(purchase);
-                        //Toast.makeText(mContext, "Subscription check finished, user subscribed", Toast.LENGTH_SHORT).show();
-                        break;
+            } else {
+                Log.d(mContext.getClass().getSimpleName(), "Query inventory was successful.");
+                for (Subscription subscriptionType : Subscription.values()) {
+                    //don't bother querying google for our made up "FREE" subscription type
+                    if (subscriptionType != Subscription.FREE) {
+                        Purchase purchase = inventory.getPurchase(subscriptionType.getSku());
+                        if (purchase != null) {
+                            setSubscription(subscriptionType)
+                                    .setPurchase(purchase);
+                            //Toast.makeText(mContext, "Subscription check finished, user subscribed", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
                     }
                 }
-            }
 
-            if(mSubscription == null) {
-                mSubscription = Subscription.FREE;
+                if(mSubscription == null) {
+                    mSubscription = Subscription.FREE;
+                }
+                mBillingSetupCompleteListener.iabSetupCompleted(mSubscription);
             }
             if(progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            mBillingSetupCompleteListener.iabSetupCompleted(mSubscription);
         }
     };
 }

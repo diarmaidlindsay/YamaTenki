@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
 
 android {
     signingConfigs {
@@ -14,8 +15,7 @@ android {
     defaultConfig {
         applicationId "pulseanddecibels.jp.yamatenki"
         minSdkVersion 15
-        //if we target 23+ it means we have to rework the permissions system completely for location and sd card access
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -41,4 +41,6 @@ dependencies {
     compile 'de.greenrobot:greendao:2.0.0'
     compile 'com.code-troopers.betterpickers:library:2.2.1'
     compile 'com.facebook.android:facebook-android-sdk:4.6.0'
+    compile 'com.github.hotchemi:permissionsdispatcher:2.0.1'
+    apt 'com.github.hotchemi:permissionsdispatcher-processor:2.0.1'
 }

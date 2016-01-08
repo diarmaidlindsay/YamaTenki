@@ -83,7 +83,7 @@ public class MountainListAdapter extends BaseAdapter {
     private GeoLocation here;
     private String searchString; //in case we have to resubmit the query after update in child activity
 
-    private Subscription subscription;
+    private Subscription subscription = null;
 
     public MountainListAdapter(Context context) {
         this.mContext = context;
@@ -136,7 +136,7 @@ public class MountainListAdapter extends BaseAdapter {
         viewHolder.height.setText(String.format("%sm", String.valueOf(mountain.getHeight())));
 
         final long mountainId = mountain.getId();
-        if(subscription == Subscription.FREE && !mountain.getTopMountain()) {
+        if(getSubscription() == Subscription.FREE && !mountain.getTopMountain()) {
             viewHolder.difficulty.setImageResource(DIFFICULTY_SMALL_IMAGES.get(0));
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -183,7 +183,7 @@ public class MountainListAdapter extends BaseAdapter {
                 }
             });
 
-        } else {
+        } else if(getSubscription() != null) {
             viewHolder.difficulty.setImageResource(DIFFICULTY_SMALL_IMAGES.get(currentMountainStatus.get(mountainId)));
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override

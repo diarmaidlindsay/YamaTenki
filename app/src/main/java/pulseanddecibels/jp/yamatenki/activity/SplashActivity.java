@@ -46,7 +46,7 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         settings = new Settings(this);
         //TODO : Remove debug mode before release
-        Settings.setDebugMode(true);
+        Settings.setDebugMode(false);
         setContentView(R.layout.activity_splash);
         FacebookSdk.sdkInitialize(getApplicationContext());
         JodaTimeAndroid.init(this);

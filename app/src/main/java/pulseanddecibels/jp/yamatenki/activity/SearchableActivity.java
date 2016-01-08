@@ -594,6 +594,7 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
     public void iabSetupCompleted(Subscription subscription) {
         if(mountainListAdapter != null) {
             mountainListAdapter.setSubscription(subscription);
+            mountainListAdapter.notifyDataSetInvalidated();
         }
     }
 }

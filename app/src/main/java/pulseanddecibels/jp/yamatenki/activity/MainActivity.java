@@ -1,9 +1,14 @@
 package pulseanddecibels.jp.yamatenki.activity;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,22 +20,27 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.RuntimePermissions;
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
 import pulseanddecibels.jp.yamatenki.utils.Settings;
-import pulseanddecibels.jp.yamatenki.utils.SubscriptionSingleton;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/24.
  * Copyright Pulse and Decibels 2015
  */
+@RuntimePermissions
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private LocationRequest mLocationRequest;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +52,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         mountainNameSearchButton.setTypeface(Utils.getHannariTypeFace(this));
         Button nearMountainSearchButton = (Button) findViewById(R.id.button_main_20_closest_search);
         nearMountainSearchButton.setTypeface(Utils.getHannariTypeFace(this));
+        progressDialog = new ProgressDialog(this);
         Button areaSearchButton = (Button) findViewById(R.id.button_main_area_search);
         areaSearchButton.setTypeface(Utils.getHannariTypeFace(this));
         Button heightSearchButton = (Button) findViewById(R.id.button_main_height_search);
@@ -75,13 +86,9 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             @Override
             public void onClick(View v) {
                 if (mLastLocation != null) {
-                    Intent intent = new Intent(getApplicationContext(), SearchableActivity.class);
-                    intent.putExtra("lat", mLastLocation.getLatitude());
-                    intent.putExtra("long", mLastLocation.getLongitude());
-                    startActivity(intent);
+                    startIntent20ClosestMountains();
                 } else {
-                    if(Settings.isDebugMode())
-                        Toast.makeText(MainActivity.this, "Waiting for current location", Toast.LENGTH_SHORT).show();
+                    MainActivityPermissionsDispatcher.buildGoogleApiClientWithCheck(MainActivity.this);
                 }
             }
         });
@@ -127,30 +134,59 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             }
         });
 
-        buildGoogleApiClient();
         JSONDownloader.getMountainListFromServer(this);
         JSONDownloader.getMountainStatusFromServer(this);
     }
 
-    private void buildGoogleApiClient() {
+    @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    public void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(MainActivity.this)
                 .addConnectionCallbacks(MainActivity.this)
                 .addOnConnectionFailedListener(MainActivity.this)
                 .addApi(LocationServices.API)
                 .build();
+        mGoogleApiClient.connect();
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(true);
+        progressDialog.setMessage(MainActivity.this.getString(R.string.text_dialog_please_wait));
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                mGoogleApiClient.disconnect();
+            }
+        });
+        progressDialog.show();
+    }
+
+    private void startIntent20ClosestMountains() {
+        Intent intent = new Intent(getApplicationContext(), SearchableActivity.class);
+        intent.putExtra("lat", mLastLocation.getLatitude());
+        intent.putExtra("long", mLastLocation.getLongitude());
+        startActivity(intent);
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
+        try {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                    mGoogleApiClient);
+        } catch (SecurityException e) {
+            //do nothing! The PermissionsDispatcher framework handles this
+            Log.e("MainActivity", "onConnected : "+e);
+        }
 
         if (mLastLocation == null) {
             mLocationRequest = LocationRequest.create();
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             mLocationRequest.setInterval(30000);
 
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            requestLocationUpdates();
+        } else {
+            if(progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+            startIntent20ClosestMountains();
         }
     }
 
@@ -162,7 +198,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         if(Settings.isDebugMode())
             Toast.makeText(this, "Failed to connect to Google Play Service...", Toast.LENGTH_SHORT).show();
     }
@@ -171,32 +207,37 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     public void onLocationChanged(Location location) {
         mLastLocation = location;
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        if(progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        startIntent20ClosestMountains();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+        if(mGoogleApiClient != null && mGoogleApiClient.isConnected() && progressDialog != null && progressDialog.isShowing()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        } else {
-            if(Settings.isDebugMode())
-                Toast.makeText(this, "Couldn't connect to Google Play Service", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && mLastLocation == null) {
+        //if the user pressed "home" when we're still looking for updates, resume the process now
+        if(progressDialog != null && progressDialog.isShowing() && mGoogleApiClient != null && mLastLocation == null) {
+            if(!mGoogleApiClient.isConnected()) {
+                mGoogleApiClient.connect();
+            }
+        }
+    }
+
+    public void requestLocationUpdates() {
+        try {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        } catch (SecurityException e) {
+            //do nothing! The PermissionsDispatcher framework handles this
+            Log.e("MainActivity", "requestLocationUpdates : "+e);
         }
     }
 
@@ -209,8 +250,19 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        SubscriptionSingleton.getInstance(this).disposeIabHelperInstance(this);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // NOTE: delegate the permission handling to generated method
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @OnPermissionDenied({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    void onLocationDenied() {
+        Toast.makeText(this, getString(R.string.toast_error_location_denied), Toast.LENGTH_LONG).show();
+    }
+
+    @OnNeverAskAgain({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    void onLocationNeverAskAgain() {
+        Toast.makeText(this, getString(R.string.toast_error_location_dont_ask_again), Toast.LENGTH_LONG).show();
     }
 }

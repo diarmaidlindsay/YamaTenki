@@ -122,7 +122,13 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
     private Mountain mountain;
     private MapView mMapView;
     private CallbackManager callbackManager;
-    private Subscription mSubscription;
+    private Subscription mSubscription = Subscription.FREE;
+
+    LinearLayout todayAMForecast;
+    LinearLayout todayPMForecast;
+    LinearLayout tomorrowAMForecast;
+    LinearLayout tomorrowPMForecast;
+    LinearLayout weeklyForecast;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -139,15 +145,6 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         mountainId = arguments.getLong("mountainId");
         MountainDao mountainDao = Database.getInstance(this).getMountainDao();
         mountain = mountainDao.load(mountainId);
-        if(savedInstanceState != null && savedInstanceState.getSerializable("subscription") != null) {
-            Serializable sub = savedInstanceState.getSerializable("subscription");
-            mSubscription = (Subscription) sub;
-            Log.d("MFA : onCreate", "Restoring old subscription");
-            iabSetupCompleted(mSubscription);
-        }
-        else {
-            SubscriptionSingleton.getInstance(this).initGoogleBillingApi(this, this);
-        }
         title = (TextView) findViewById(R.id.text_forecast_header);
         title.setTypeface(Utils.getHannariTypeFace(this));
         title.setText(mountain.getTitle());
@@ -228,15 +225,51 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         Button addMemoButton = (Button) findViewById(R.id.button_add_memo);
         addMemoButton.setTypeface(Utils.getHannariTypeFace(this));
         addMemoButton.setOnClickListener(getAddMemoListener());
+
+        initialiseWidgets();
+        JSONDownloader.getMountainForecastFromServer(this, mountain.getYid(), this);
+        if(savedInstanceState != null && savedInstanceState.getSerializable("subscription") != null) {
+            Serializable sub = savedInstanceState.getSerializable("subscription");
+            mSubscription = (Subscription) sub;
+            Log.d("MFA : onCreate", "Restoring old subscription");
+            iabSetupCompleted(mSubscription);
+        }
+        else {
+            SubscriptionSingleton.getInstance(this).initGoogleBillingApi(this, this);
+        }
+    }
+
+    private void updateForecastVisibilty() {
+        FrameLayout tomorrowAMForecastFrame = (FrameLayout) tomorrowAMForecast.findViewById(R.id.table_frame);
+        FrameLayout tomorrowPMForecastFrame = (FrameLayout) tomorrowPMForecast.findViewById(R.id.table_frame);
+        FrameLayout weeklyForecastFrame = (FrameLayout) weeklyForecast.findViewById(R.id.table_frame);
+
+        if (mSubscription == Subscription.FREE) {
+            tomorrowAMForecastFrame.setOnTouchListener(getSubscriptionLockImageOnTouchListener());
+            tomorrowPMForecastFrame.setOnTouchListener(getSubscriptionLockImageOnTouchListener());
+            weeklyForecastFrame.setOnTouchListener(getSubscriptionLockImageOnTouchListener());
+
+            tomorrowAMForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1, 4))));
+            tomorrowPMForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1, 4))));
+            weeklyForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1, 4))));
+        } else {
+            tomorrowAMForecastFrame.setOnTouchListener(null);
+            tomorrowPMForecastFrame.setOnTouchListener(null);
+            weeklyForecastFrame.setOnTouchListener(null);
+
+            tomorrowAMForecastFrame.setForeground(null);
+            tomorrowPMForecastFrame.setForeground(null);
+            weeklyForecastFrame.setForeground(null);
+        }
     }
 
     private void initialiseWidgets() {
         ScrollView mountainForecastScrollView = (ScrollView) findViewById(R.id.scroll_forecasts);
-        LinearLayout todayAMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.today_am_forecast);
-        LinearLayout todayPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.today_pm_forecast);
-        LinearLayout tomorrowAMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_am_forecast);
-        LinearLayout tomorrowPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_pm_forecast);
-        LinearLayout weeklyForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.weekly_forecast);
+        todayAMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.today_am_forecast);
+        todayPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.today_pm_forecast);
+        tomorrowAMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_am_forecast);
+        tomorrowPMForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.tomorrow_pm_forecast);
+        weeklyForecast = (LinearLayout) mountainForecastScrollView.findViewById(R.id.weekly_forecast);
         //add in correct order because index matters for looking up date
         scrollViewElements.clear();
         scrollViewElements.add(new ForecastScrollViewElement(todayAMForecast, false));
@@ -245,19 +278,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         scrollViewElements.add(new ForecastScrollViewElement(tomorrowPMForecast, false));
         scrollViewElements.add(new ForecastScrollViewElement(weeklyForecast, true));
         //Users without subscriptions can only see today's forecast
-        if (mSubscription == Subscription.FREE) {
-            FrameLayout tomorrowAMForecastFrame = (FrameLayout) tomorrowAMForecast.findViewById(R.id.table_frame);
-            FrameLayout tomorrowPMForecastFrame = (FrameLayout) tomorrowPMForecast.findViewById(R.id.table_frame);
-            FrameLayout weeklyForecastFrame = (FrameLayout) weeklyForecast.findViewById(R.id.table_frame);
-
-            tomorrowAMForecastFrame.setOnTouchListener(getSubscriptionLockImageOnTouchListener());
-            tomorrowPMForecastFrame.setOnTouchListener(getSubscriptionLockImageOnTouchListener());
-            weeklyForecastFrame.setOnTouchListener(getSubscriptionLockImageOnTouchListener());
-
-            tomorrowAMForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1, 4))));
-            tomorrowPMForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1, 4))));
-            weeklyForecastFrame.setForeground(ContextCompat.getDrawable(this, LOCK_IMAGES.get(Utils.getRandomInRange(1, 4))));
-        }
+        updateForecastVisibilty();
     }
 
     private View.OnTouchListener getSubscriptionLockImageOnTouchListener() {
@@ -945,9 +966,10 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
 
     @Override
     public void iabSetupCompleted(Subscription subscription) {
-        mSubscription = subscription;
-        initialiseWidgets();
-        JSONDownloader.getMountainForecastFromServer(this, mountain.getYid(), this);
+        if(mSubscription != subscription) {
+            mSubscription = subscription;
+            updateForecastVisibilty();
+        }
     }
 
     // For now this is used for "Today" and "Tomorrow", ie, short term forecasts

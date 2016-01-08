@@ -42,12 +42,23 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
 
     Settings settings;
     TextView subscriptionSubtitle;
+    PercentRelativeLayout subscriptionSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         settings = new Settings(this);
         setContentView(R.layout.activity_settings);
+        TextView header = (TextView) findViewById(R.id.text_settings_header);
+        header.setTypeface(Utils.getHannariTypeFace(this));
+        PercentRelativeLayout displayWarningSetting = (PercentRelativeLayout) findViewById(R.id.setting_dont_display_warning);
+        initialiseSettingCheckedNoSubtitle(displayWarningSetting, R.string.text_setting_title_warning, "setting_dont_display_warning");
+        PercentRelativeLayout downloadMobileSetting = (PercentRelativeLayout) findViewById(R.id.setting_download_only_wifi);
+        initialiseSettingCheckedNoSubtitle(downloadMobileSetting, R.string.text_setting_title_mobile, "setting_download_only_wifi");
+        PercentRelativeLayout resetChecklistSetting = (PercentRelativeLayout) findViewById(R.id.setting_reset_checklist);
+        initialiseSettingCheckedNoSubtitle(resetChecklistSetting, R.string.text_setting_title_checklist_reset, "setting_reset_checklist");
+        subscriptionSetting = (PercentRelativeLayout) findViewById(R.id.setting_subscription);
+        initialiseSubscription(subscriptionSetting);
         SubscriptionSingleton.getInstance(this).initGoogleBillingApi(this, this);
     }
 
@@ -61,7 +72,6 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
     }
 
     private View.OnClickListener getSubscriptionOnClickListener() {
-        final IabHelper mBillingHelper = SubscriptionSingleton.getInstance(this).getIabHelperInstance(this);
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,33 +91,30 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
                 initialiseSubscriptionListItem(month6Sub, "６ヶ月", "107", "640", R.drawable.discount10, R.color.sub_6month);
                 initialiseSubscriptionListItem(yearSub, "１年", "96", "1,150", R.drawable.discount20, R.color.sub_year);
 
-                month1Sub.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mBillingHelper.launchSubscriptionPurchaseFlow(SettingsActivity.this, Subscription.MONTHLY.getSku(), 100, SettingsActivity.this);
-                        dialog.dismiss();
-                    }
-                });
-                month6Sub.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mBillingHelper.launchSubscriptionPurchaseFlow(SettingsActivity.this, Subscription.MONTH6.getSku(), 100, SettingsActivity.this);
-                        dialog.dismiss();
-                    }
-                });
-                yearSub.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mBillingHelper.launchSubscriptionPurchaseFlow(SettingsActivity.this, Subscription.YEARLY.getSku(), 100, SettingsActivity.this);
-                        dialog.dismiss();
-                    }
-                });
+                month1Sub.setOnClickListener(getSubButtonOnClickListener(Subscription.MONTHLY.getSku(), dialog));
+                month6Sub.setOnClickListener(getSubButtonOnClickListener(Subscription.MONTH6.getSku(), dialog));
+                yearSub.setOnClickListener(getSubButtonOnClickListener(Subscription.YEARLY.getSku(), dialog));
 
                 //show google help on how to unsubscribe when "Help" is pressed in the TextView
                 Pattern pattern = Pattern.compile("ヘルプ");
                 TextView subscriptionHelp = (TextView) dialog.findViewById(R.id.subscription_help);
-                Linkify.addLinks(subscriptionHelp, pattern, "https://support.google.com/googleplay/answer/2476088?hl=ja");
+                    Linkify.addLinks(subscriptionHelp, pattern, "https://support.google.com/googleplay/answer/2476088?hl=ja");
                 dialog.show();
+            }
+        };
+    }
+
+    private View.OnClickListener getSubButtonOnClickListener(final String sku, final Dialog dialog) {
+        final IabHelper mBillingHelper = SubscriptionSingleton.getInstance(this).getIabHelperInstance(this);
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mBillingHelper.subscriptionsSupported()) {
+                    mBillingHelper.launchSubscriptionPurchaseFlow(SettingsActivity.this, sku, 100, SettingsActivity.this);
+                } else {
+                    Toast.makeText(SettingsActivity.this, getString(R.string.toast_google_account_not_setup), Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
             }
         };
     }
@@ -228,16 +235,7 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
 
     @Override
     public void iabSetupCompleted(Subscription subscription) {
-        TextView header = (TextView) findViewById(R.id.text_settings_header);
-        header.setTypeface(Utils.getHannariTypeFace(this));
-        PercentRelativeLayout subscriptionSetting = (PercentRelativeLayout) findViewById(R.id.setting_subscription);
-        initialiseSubscription(subscriptionSetting);
-        PercentRelativeLayout displayWarningSetting = (PercentRelativeLayout) findViewById(R.id.setting_dont_display_warning);
-        initialiseSettingCheckedNoSubtitle(displayWarningSetting, R.string.text_setting_title_warning, "setting_dont_display_warning");
-        PercentRelativeLayout downloadMobileSetting = (PercentRelativeLayout) findViewById(R.id.setting_download_only_wifi);
-        initialiseSettingCheckedNoSubtitle(downloadMobileSetting, R.string.text_setting_title_mobile, "setting_download_only_wifi");
-        PercentRelativeLayout resetChecklistSetting = (PercentRelativeLayout) findViewById(R.id.setting_reset_checklist);
-        initialiseSettingCheckedNoSubtitle(resetChecklistSetting, R.string.text_setting_title_checklist_reset, "setting_reset_checklist");
+        subscriptionSubtitle.setText(SubscriptionSingleton.getInstance(this).getSubscriptionStatus());
 
         Bundle arguments = getIntent().getExtras();
         if (arguments != null) {
@@ -247,6 +245,6 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
                 subscriptionSetting.callOnClick();
             }
         }
-        subscriptionSubtitle.setText(SubscriptionSingleton.getInstance(this).getSubscriptionStatus());
+
     }
 }
