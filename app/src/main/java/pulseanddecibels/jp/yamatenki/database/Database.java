@@ -55,13 +55,26 @@ public class Database {
 
     public static DaoSession getInstance(Context context) {
         if (daoSession == null) {
-            //TODO : DevOpenHelper is only for DEVELOPMENT. Switch to OpenHelper for production.
-            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, "yama-tenki.db", null);
+            //TODO : DevOpenHelper is only for DEVELOPMENT. Switch to MyOpenHelper for production.
+//            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, "yama-tenki.db", null);
+            MyOpenHelper helper = new MyOpenHelper(context, "yama-tenki.db", null);
             db = helper.getWritableDatabase();
             daoMaster = new DaoMaster(db);
             daoSession = daoMaster.newSession();
         }
         return daoSession;
+    }
+
+    public static class MyOpenHelper extends DaoMaster.OpenHelper {
+
+        public MyOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory) {
+            super(context, name, factory);
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            // if we need to add new columns or tables or do data migration in later versions of Yama Tenki, the code should go here
+        }
     }
 
     public static List<String> parsePrefectureCSV(Context context) throws IOException {
