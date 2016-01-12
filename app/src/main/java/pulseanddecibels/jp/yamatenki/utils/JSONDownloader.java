@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -45,6 +46,10 @@ public class JSONDownloader {
      */
     static Context mContext;
     private static OnDownloadComplete mDownloadComplete;
+
+    private static boolean isDownloadOnlyWifi() {
+        return new Settings(mContext).getSetting("setting_download_only_wifi");
+    }
 
     public static void getMountainListFromServer(Context context) {
         mContext = context;
@@ -96,6 +101,10 @@ public class JSONDownloader {
 
         @Override
         protected Boolean doInBackground(String... params) {
+            if(isDownloadOnlyWifi() && !Utils.isConnectedToWifi(mContext)) {
+                return true;
+            }
+
             String json = downloadJSON(getURL());
             if (json != null) {
                 publishProgress(33);
@@ -178,6 +187,10 @@ public class JSONDownloader {
 
         @Override
         protected Boolean doInBackground(String... params) {
+            if(isDownloadOnlyWifi() && !Utils.isConnectedToWifi(mContext)) {
+                return true;
+            }
+
             String json = downloadJSON(getURL());
             if (json != null) {
                 publishProgress(33);
@@ -261,6 +274,10 @@ public class JSONDownloader {
         // Do the long-running work in here
         @Override
         protected Boolean doInBackground(String... params) {
+            if(isDownloadOnlyWifi() && !Utils.isConnectedToWifi(mContext)) {
+                return true;
+            }
+
             String yid = params[0];
             String url = String.format(getURL(), yid);
             existingETag = getExistingEtag(yid);
@@ -305,6 +322,10 @@ public class JSONDownloader {
                 Log.i(JSONDownloader.class.getSimpleName(), "Successfully Updated Forecast.");
             } else {
                 Log.e(JSONDownloader.class.getSimpleName(), "Failed to Update Forecast");
+            }
+
+            if(isDownloadOnlyWifi() && !Utils.isConnectedToWifi(mContext)) {
+                Toast.makeText(mContext, mContext.getString(R.string.toast_error_no_connection_wifi), Toast.LENGTH_LONG).show();
             }
 
             mDownloadComplete.downloadingCompleted(result);

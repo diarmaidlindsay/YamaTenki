@@ -40,7 +40,7 @@
     <string name="error_min_max_height">最低標高は最高標高を超えないでください</string>
     <string name="text_my_mountain_list_header">Ｍｙ山リスト</string>
     <string name="button_add_my_mountain">Ｍｙ山リスト\nに登録</string>
-    <string name="button_remove_my_mountain">Ｍｙ山リスト\nに登録解除</string>
+    <string name="button_remove_my_mountain">Ｍｙ山リスト\nから登録解除</string>
     <string name="button_add_memo">登った山メモ\nに登録</string>
     <string name="text_memo_header">登った山メモ</string>
     <string name="text_memo_time_edit">日時：　</string>
@@ -132,4 +132,5 @@
     <string name="toast_error_location_denied">位置情報の使用を許可しない場合は「近くの山20選」を使えません。</string>
     <string name="toast_error_location_dont_ask_again">「近くの山20選」を使う場合は位置情報の使用を許可してください。設定＞アプリ＞YamaTenki>許可＞位置情報</string>
     <string name="button_main_map">山行地図\nで探す</string>
+    <string name="toast_error_no_connection_wifi">情報が更新できません。\n圏外、もしくは詳細設定内の「情報更新」を確認ください。\n詳細設定はトップページから入れます。</string>
 </resources>

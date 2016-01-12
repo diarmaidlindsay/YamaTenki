@@ -3,6 +3,8 @@ package pulseanddecibels.jp.yamatenki.utils;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import java.util.List;
 
@@ -54,4 +56,13 @@ public class Utils {
             return false;
         return Math.abs(Color.blue(color1) - Color.blue(color2)) <= tolerance;
     } // end match
+
+    public static boolean isConnectedToWifi(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
+    }
 }
