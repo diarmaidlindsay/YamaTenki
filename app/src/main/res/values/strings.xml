@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">YamaTenki</string>
+    <string name="app_name">山てんき</string>
     <string name="button_main_20_closest_search">近くの山\n20選</string>
     <string name="button_main_name_search">名前\nで探す</string>
     <string name="button_main_area_search">エリア\nで探す</string>
