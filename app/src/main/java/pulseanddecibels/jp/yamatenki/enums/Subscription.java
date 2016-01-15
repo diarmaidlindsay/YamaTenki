@@ -8,9 +8,9 @@ import pulseanddecibels.jp.yamatenki.utils.Constants;
  */
 public enum Subscription {
     FREE("", "No Subscription"),
-    YEARLY(Constants.SUBSCRIPTION_1_YEAR, "1 year"),
-    MONTH6(Constants.SUBSCRIPTION_6_MONTH, "6 month"),
-    MONTHLY(Constants.SUBSCRIPTION_1_MONTH, "1 month");
+    YEARLY(Constants.SUBSCRIPTION_1_YEAR_SKU, "1 year"),
+    MONTH6(Constants.SUBSCRIPTION_6_MONTH_SKU, "6 month"),
+    MONTHLY(Constants.SUBSCRIPTION_1_MONTH_SKU, "1 month");
 
     private String sku;
     private String displaytext;

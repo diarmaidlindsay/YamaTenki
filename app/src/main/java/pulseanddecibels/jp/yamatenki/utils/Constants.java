@@ -5,7 +5,11 @@ package pulseanddecibels.jp.yamatenki.utils;
  * Copyright Pulse and Decibels 2015
  */
 public class Constants {
-    public static final String SUBSCRIPTION_1_MONTH = "subscription_monthly";
-    public static final String SUBSCRIPTION_6_MONTH = "subscription_6month";
-    public static final String SUBSCRIPTION_1_YEAR = "subscription_1year";
+
+    /**
+     * SKUs for Google Play Store
+     */
+    public static final String SUBSCRIPTION_1_MONTH_SKU = "subscription_1month";
+    public static final String SUBSCRIPTION_6_MONTH_SKU = "subscription_6month";
+    public static final String SUBSCRIPTION_1_YEAR_SKU = "subscription_1year";
 }
