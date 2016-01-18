@@ -41,6 +41,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback, GoogleM
     HashMap<Marker, Long> markerMap = new HashMap<>();
     private Subscription subscription = null;
     GoogleMap googleMap;
+    MapView mMapView;
 
     private final SparseIntArray DIFFICULTY_SMALL_IMAGES = new SparseIntArray() {
         {
@@ -54,18 +55,20 @@ public class MapActivity extends Activity implements OnMapReadyCallback, GoogleM
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        MapView mMapView = (MapView) findViewById(R.id.mapview);
+        if(savedInstanceState != null && savedInstanceState.getSerializable("subscription") != null) {
+            Serializable sub = savedInstanceState.getSerializable("subscription");
+            if(sub != null) {
+                subscription = (Subscription) sub;
+                //need to clear because MapView will crash if it tries to read our Subscription object
+                savedInstanceState.clear();
+            }
+        }
+        mMapView = (MapView) findViewById(R.id.mapview);
         //must call the whole lifecycle http://www.matt-reid.co.uk/blog_post.php?id=93
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
         MapsInitializer.initialize(MapActivity.this);
         mMapView.getMapAsync(this);
-        if(savedInstanceState != null && savedInstanceState.getSerializable("subscription") != null) {
-            Serializable sub = savedInstanceState.getSerializable("subscription");
-            if(sub != null) {
-                subscription = (Subscription) sub;
-            }
-        }
     }
 
     @Override
@@ -124,7 +127,13 @@ public class MapActivity extends Activity implements OnMapReadyCallback, GoogleM
 
         private void doDatabasePreparation() {
             MountainDao mountainDao = Database.getInstance(MapActivity.this).getMountainDao();
-            mountains = mountainDao.loadAll();
+
+            if(subscription == null || subscription == Subscription.FREE) {
+                //Free users can only see top 100 mountains of Japan
+                mountains = mountainDao.queryBuilder().where(MountainDao.Properties.TopMountain.eq(1)).list();
+            } else {
+                mountains = mountainDao.loadAll();
+            }
 
             for(Mountain mountain : mountains) {
                 coordinateHashMap.put(mountain, mountain.getCoordinate());
@@ -170,5 +179,38 @@ public class MapActivity extends Activity implements OnMapReadyCallback, GoogleM
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putSerializable("subscription", subscription);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mMapView != null) {
+            mMapView.onResume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mMapView != null) {
+            mMapView.onPause();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mMapView != null) {
+            mMapView.onDestroy();
+        }
+        SubscriptionSingleton.getInstance(this).disposeIabHelperInstance(this);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if (mMapView != null) {
+            mMapView.onLowMemory();
+        }
     }
 }

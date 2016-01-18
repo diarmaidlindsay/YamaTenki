@@ -232,9 +232,8 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         JSONDownloader.getMountainForecastFromServer(this, mountain.getYid(), this);
         if(savedInstanceState != null && savedInstanceState.getSerializable("subscription") != null) {
             Serializable sub = savedInstanceState.getSerializable("subscription");
-            mSubscription = (Subscription) sub;
             Log.d("MFA : onCreate", "Restoring old subscription");
-            iabSetupCompleted(mSubscription);
+            iabSetupCompleted((Subscription) sub);
         }
         else {
             SubscriptionSingleton.getInstance(this).initGoogleBillingApi(this, this);
