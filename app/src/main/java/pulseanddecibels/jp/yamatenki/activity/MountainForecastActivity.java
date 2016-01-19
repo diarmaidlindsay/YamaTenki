@@ -245,6 +245,20 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         FrameLayout tomorrowPMForecastFrame = (FrameLayout) tomorrowPMForecast.findViewById(R.id.table_frame);
         FrameLayout weeklyForecastFrame = (FrameLayout) weeklyForecast.findViewById(R.id.table_frame);
 
+        for(ForecastScrollViewElement element : scrollViewElements) {
+            boolean isLongTerm = element.getLayout().getId() == R.id.weekly_forecast;
+            boolean isFreeUsersTomorrow = mSubscription ==
+                    Subscription.FREE &&
+                    (element.getLayout().getId() == R.id.tomorrow_am_forecast || element.getLayout().getId() == R.id.tomorrow_pm_forecast);
+            //if not weekly forecast AND not a free user's tomorrow's forecast elements then disable the help buttons
+            if (!isLongTerm && !isFreeUsersTomorrow) {
+                element.getLowWindHelp().setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
+                element.getMidWindHelp().setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
+                element.getHighWindHelp().setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
+                element.getCloudCoverHelp().setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_cloud_cover));
+            }
+        }
+
         if (mSubscription == Subscription.FREE) {
             tomorrowAMForecastFrame.setOnTouchListener(getSubscriptionLockImageOnTouchListener());
             tomorrowPMForecastFrame.setOnTouchListener(getSubscriptionLockImageOnTouchListener());
@@ -1016,17 +1030,6 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
             highWindHelp = (ImageView) highWindRow.findViewById(R.id.help_icon_wind_speed);
             cloudCoverHelp = (ImageView) forecastTable.findViewById(R.id.help_icon_cloud_cover);
 
-            //if not weekly forecast AND not a free user's tomorrow's forecast elements then disable the help buttons
-            if (!longTerm &&
-                    !(mSubscription == Subscription.FREE
-                            && (forecast.getId() == R.id.tomorrow_am_forecast || forecast.getId() == R.id.tomorrow_pm_forecast))
-                    ) {
-                lowWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
-                midWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
-                highWindHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_wind_speed));
-                cloudCoverHelp.setOnClickListener(getHelpDialogOnClickListener(R.string.help_text_cloud_cover));
-            }
-
             final int COLUMN_COUNT = longTermForecast ? 5 : 4;
 
             for (int columnIndex = 0; columnIndex < COLUMN_COUNT; columnIndex++) {
@@ -1094,6 +1097,22 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
 
         public LinearLayout getLayout() {
             return layout;
+        }
+
+        public ImageView getCloudCoverHelp() {
+            return cloudCoverHelp;
+        }
+
+        public ImageView getHighWindHelp() {
+            return highWindHelp;
+        }
+
+        public ImageView getMidWindHelp() {
+            return midWindHelp;
+        }
+
+        public ImageView getLowWindHelp() {
+            return lowWindHelp;
         }
     }
 
