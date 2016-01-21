@@ -39,6 +39,7 @@ import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
 import pulseanddecibels.jp.yamatenki.model.StatusArrayElement;
 import pulseanddecibels.jp.yamatenki.model.WindAndTemperatureElement;
+import pulseanddecibels.jp.yamatenki.utils.Settings;
 
 /**
  * Created by Diarmaid Lindsay on 2015/10/14.
@@ -67,15 +68,23 @@ public class Database {
 
     public static class MyOpenHelper extends DaoMaster.OpenHelper {
 
+        Context mContext;
+
         public MyOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory) {
             super(context, name, factory);
+            mContext = context;
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             // if we need to add new columns or tables or do data migration in later versions of Yama Tenki, the code should go here
             if(oldVersion == 1 && newVersion == 2) {
+                //add Reference City to Forecast
                 db.execSQL("ALTER TABLE 'MOUNTAIN' ADD 'REFERENCE_CITY' TEXT");
+            }
+            if((oldVersion == 1 || oldVersion == 2) && newVersion == 3) {
+                //force re-downloading of mountain list after adding REFERENCE_CITY
+                new Settings(mContext).setListEtag("");
             }
         }
     }
