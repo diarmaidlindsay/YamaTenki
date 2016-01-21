@@ -16,21 +16,49 @@
             android:lines="2"
             android:maxLines="2"/>
 
-        <TextView
-            android:id="@+id/mountain_prefecture"
-            style="@style/MediumBrownText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:id="@+id/mountain_subheader"
             android:layout_below="@id/text_forecast_header"
-            android:layout_centerHorizontal="true"
-            android:textSize="25sp"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/mountain_prefecture"
+                style="@style/MediumBrownText"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingStart="0dp"
+                android:paddingLeft="0dp"
+                android:paddingEnd="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"/>
+
+            <TextView
+                android:id="@+id/mountain_reference_city"
+                style="@style/MediumBrownText"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:paddingEnd="0dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"/>
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/mountain_forecast_current_difficulty"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_widthPercent="60%"
-            android:layout_below="@id/mountain_prefecture"
+            android:layout_below="@id/mountain_subheader"
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/text_search_table_header_difficulty"
             android:adjustViewBounds="true"/>

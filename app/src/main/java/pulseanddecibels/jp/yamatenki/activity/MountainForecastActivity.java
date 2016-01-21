@@ -150,6 +150,9 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         TextView mountainPrefecture = (TextView) findViewById(R.id.mountain_prefecture);
         mountainPrefecture.setTypeface(Utils.getHannariTypeFace(this));
         mountainPrefecture.setText(mountain.getPrefecture().getName());
+        TextView mountainReferenceCity = (TextView) findViewById(R.id.mountain_reference_city);
+        mountainReferenceCity.setTypeface(Utils.getHannariTypeFace(this));
+        mountainReferenceCity.setText(mountain.getReferenceCity());
         ImageView currentDifficultyImage = (ImageView) findViewById(R.id.mountain_forecast_current_difficulty);
         currentDifficultyImage.setImageResource(DIFFICULTY_BIG_IMAGES.get(mountain.getStatus()));
         TextView currentDifficultyText = (TextView) findViewById(R.id.mountain_forecast_current_difficulty_text);

@@ -19,6 +19,7 @@ public class Mountain {
     private String titleExt;
     private String titleEnglish;
     private String kana;
+    private String referenceCity;
     private long prefectureId;
     private long areaId;
     private Integer height;
@@ -50,13 +51,14 @@ public class Mountain {
         this.id = id;
     }
 
-    public Mountain(Long id, String yid, String title, String titleExt, String titleEnglish, String kana, long prefectureId, long areaId, Integer height, Boolean topMountain) {
+    public Mountain(Long id, String yid, String title, String titleExt, String titleEnglish, String kana, String referenceCity, long prefectureId, long areaId, Integer height, Boolean topMountain) {
         this.id = id;
         this.yid = yid;
         this.title = title;
         this.titleExt = titleExt;
         this.titleEnglish = titleEnglish;
         this.kana = kana;
+        this.referenceCity = referenceCity;
         this.prefectureId = prefectureId;
         this.areaId = areaId;
         this.height = height;
@@ -115,6 +117,14 @@ public class Mountain {
 
     public void setKana(String kana) {
         this.kana = kana;
+    }
+
+    public String getReferenceCity() {
+        return referenceCity;
+    }
+
+    public void setReferenceCity(String referenceCity) {
+        this.referenceCity = referenceCity;
     }
 
     public long getPrefectureId() {

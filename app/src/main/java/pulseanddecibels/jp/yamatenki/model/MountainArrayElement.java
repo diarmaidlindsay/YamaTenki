@@ -12,18 +12,20 @@ public class MountainArrayElement {
     private final String titleExt;
     private final String titleEnglish;
     private final String kana;
+    private final String referenceCity;
     private final CoordinateElement coordinate;
     private final String prefecture;
     private final int area;
     private final int height;
     private final int topMountain;
 
-    public MountainArrayElement(String yid, String title, String titleExt, String titleEnglish, String kana, CoordinateElement coordinate, String prefecture, int area, int height, int topMountain) {
+    public MountainArrayElement(String yid, String title, String titleExt, String titleEnglish, String kana, String referenceCity, CoordinateElement coordinate, String prefecture, int area, int height, int topMountain) {
         this.yid = yid;
         this.title = title;
         this.titleExt = titleExt;
         this.titleEnglish = titleEnglish;
         this.kana = kana;
+        this.referenceCity = referenceCity;
         this.coordinate = coordinate;
         this.prefecture = prefecture;
         this.area = area;
@@ -69,5 +71,9 @@ public class MountainArrayElement {
 
     public int getTopMountain() {
         return topMountain;
+    }
+
+    public String getReferenceCity() {
+        return referenceCity;
     }
 }

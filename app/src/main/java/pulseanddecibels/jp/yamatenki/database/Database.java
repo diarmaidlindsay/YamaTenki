@@ -74,6 +74,9 @@ public class Database {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             // if we need to add new columns or tables or do data migration in later versions of Yama Tenki, the code should go here
+            if(oldVersion == 1 && newVersion == 2) {
+                db.execSQL("ALTER TABLE 'MOUNTAIN' ADD 'REFERENCE_CITY' TEXT");
+            }
         }
     }
 
@@ -158,7 +161,7 @@ public class Database {
             yids.add(key);
             Area area = areaDao.queryBuilder().where(AreaDao.Properties.Id.eq(element.getArea())).unique();
             Prefecture prefecture = prefectureDao.queryBuilder().where(PrefectureDao.Properties.Name.eq(element.getPrefecture().trim())).unique();
-            Mountain mountain = new Mountain(null, element.getYid(), element.getTitle(), element.getTitleExt(), element.getTitleEnglish(), element.getKana(),
+            Mountain mountain = new Mountain(null, element.getYid(), element.getTitle(), element.getTitleExt(), element.getTitleEnglish(), element.getKana(), element.getReferenceCity(),
                     prefecture.getId(), area.getId(), element.getHeight(), element.getTopMountain() == 1);
             mountainList.add(mountain);
             Coordinate coordinate = new Coordinate(null, (float) element.getCoordinate().getLatitude(), (float) element.getCoordinate().getLongitude());

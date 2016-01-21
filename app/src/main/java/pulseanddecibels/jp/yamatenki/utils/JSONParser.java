@@ -130,6 +130,7 @@ public class JSONParser {
         String titleExt = mountain.optString("titleExt");
         String titleEnglish = mountain.optString("titleEnglish");
         String kana = mountain.optString("kana");
+        String referenceCity = mountain.optString("referenceCity");
         JSONObject coordinateObject = mountain.getJSONObject("coordinate");
         double latitude = coordinateObject.optDouble("lat");
         double longitude = coordinateObject.optDouble("lng");
@@ -139,7 +140,7 @@ public class JSONParser {
         int height = mountain.optInt("height");
         int topMountain = mountain.optInt("topMountain");
 
-        return new MountainArrayElement(yid, title, titleExt, titleEnglish, kana, coordinate, prefecture,
+        return new MountainArrayElement(yid, title, titleExt, titleEnglish, kana, referenceCity, coordinate, prefecture,
                 area, height, topMountain);
     }
 

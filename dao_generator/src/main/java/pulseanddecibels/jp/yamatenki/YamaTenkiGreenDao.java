@@ -35,6 +35,7 @@ public class YamaTenkiGreenDao {
         mountain.addStringProperty("titleExt");
         mountain.addStringProperty("titleEnglish");
         mountain.addStringProperty("kana");
+        mountain.addStringProperty("referenceCity");
         Property prefectureId = mountain.addLongProperty("prefectureId").notNull().getProperty();
         Property areaId = mountain.addLongProperty("areaId").notNull().getProperty();
         mountain.addIntProperty("height");

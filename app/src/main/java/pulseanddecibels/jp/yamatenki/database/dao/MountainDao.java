@@ -31,10 +31,11 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
         public final static Property TitleExt = new Property(3, String.class, "titleExt", false, "TITLE_EXT");
         public final static Property TitleEnglish = new Property(4, String.class, "titleEnglish", false, "TITLE_ENGLISH");
         public final static Property Kana = new Property(5, String.class, "kana", false, "KANA");
-        public final static Property PrefectureId = new Property(6, long.class, "prefectureId", false, "PREFECTURE_ID");
-        public final static Property AreaId = new Property(7, long.class, "areaId", false, "AREA_ID");
-        public final static Property Height = new Property(8, Integer.class, "height", false, "HEIGHT");
-        public final static Property TopMountain = new Property(9, Boolean.class, "topMountain", false, "TOP_MOUNTAIN");
+        public final static Property ReferenceCity = new Property(6, String.class, "referenceCity", false, "REFERENCE_CITY");
+        public final static Property PrefectureId = new Property(7, long.class, "prefectureId", false, "PREFECTURE_ID");
+        public final static Property AreaId = new Property(8, long.class, "areaId", false, "AREA_ID");
+        public final static Property Height = new Property(9, Integer.class, "height", false, "HEIGHT");
+        public final static Property TopMountain = new Property(10, Boolean.class, "topMountain", false, "TOP_MOUNTAIN");
     }
 
     private DaoSession daoSession;
@@ -59,10 +60,11 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
                 "'TITLE_EXT' TEXT," + // 3: titleExt
                 "'TITLE_ENGLISH' TEXT," + // 4: titleEnglish
                 "'KANA' TEXT," + // 5: kana
-                "'PREFECTURE_ID' INTEGER NOT NULL ," + // 6: prefectureId
-                "'AREA_ID' INTEGER NOT NULL ," + // 7: areaId
-                "'HEIGHT' INTEGER," + // 8: height
-                "'TOP_MOUNTAIN' INTEGER);"); // 9: topMountain
+                "'REFERENCE_CITY' TEXT," + // 6: referenceCity
+                "'PREFECTURE_ID' INTEGER NOT NULL ," + // 7: prefectureId
+                "'AREA_ID' INTEGER NOT NULL ," + // 8: areaId
+                "'HEIGHT' INTEGER," + // 9: height
+                "'TOP_MOUNTAIN' INTEGER);"); // 10: topMountain
     }
 
     /** Drops the underlying database table. */
@@ -105,17 +107,22 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
         if (kana != null) {
             stmt.bindString(6, kana);
         }
-        stmt.bindLong(7, entity.getPrefectureId());
-        stmt.bindLong(8, entity.getAreaId());
+ 
+        String referenceCity = entity.getReferenceCity();
+        if (referenceCity != null) {
+            stmt.bindString(7, referenceCity);
+        }
+        stmt.bindLong(8, entity.getPrefectureId());
+        stmt.bindLong(9, entity.getAreaId());
  
         Integer height = entity.getHeight();
         if (height != null) {
-            stmt.bindLong(9, height);
+            stmt.bindLong(10, height);
         }
  
         Boolean topMountain = entity.getTopMountain();
         if (topMountain != null) {
-            stmt.bindLong(10, topMountain ? 1l: 0l);
+            stmt.bindLong(11, topMountain ? 1l: 0l);
         }
     }
 
@@ -141,10 +148,11 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // titleExt
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // titleEnglish
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // kana
-            cursor.getLong(offset + 6), // prefectureId
-            cursor.getLong(offset + 7), // areaId
-            cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8), // height
-            cursor.isNull(offset + 9) ? null : cursor.getShort(offset + 9) != 0 // topMountain
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // referenceCity
+            cursor.getLong(offset + 7), // prefectureId
+            cursor.getLong(offset + 8), // areaId
+            cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9), // height
+            cursor.isNull(offset + 10) ? null : cursor.getShort(offset + 10) != 0 // topMountain
         );
         return entity;
     }
@@ -158,10 +166,11 @@ public class MountainDao extends AbstractDao<Mountain, Long> {
         entity.setTitleExt(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setTitleEnglish(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setKana(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setPrefectureId(cursor.getLong(offset + 6));
-        entity.setAreaId(cursor.getLong(offset + 7));
-        entity.setHeight(cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8));
-        entity.setTopMountain(cursor.isNull(offset + 9) ? null : cursor.getShort(offset + 9) != 0);
+        entity.setReferenceCity(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setPrefectureId(cursor.getLong(offset + 7));
+        entity.setAreaId(cursor.getLong(offset + 8));
+        entity.setHeight(cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9));
+        entity.setTopMountain(cursor.isNull(offset + 10) ? null : cursor.getShort(offset + 10) != 0);
      }
     
     /** @inheritdoc */
