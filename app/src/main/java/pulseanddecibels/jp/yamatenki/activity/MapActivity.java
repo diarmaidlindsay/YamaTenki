@@ -200,6 +200,10 @@ public class MapActivity extends Activity implements OnMapReadyCallback, GoogleM
     @Override
     public void onDestroy() {
         super.onDestroy();
+        markerMap.clear();
+        if(googleMap != null) {
+            googleMap.clear();
+        }
         if (mMapView != null) {
             mMapView.onDestroy();
         }
