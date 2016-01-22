@@ -1,7 +1,9 @@
 package pulseanddecibels.jp.yamatenki.database;
 
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.util.SparseIntArray;
 
 import java.io.BufferedReader;
@@ -78,11 +80,13 @@ public class Database {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             // if we need to add new columns or tables or do data migration in later versions of Yama Tenki, the code should go here
-            if(oldVersion == 1 && newVersion == 2) {
+            if(oldVersion < 4) {
                 //add Reference City to Forecast
-                db.execSQL("ALTER TABLE 'MOUNTAIN' ADD 'REFERENCE_CITY' TEXT");
-            }
-            if((oldVersion == 1 || oldVersion == 2) && newVersion == 3) {
+                try {
+                    db.execSQL("ALTER TABLE 'MOUNTAIN' ADD 'REFERENCE_CITY' TEXT");
+                } catch (SQLException e) {
+                    Log.v("Database.onUpgrade", "Reference City was already added to Database, not adding again.");
+                }
                 //force re-downloading of mountain list after adding REFERENCE_CITY
                 new Settings(mContext).setListEtag("");
             }
