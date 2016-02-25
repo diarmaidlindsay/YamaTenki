@@ -1,5 +1,8 @@
 package pulseanddecibels.jp.yamatenki.enums;
 
+import android.content.res.Resources;
+
+import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.utils.Constants;
 
 /**
@@ -7,17 +10,21 @@ import pulseanddecibels.jp.yamatenki.utils.Constants;
  * Copyright Pulse and Decibels 2015
  */
 public enum Subscription {
-    FREE("", "No Subscription"),
-    YEARLY(Constants.SUBSCRIPTION_1_YEAR_SKU, "1 year"),
-    MONTH6(Constants.SUBSCRIPTION_6_MONTH_SKU, "6 month"),
-    MONTHLY(Constants.SUBSCRIPTION_1_MONTH_SKU, "1 month");
+    FREE("", 0),
+    YEARLY(Constants.SUBSCRIPTION_1_YEAR_SKU, R.string.one_year),
+    MONTH6(Constants.SUBSCRIPTION_6_MONTH_SKU, R.string.six_months),
+    MONTHLY(Constants.SUBSCRIPTION_1_MONTH_SKU, R.string.one_month),
+    //price changed middle of February 2016, we're keeping these around in case there are customers who bought at old price.
+    YEARLY_Q1_2016(Constants.SUBSCRIPTION_2016_Q1_1_YEAR_SKU, R.string.one_year),
+    MONTH6_Q1_2016(Constants.SUBSCRIPTION_2016_Q1_6_MONTH_SKU, R.string.six_months),
+    MONTHLY_Q1_2016(Constants.SUBSCRIPTION_2016_Q1_1_MONTH_SKU, R.string.one_month);
 
     private String sku;
-    private String displaytext;
+    private int displayTextId;
 
-    Subscription(String sku, String displayText) {
+    Subscription(String sku, int displayTextId) {
         this.sku = sku;
-        this.displaytext = displayText;
+        this.displayTextId = displayTextId;
     }
 
     public String getSku() {
@@ -33,7 +40,8 @@ public enum Subscription {
         return FREE;
     }
 
-    public String getDisplaytext() {
-        return displaytext;
+    public String getDisplaytext(Resources resources) {
+        if (this.displayTextId == 0) return "";
+        return resources.getString(this.displayTextId);
     }
 }

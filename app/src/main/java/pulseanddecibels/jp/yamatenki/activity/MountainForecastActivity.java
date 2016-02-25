@@ -132,7 +132,6 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        Log.d("MFA : onRestore", "Saving subscription - " + mSubscription.getDisplaytext());
         savedInstanceState.putSerializable("subscription", mSubscription);
     }
 

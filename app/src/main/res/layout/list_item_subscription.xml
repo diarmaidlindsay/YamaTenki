@@ -74,6 +74,7 @@
     </LinearLayout>
 
     <ImageView
+        android:adjustViewBounds="true"
         android:id="@+id/image_discount"
         android:background="@color/yama_background"
         android:layout_height="55dp"

@@ -56,7 +56,6 @@ public class SubscriptionSingleton {
 
     public void disposeIabHelperInstance(Context context) {
         if (mBillingHelpers.get(context) != null) {
-            Log.d("SubscriptionSingleton", "disposeIabHelperInstance() : "+context.getClass().getSimpleName());
             mBillingHelpers.get(context).dispose();
             mBillingHelpers.remove(context);
         }
@@ -80,7 +79,7 @@ public class SubscriptionSingleton {
         if (mSubscription == Subscription.FREE) {
             return mContext.getString(R.string.text_subscription_not_subscribed);
         }
-        return String.format(mContext.getString(R.string.text_subscription_subscribed), mSubscription.getDisplaytext());
+        return String.format(mContext.getString(R.string.text_subscription_subscribed), mSubscription.getDisplaytext(mContext.getResources()));
     }
 
     public void initGoogleBillingApi(final Context context, OnInAppBillingServiceSetupComplete billingSetupCompleteListener) {

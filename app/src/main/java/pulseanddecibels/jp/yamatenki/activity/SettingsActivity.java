@@ -87,9 +87,9 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
                 LinearLayout month6Sub = (LinearLayout) dialog.findViewById(R.id.item_6_month_sub);
                 LinearLayout yearSub = (LinearLayout) dialog.findViewById(R.id.item_1_year_sub);
 
-                initialiseSubscriptionListItem(month1Sub, "１ヶ月", "120", "120", null, R.color.sub_1month);
-                initialiseSubscriptionListItem(month6Sub, "６ヶ月", "107", "640", R.drawable.discount10, R.color.sub_6month);
-                initialiseSubscriptionListItem(yearSub, "１年", "96", "1,150", R.drawable.discount20, R.color.sub_year);
+                initialiseSubscriptionListItem(month1Sub, "１ヶ月", "240", "240", null, R.color.sub_1month);
+                initialiseSubscriptionListItem(month6Sub, "６ヶ月", "120", "720", R.drawable.discount50, R.color.sub_6month);
+                initialiseSubscriptionListItem(yearSub, "１年", "100", "1,200", R.drawable.discount58, R.color.sub_year);
 
                 month1Sub.setOnClickListener(getSubButtonOnClickListener(Subscription.MONTHLY.getSku(), dialog));
                 month6Sub.setOnClickListener(getSubButtonOnClickListener(Subscription.MONTH6.getSku(), dialog));
@@ -134,7 +134,7 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
         if(discountImageId == null) {
             monthlyPriceText = String.format(getString(R.string.text_monthly_cost), monthlyPriceText);
         } else {
-            monthlyPriceText = String.format(getString(R.string.text_monthly_cost_approx), monthlyPriceText);
+            monthlyPriceText = String.format(getString(R.string.text_monthly_cost), monthlyPriceText);
         }
         final SpannableString monthlyPriceTextSpan = new SpannableString(monthlyPriceText);
         //all prices different lengths so...
