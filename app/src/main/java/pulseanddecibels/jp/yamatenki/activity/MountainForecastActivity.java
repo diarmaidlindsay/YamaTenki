@@ -157,8 +157,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         TextView currentDifficultyText = (TextView) findViewById(R.id.mountain_forecast_current_difficulty_text);
         currentDifficultyText.setTypeface(Utils.getHannariTypeFace(this));
         ImageView helpIconDifficulty = (ImageView) findViewById(R.id.mountain_forecast_difficulty_help);
-        helpIconDifficulty.setOnClickListener(
-                getHelpDialogOnClickListener(R.string.help_text_difficulty));
+        helpIconDifficulty.setOnClickListener(getTitleHelpDialogOnClickListener());
         ImageView iconFacebook = (ImageView) findViewById(R.id.icon_facebook);
         iconFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -645,6 +644,22 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                 dialog.setContentView(R.layout.dialog_help);
                 TextView helpText = (TextView) dialog.findViewById(R.id.help_text);
                 helpText.setText(text);
+                dialog.setCanceledOnTouchOutside(true);
+                Drawable d = new ColorDrawable(ContextCompat.getColor(MountainForecastActivity.this, R.color.yama_brown));
+                d.setAlpha(200);
+                dialog.getWindow().setBackgroundDrawable(d);
+                dialog.show();
+            }
+        };
+    }
+
+    public View.OnClickListener getTitleHelpDialogOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(MountainForecastActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_help_difficulty);
                 dialog.setCanceledOnTouchOutside(true);
                 Drawable d = new ColorDrawable(ContextCompat.getColor(MountainForecastActivity.this, R.color.yama_brown));
                 d.setAlpha(200);
