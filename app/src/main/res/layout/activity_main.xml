@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.percent.PercentRelativeLayout
     style="@style/YamaTenkiActivity"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:padding="0dp"
+    android:layout_margin="0dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
         android:id="@+id/text_main_header"
-        style="@style/ScreenTitle"
+        style="@style/ScreenTitlePercent"
         android:text="@string/text_main_header"/>
 
     <Button
@@ -20,7 +21,6 @@
         android:id="@+id/button_main_map"
         style="@style/MainButtonLeft"
         android:layout_below="@id/button_main_mountain_name_search"
-        android:adjustViewBounds="false"
         android:background="@drawable/round_button_lime_green"
         android:text="@string/button_main_map"/>
 
@@ -55,10 +55,7 @@
         android:layout_below="@id/button_main_my_mountain_list"
         android:layout_toEndOf="@+id/button_main_memo"
         android:layout_toRightOf="@id/button_main_memo"
-        android:layout_marginBottom="10dp"
         android:background="@drawable/round_button_gray"
-        android:paddingBottom="0dp"
-        android:paddingTop="0dp"
         android:text="@string/button_main_tool_list"/>
 
     <Button
@@ -83,11 +80,9 @@
         android:id="@+id/button_main_settings"
         style="@style/MainButtonRight"
         android:layout_below="@id/button_main_tool_list"
-        android:layout_marginBottom="10dp"
         android:layout_toEndOf="@+id/button_main_memo"
         android:layout_toRightOf="@+id/button_main_memo"
         android:background="@drawable/round_button_light_gray"
-        android:text="@string/button_main_settings"
-        app:layout_heightPercent="10%"/>
+        android:text="@string/button_main_settings"/>
 
 </android.support.percent.PercentRelativeLayout>

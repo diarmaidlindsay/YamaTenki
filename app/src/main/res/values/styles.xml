@@ -25,43 +25,46 @@
         <item name="android:layout_marginRight">10dp</item>
     </style>
 
-    <style name="MenuButton">
+    <style name="ScreenTitlePercent" parent="ScreenTitle">
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginRight">0dp</item>
+        <item name="layout_marginTopPercent">2%</item>
+        <item name="layout_marginBottomPercent">2%</item>
+        <item name="layout_widthPercent">100%</item>
+        <item name="layout_heightPercent">6%</item>
+    </style>
+
+    <style name="MenuButtonPercent">
         <item name="android:gravity">center</item>
-        <item name="layout_widthPercent">39%</item>
-        <item name="layout_heightPercent">13%</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
+        <item name="layout_marginTopPercent">2%</item>
+        <item name="layout_marginBottomPercent">2%</item>
+        <item name="layout_marginLeftPercent">5%</item>
+        <item name="layout_marginRightPercent">5%</item>
+        <item name="layout_widthPercent">40%</item>
+        <item name="layout_heightPercent">14%</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">20sp</item>
-    </style>
-
-    <style name="MainButtonLeft" parent="MenuButton">
-        <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="layout_heightPercent">14%</item>
         <item name="android:textSize">25sp</item>
-        <item name="android:layout_marginRight">20dp</item>
     </style>
 
-    <style name="MainButtonRight" parent="MenuButton">
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="layout_heightPercent">14%</item>
-        <item name="android:textSize">25sp</item>
-        <item name="android:layout_marginLeft">20dp</item>
-    </style>
-
-    <style name="AreaButtonLeft" parent="MenuButton">
+    <style name="MainButtonLeft" parent="MenuButtonPercent">
         <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:layout_marginRight">20dp</item>
     </style>
 
-    <style name="AreaButtonRight" parent="MenuButton">
+    <style name="MainButtonRight" parent="MenuButtonPercent">
         <item name="android:layout_alignParentRight">true</item>
-        <item name="android:layout_marginLeft">20dp</item>
+    </style>
+
+    <style name="AreaButtonLeft" parent="MenuButtonPercent">
+        <item name="android:textSize">23sp</item>
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+
+    <style name="AreaButtonRight" parent="MenuButtonPercent">
+        <item name="android:textSize">23sp</item>
+        <item name="android:layout_alignParentRight">true</item>
     </style>
 
     <style name="RatingButton">
