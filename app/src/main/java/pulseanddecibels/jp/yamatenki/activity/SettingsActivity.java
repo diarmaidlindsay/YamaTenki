@@ -83,9 +83,9 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
                 d.setAlpha(200);
                 dialog.getWindow().setBackgroundDrawable(d);
 
-                LinearLayout month1Sub = (LinearLayout) dialog.findViewById(R.id.item_1_month_sub);
-                LinearLayout month6Sub = (LinearLayout) dialog.findViewById(R.id.item_6_month_sub);
-                LinearLayout yearSub = (LinearLayout) dialog.findViewById(R.id.item_1_year_sub);
+                PercentRelativeLayout month1Sub = (PercentRelativeLayout) dialog.findViewById(R.id.item_1_month_sub);
+                PercentRelativeLayout month6Sub = (PercentRelativeLayout) dialog.findViewById(R.id.item_6_month_sub);
+                PercentRelativeLayout yearSub = (PercentRelativeLayout) dialog.findViewById(R.id.item_1_year_sub);
 
                 initialiseSubscriptionListItem(month1Sub, "１ヶ月", "240", "240", null, R.color.sub_1month);
                 initialiseSubscriptionListItem(month6Sub, "６ヶ月", "120", "720", R.drawable.discount50, R.color.sub_6month);
@@ -119,7 +119,7 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
         };
     }
 
-    private void initialiseSubscriptionListItem(LinearLayout subItem, String periodText, String monthlyPriceText, String periodPriceText, Integer discountImageId, Integer colorId) {
+    private void initialiseSubscriptionListItem(PercentRelativeLayout subItem, String periodText, String monthlyPriceText, String periodPriceText, Integer discountImageId, Integer colorId) {
         LinearLayout subscriptionPeriod = (LinearLayout) subItem.findViewById(R.id.subscription_period);
         subscriptionPeriod.setBackgroundColor(ContextCompat.getColor(this, colorId));
         TextView period = (TextView) subItem.findViewById(R.id.period);
