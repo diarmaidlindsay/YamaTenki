@@ -24,6 +24,7 @@ import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.database.Database;
 import pulseanddecibels.jp.yamatenki.utils.DateUtils;
 import pulseanddecibels.jp.yamatenki.utils.Settings;
+import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/24.
@@ -52,9 +53,16 @@ public class SplashActivity extends Activity {
         JodaTimeAndroid.init(this);
         goFullScreen();
 
-        if (settings.isFirstTimeRun()) {
+
+        if (settings.isFirstTimeRun() ||
+                settings.getLastLocale().equals("") ||
+                !settings.getLastLocale().equals(Utils.getLocale(this))) {
+            //load English or Japanese csv files if the language was changed or if first time
+            settings.setLastLocale(Utils.getLocale(this));
             new DatabaseSetupTask().execute();
-            writeDefaultSettings();
+            if(settings.isFirstTimeRun()) {
+                writeDefaultSettings();
+            }
         } else {
             displayNormalSplash();
         }

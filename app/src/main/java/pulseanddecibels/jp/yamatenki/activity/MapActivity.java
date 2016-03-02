@@ -31,6 +31,7 @@ import pulseanddecibels.jp.yamatenki.database.dao.MountainDao;
 import pulseanddecibels.jp.yamatenki.enums.Subscription;
 import pulseanddecibels.jp.yamatenki.interfaces.OnInAppBillingServiceSetupComplete;
 import pulseanddecibels.jp.yamatenki.utils.SubscriptionSingleton;
+import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
  * Created by Diarmaid Lindsay on 2016/01/08.
@@ -165,11 +166,14 @@ public class MapActivity extends Activity implements OnMapReadyCallback, GoogleM
                     continue;
                 }
                 LatLng latLng = new LatLng(coordinate.getLatitude(), coordinate.getLongitude());
+                String title = Utils.isEnglishLocale(MapActivity.this) ?
+                        mountain.getTitleEnglish() :
+                        mountain.getTitleExt();
                 Marker marker = googleMap.addMarker(new MarkerOptions()
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.fromResource(DIFFICULTY_SMALL_IMAGES.get(status)))
                         .snippet(mountain.getHeight() + "m")
-                        .title(mountain.getTitleExt()));
+                        .title(title));
                 markerMap.put(marker, mountain.getId());
             }
         }

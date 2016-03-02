@@ -86,7 +86,11 @@ public class MemoListAdapter extends BaseAdapter {
         final MyMemo memo = (MyMemo) getItem(position);
         Mountain mountain = memo.getMountain();
 
-        viewHolder.name.setText(mountain.getTitle());
+        if(Utils.isEnglishLocale(mContext)) {
+            viewHolder.name.setText(mountain.getTitleEnglish());
+        } else {
+            viewHolder.name.setText(mountain.getTitle());
+        }
         viewHolder.rating.setText(memo.getRating() == null ? "" : String.format("%d", memo.getRating()));
         Long dateTime = memo.getDateTimeFrom();
         viewHolder.date.setText(dateTime == null ? "" : DateUtils.getMemoDateFromMillis(dateTime));

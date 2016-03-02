@@ -69,6 +69,14 @@ public class Settings {
         settings.edit().putString("last_status_etag", etag).apply();
     }
 
+    public String getLastLocale() {
+        return settings.getString("last_locale", "");
+    }
+
+    public void setLastLocale(String locale) {
+        settings.edit().putString("last_locale", locale).apply();
+    }
+
     public static boolean isDebugMode() {
         return DEBUG_MODE;
     }

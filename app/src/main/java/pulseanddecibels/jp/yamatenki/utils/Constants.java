@@ -15,4 +15,7 @@ public class Constants {
     public static final String SUBSCRIPTION_1_MONTH_SKU = "new1month";
     public static final String SUBSCRIPTION_6_MONTH_SKU = "new6month";
     public static final String SUBSCRIPTION_1_YEAR_SKU = "new1year";
+
+    public static final String ENGLISH_LANGUAGE = "en";
+    public static final String JAPANESE_LANGUAGE = "jp";
 }

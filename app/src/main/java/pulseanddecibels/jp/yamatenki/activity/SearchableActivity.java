@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -122,10 +123,11 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
             if (areaId != 0) {
                 setContentView(R.layout.activity_search_area);
                 header = (TextView) findViewById(R.id.text_search_header);
-                String areaTemplate = "%sの山";
+                String areaTemplate = getString(R.string.text_search_area_result_header);
                 String area = getAreaForButtonId(areaId);
                 header.setText(String.format(areaTemplate, area));
-                mountainListAdapter.searchByArea(area);
+                //the Japanese names are stored in the database so always use those
+                mountainListAdapter.searchByArea(getJapaneseAreaForButtonId(areaId));
 
             } else if (latitude != 0 && longitude != 0) {
                 //we came here from Main Activity (Closest 20 Mountains)
@@ -490,39 +492,50 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
     }
 
     private String getAreaForButtonId(int areaId) {
-        String area;
-        switch (areaId) {
-            case R.id.button_area_chuugoku:
-                area = "中国";
-                break;
-            case R.id.button_area_hokkaidou:
-                area = "北海道";
-                break;
-            case R.id.button_area_hokuriku:
-                area = "北陸";
-                break;
-            case R.id.button_area_kinki:
-                area = "近畿";
-                break;
-            case R.id.button_area_koushin:
-                area = "関東・甲信";
-                break;
-            case R.id.button_area_okinawa:
-                area = "九州・沖縄";
-                break;
-            case R.id.button_area_touhoku:
-                area = "東北";
-                break;
-            case R.id.button_area_toukai:
-                area = "東海";
-                break;
-            case R.id.button_area_shikoku:
-                area = "四国";
-                break;
-            default:
-                area = "不明";
-        }
+        return Utils.isEnglishLocale(this) ?
+                getEnglishAreaForButtonId(areaId) :
+                getJapaneseAreaForButtonId(areaId);
+    }
 
+    private String getJapaneseAreaForButtonId(int areaId) {
+        String area;
+        final SparseArray<String> AREAS_JAPANESE = new SparseArray<String>() {
+            {
+                append(R.id.button_area_chuugoku, "中国");
+                append(R.id.button_area_hokkaidou, "北海道");
+                append(R.id.button_area_hokuriku, "北陸");
+                append(R.id.button_area_kinki, "近畿");
+                append(R.id.button_area_koushin, "関東・甲信");
+                append(R.id.button_area_okinawa, "九州・沖縄");
+                append(R.id.button_area_touhoku, "東北");
+                append(R.id.button_area_toukai, "東海");
+                append(R.id.button_area_shikoku, "四国");
+            }
+        };
+
+        area = AREAS_JAPANESE.get(areaId);
+        if(area == null) area = "不明";
+        return area;
+    }
+
+    private String getEnglishAreaForButtonId(int areaId) {
+        String area;
+        final SparseArray<String> AREAS_ENGLISH = new SparseArray<String>() {
+            {
+                append(R.id.button_area_chuugoku, "Chuugoku");
+                append(R.id.button_area_hokkaidou, "Hokkaidou");
+                append(R.id.button_area_hokuriku, "Hokuriku");
+                append(R.id.button_area_kinki, "Kinki");
+                append(R.id.button_area_koushin, "Koushin");
+                append(R.id.button_area_okinawa, "Okinawa");
+                append(R.id.button_area_touhoku, "Touhoku");
+                append(R.id.button_area_toukai, "Toukai");
+                append(R.id.button_area_shikoku, "Shikoku");
+            }
+        };
+
+        area = AREAS_ENGLISH.get(areaId);
+        if(area == null) area = "Unknown";
         return area;
     }
 

@@ -145,7 +145,11 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         mountain = mountainDao.load(mountainId);
         title = (TextView) findViewById(R.id.text_forecast_header);
         title.setTypeface(Utils.getHannariTypeFace(this));
-        title.setText(mountain.getTitle());
+        if(Utils.isEnglishLocale(this)) {
+            title.setText(mountain.getTitleEnglish());
+        } else {
+            title.setText(mountain.getTitle());
+        }
         TextView mountainPrefecture = (TextView) findViewById(R.id.mountain_prefecture);
         mountainPrefecture.setTypeface(Utils.getHannariTypeFace(this));
         mountainPrefecture.setText(mountain.getPrefecture().getName());
@@ -460,11 +464,8 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
     }
 
     private void populateWidgetsFromDatabase() {
-        MountainDao mountainDao = Database.getInstance(this).getMountainDao();
         PressureDao pressureDao = Database.getInstance(this).getPressureDao();
-        final Mountain mountain = mountainDao.load(mountainId);
 
-        title.setText(mountain.getTitle());
         Map<String, Forecast> forecastMapShortTerm = getMappedForecasts(false);
         Map<String, Forecast> forecastMapLongTerm = getMappedForecasts(true);
         List<Pressure> heights = pressureDao.queryBuilder().where(PressureDao.Properties.MountainId.eq(mountainId)).list();
@@ -473,10 +474,10 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
             ForecastScrollViewElement scrollViewElement = scrollViewElements.get(i);
             //set ScrollViewElement header
             if (!scrollViewElement.isLongTermForecast()) {
-                scrollViewElement.getHeader().setText(DateUtils.getFormattedHeader(i));
+                scrollViewElement.getHeader().setText(DateUtils.getFormattedHeader(i, this));
             }
             //now depending on the amount of heights, we will display a different amount of rows...
-            String heightPressureTemplate = "高度 %s m付近（%shPa )";
+            String heightPressureTemplate = getResources().getString(R.string.text_forecast_table_height_pressure);
             if (heights.size() == 3 || heights.size() == 2 || heights.size() == 1) {
                 int height = heights.get(0).getHeight();
                 int pressure = heights.get(0).getPressure();
@@ -803,7 +804,12 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         final Mountain mountain = mountainDao.load(mountainId);
 
         TextView snForecastHeader = (TextView) snLayout.findViewById(R.id.sn_forecast_header);
-        snForecastHeader.setText(mountain.getTitle());
+        if(Utils.isEnglishLocale(this)) {
+            snForecastHeader.setText(mountain.getTitleEnglish());
+        } else {
+            snForecastHeader.setText(mountain.getTitle());
+        }
+
         snForecastHeader.setTypeface(Utils.getHannariTypeFace(this));
 
         TextView snCurrentDifficultyText = (TextView) snLayout.findViewById(R.id.sn_current_difficulty_text);
@@ -817,7 +823,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
 
         TextView snDate = (TextView) snLayout.findViewById(R.id.sn_date);
         DateTime now = new DateTime(DateUtils.JAPAN_TIME_ZONE);
-        snDate.setText(String.format("%s月%s日　本日の山行指数", Utils.num2DigitString(now.getMonthOfYear()), Utils.num2DigitString(now.getDayOfMonth())));
+        snDate.setText(String.format(getString(R.string.text_sn_date), Utils.num2DigitString(now.getMonthOfYear()), Utils.num2DigitString(now.getDayOfMonth())));
 
         Map<String, Forecast> forecastMapShortTerm = getMappedForecasts(false);
         for(String hour : TIME_INTERVAL) {

@@ -150,15 +150,17 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
             memo.setText(myMemo.getMemo());
             editMode(false);
         } else {
-
-
             editMode(true);
         }
 
         MountainDao mountainDao = Database.getInstance(this).getMountainDao();
         Mountain mountain =
                 mountainDao.queryBuilder().where(MountainDao.Properties.Id.eq(mountainId)).unique();
-        mountainSubtitle.setText(mountain.getTitle());
+        if(Utils.isEnglishLocale(this)) {
+            mountainSubtitle.setText(mountain.getTitleEnglish());
+        } else {
+            mountainSubtitle.setText(mountain.getTitle());
+        }
     }
 
     /**

@@ -42,6 +42,7 @@ import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
 import pulseanddecibels.jp.yamatenki.model.StatusArrayElement;
 import pulseanddecibels.jp.yamatenki.model.WindAndTemperatureElement;
 import pulseanddecibels.jp.yamatenki.utils.Settings;
+import pulseanddecibels.jp.yamatenki.utils.Utils;
 
 /**
  * Created by Diarmaid Lindsay on 2015/10/14.
@@ -102,7 +103,9 @@ public class Database {
     }
 
     public static List<String> parseChecklistCSV(Context context) throws IOException {
-        return parseCSV(context, "databases/initialChecklist.csv");
+        return parseCSV(context, Utils.isEnglishLocale(context) ?
+                "databases/initialChecklist_en.csv" :
+                "databases/initialChecklist_jp.csv");
     }
 
     private static List<String> parseCSV(Context context, String path) throws IOException {

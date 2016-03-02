@@ -14,6 +14,7 @@ import android.text.style.TextAppearanceSpan;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -83,22 +84,31 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
                 d.setAlpha(200);
                 dialog.getWindow().setBackgroundDrawable(d);
 
-                PercentRelativeLayout month1Sub = (PercentRelativeLayout) dialog.findViewById(R.id.item_1_month_sub);
-                PercentRelativeLayout month6Sub = (PercentRelativeLayout) dialog.findViewById(R.id.item_6_month_sub);
-                PercentRelativeLayout yearSub = (PercentRelativeLayout) dialog.findViewById(R.id.item_1_year_sub);
+                ViewGroup month1Sub = (ViewGroup) dialog.findViewById(R.id.item_1_month_sub);
+                ViewGroup month6Sub = (ViewGroup) dialog.findViewById(R.id.item_6_month_sub);
+                ViewGroup yearSub = (ViewGroup) dialog.findViewById(R.id.item_1_year_sub);
 
-                initialiseSubscriptionListItem(month1Sub, "１ヶ月", "240", "240", null, R.color.sub_1month);
-                initialiseSubscriptionListItem(month6Sub, "６ヶ月", "120", "720", R.drawable.discount50, R.color.sub_6month);
-                initialiseSubscriptionListItem(yearSub, "１年", "100", "1,200", R.drawable.discount58, R.color.sub_year);
+                initialiseSubscriptionListItem(month1Sub, getString(R.string.one_month), "240", "240", R.drawable.discount0, R.color.sub_1month);
+                initialiseSubscriptionListItem(month6Sub, getString(R.string.six_months), "120", "720", R.drawable.discount50, R.color.sub_6month);
+                initialiseSubscriptionListItem(yearSub, getString(R.string.one_year), "100", "1,200", R.drawable.discount58, R.color.sub_year);
 
                 month1Sub.setOnClickListener(getSubButtonOnClickListener(Subscription.MONTHLY.getSku(), dialog));
                 month6Sub.setOnClickListener(getSubButtonOnClickListener(Subscription.MONTH6.getSku(), dialog));
                 yearSub.setOnClickListener(getSubButtonOnClickListener(Subscription.YEARLY.getSku(), dialog));
 
                 //show google help on how to unsubscribe when "Help" is pressed in the TextView
-                Pattern pattern = Pattern.compile("ヘルプ");
+                Pattern pattern;
                 TextView subscriptionHelp = (TextView) dialog.findViewById(R.id.subscription_help);
+
+                //Make the "help" text clickable
+                if(Utils.isEnglishLocale(SettingsActivity.this)) {
+                    pattern = Pattern.compile("Help");
+                    Linkify.addLinks(subscriptionHelp, pattern, "https://support.google.com/googleplay/answer/2476088?hl=en");
+                } else {
+                    pattern = Pattern.compile("ヘルプ");
                     Linkify.addLinks(subscriptionHelp, pattern, "https://support.google.com/googleplay/answer/2476088?hl=ja");
+                }
+
                 dialog.show();
             }
         };
@@ -119,17 +129,23 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
         };
     }
 
-    private void initialiseSubscriptionListItem(PercentRelativeLayout subItem, String periodText, String monthlyPriceText, String periodPriceText, Integer discountImageId, Integer colorId) {
-        LinearLayout subscriptionPeriod = (LinearLayout) subItem.findViewById(R.id.subscription_period);
-        subscriptionPeriod.setBackgroundColor(ContextCompat.getColor(this, colorId));
+    private void initialiseSubscriptionListItem(ViewGroup subItem, String periodText, String monthlyPriceText, String periodPriceText, Integer discountImageId, Integer colorId) {
         TextView period = (TextView) subItem.findViewById(R.id.period);
         TextView monthlyPrice = (TextView) subItem.findViewById(R.id.price1);
         TextView periodPrice = (TextView) subItem.findViewById(R.id.price2);
 
-        //number was smaller than kanji so I used span to even it out
-        final SpannableString periodSpan = new SpannableString(periodText);
-        periodSpan.setSpan(new TextAppearanceSpan(this, R.style.LargestSizeText), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        period.setText(periodSpan, TextView.BufferType.SPANNABLE);
+        if(Utils.isEnglishLocale(this)) {
+            period.setText(periodText);
+            LinearLayout subscriptionBlock = (LinearLayout) subItem.findViewById(R.id.subscription_block);
+            subscriptionBlock.setBackgroundColor(ContextCompat.getColor(this, colorId));
+        } else {
+            LinearLayout subscriptionPeriod = (LinearLayout) subItem.findViewById(R.id.subscription_period);
+            subscriptionPeriod.setBackgroundColor(ContextCompat.getColor(this, colorId));
+            //number was smaller than kanji so I used span to even it out
+            final SpannableString periodSpan = new SpannableString(periodText);
+            periodSpan.setSpan(new TextAppearanceSpan(this, R.style.LargestSizeText), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            period.setText(periodSpan, TextView.BufferType.SPANNABLE);
+        }
 
         if(discountImageId == null) {
             monthlyPriceText = String.format(getString(R.string.text_monthly_cost), monthlyPriceText);
@@ -145,10 +161,14 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
 
 
         periodPriceText = String.format(getString(R.string.text_payment_amount), periodPriceText);
+        if(Utils.isEnglishLocale(this)) {
+            periodPriceText = periodPriceText.replace("¥", "\n¥");
+        }
         periodPrice.setText(periodPriceText);
         if(discountImageId != null) {
             ImageView imageDiscount = (ImageView) subItem.findViewById(R.id.image_discount);
             imageDiscount.setImageResource(discountImageId);
+            imageDiscount.setScaleType(ImageView.ScaleType.FIT_START);
         }
     }
 

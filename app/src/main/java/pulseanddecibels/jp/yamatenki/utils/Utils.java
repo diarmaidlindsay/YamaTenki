@@ -65,4 +65,12 @@ public class Utils {
         return activeNetwork != null &&
                 activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
     }
+
+    public static String getLocale(Context context) {
+        return context.getResources().getConfiguration().locale.getLanguage();
+    }
+
+    public static boolean isEnglishLocale(Context context) {
+        return getLocale(context).equals(Constants.ENGLISH_LANGUAGE);
+    }
 }

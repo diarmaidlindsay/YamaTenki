@@ -11,7 +11,6 @@
     <string name="text_main_header">山サーチ</string>
     <string name="text_search_name_header">山の名前で探す</string>
     <string name="text_search_textbox_hint">漢字やひらがな検索</string>
-    <string name="text_search_name_search_button">検索</string>
     <string name="text_search_table_header_name">名前</string>
     <string name="text_search_table_header_difficulty">現在の登山指数</string>
     <string name="text_search_table_header_height">標高</string>
@@ -124,7 +123,7 @@
     <string name="text_subscription_not_subscribed">現在チケットの購入はありません</string>
     <string name="text_subscription_subscribed">現在%sチケットを購入中</string>
     <string name="button_view_subscription_plans">プランを見る</string>
-    <string name="text_go_to_subscription_screen">チケットを見に行く 月額¥96~</string>
+    <string name="text_go_to_subscription_screen">チケットを見に行く 月額¥100~</string>
     <string name="text_dialog_please_wait">しばらくお待ちください</string>
     <string name="toast_height_min_max_error">標高は「最低値〜最高値」の順に入力してください。</string>
     <string name="toast_google_account_not_setup">この携帯のGoogleアカウントが設定されていません。</string>
@@ -138,4 +137,18 @@
     <string name="table_help_temperature">気温\n（°C）</string>
     <string name="table_help_wind_speed">風\n（m/s）</string>
     <string name="table_help_rain_level">積算降水量\n(mm)</string>
+    <string name="text_forecast_table_height_pressure">高度 %1$sm 付近（%2$shPa)</string>
+    <string name="text_weekday_monday">月</string>
+    <string name="text_weekday_tuesday">火</string>
+    <string name="text_weekday_wednesday">水</string>
+    <string name="text_weekday_thursday">木</string>
+    <string name="text_weekday_friday">金</string>
+    <string name="text_weekday_saturday">土</string>
+    <string name="text_weekday_sunday">日</string>
+    <string name="text_day_name_today">本日</string>
+    <string name="text_day_name_tomorrow">明日</string>
+    <string name="text_time_of_day_AM">午前</string>
+    <string name="text_time_of_day_PM">午後</string>
+    <string name="text_search_area_result_header">%sの山</string>
+    <string name="text_sn_date">%1$s月%2$s日　本日の山行指数"</string>
 </resources>

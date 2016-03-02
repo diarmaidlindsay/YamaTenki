@@ -1,5 +1,6 @@
 package pulseanddecibels.jp.yamatenki.utils;
 
+import android.content.Context;
 import android.util.SparseArray;
 
 import org.joda.time.DateTime;
@@ -10,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import pulseanddecibels.jp.yamatenki.R;
+
 /**
  * Created by Diarmaid Lindsay on 2015/10/05.
  * Copyright Pulse and Decibels 2015
@@ -19,26 +22,32 @@ public class DateUtils {
     /**
      * Calendar.DAY_OF_WEEK to Japanese
      */
-    private static final SparseArray<String> JAPANESE_DAY_OF_WEEK = new SparseArray<String>() {
-        {
-            append(1, "月");
-            append(2, "火");
-            append(3, "水");
-            append(4, "木");
-            append(5, "金");
-            append(6, "土");
-            append(7, "日");
-        }
-    };
-    //0 == today, 1 == tomorrow etc
-    private static final String[] JAPANESE_DAY_NAMES = {"本日", "本日", "明日", "明日", "週間予測"};
-    private static final String[] JAPANESE_TIME_OF_DAY = {"午前", "午後"};
+
     public static final DateTimeZone JAPAN_TIME_ZONE = DateTimeZone.forOffsetHours(9);
 
     static final String[] TIME_INCREMENTS_AM = {"00", "03", "06", "09"}; // column headers
     static final String[] TIME_INCREMENTS_PM = {"12", "15", "18", "21"}; // column headers
 
-    public static String getFormattedHeader(int index) {
+    public static String getFormattedHeader(int index, final Context context) {
+        final String[] DAY_NAMES = {
+                getString(R.string.text_day_name_today, context),
+                getString(R.string.text_day_name_today, context),
+                getString(R.string.text_day_name_tomorrow, context),
+                getString(R.string.text_day_name_tomorrow, context),
+        };
+        final SparseArray<String> DAY_OF_WEEK = new SparseArray<String>() {
+            {
+                append(1, getString(R.string.text_weekday_monday, context));
+                append(2, getString(R.string.text_weekday_tuesday, context));
+                append(3, getString(R.string.text_weekday_wednesday, context));
+                append(4, getString(R.string.text_weekday_thursday, context));
+                append(5, getString(R.string.text_weekday_friday, context));
+                append(6, getString(R.string.text_weekday_saturday, context));
+                append(7, getString(R.string.text_weekday_sunday, context));
+            }
+        };
+        final String[] TIME_OF_DAY = {getString(R.string.text_time_of_day_AM, context), getString(R.string.text_time_of_day_PM, context)};
+
         DateTime dateTime = new DateTime(DateUtils.JAPAN_TIME_ZONE);
         //don't cause IndexOutOfBoundsException
         switch (index) {
@@ -50,13 +59,12 @@ public class DateUtils {
             case 3:
                 dateTime = dateTime.plusDays(1);
                 break; //tomorrow
-            case 4:
-                return JAPANESE_DAY_NAMES[4]; // rest of the week
             default:
                 return "";
         }
         String format = "%s %d/%d （%s）%s";
-        String dayString = JAPANESE_DAY_NAMES[index];
+
+        String dayString = DAY_NAMES[index];
         int month = dateTime.getMonthOfYear();
         int day = dateTime.getDayOfMonth();
         int dayOfWeek = dateTime.getDayOfWeek();
@@ -69,7 +77,11 @@ public class DateUtils {
             default:
                 timeOfDay = 1; //PM
         }
-        return String.format(format, dayString, month, day, JAPANESE_DAY_OF_WEEK.get(dayOfWeek), JAPANESE_TIME_OF_DAY[timeOfDay]);
+        return String.format(format, dayString, month, day, DAY_OF_WEEK.get(dayOfWeek), TIME_OF_DAY[timeOfDay]);
+    }
+
+    private static String getString(int id, Context context) {
+        return context.getResources().getString(id);
     }
 
     public static DateTime getDateTimeFromForecast(String timeStampString) {
