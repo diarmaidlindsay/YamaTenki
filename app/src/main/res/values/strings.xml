@@ -93,7 +93,6 @@
     <string name="text_setting_title_warning">各山の注意喚起を表示しない</string>
     <string name="text_setting_title_mobile">情報の更新はWi-Fiのみでする</string>
     <string name="text_setting_title_checklist_reset">持ち物リストの一括リセット</string>
-    <string name="facebook_app_id">1676238312590862</string>
     <string name="text_powered_by">Powered by 山てんき</string>
     <string name="item_desc_facebook_preview">Facebook image preview</string>
     <string name="dialog_facebook">Facebook</string>
@@ -151,4 +150,9 @@
     <string name="text_time_of_day_PM">午後</string>
     <string name="text_search_area_result_header">%sの山</string>
     <string name="text_sn_date">%1$s月%2$s日　本日の山行指数"</string>
+    <string name="text_setting_language_title">言語</string>
+    <string name="text_setting_language_subtitle_default">既定</string>
+    <string name="text_setting_language_subtitle_english">英語</string>
+    <string name="text_setting_language_subtitle_japanese">日本語</string>
+
 </resources>

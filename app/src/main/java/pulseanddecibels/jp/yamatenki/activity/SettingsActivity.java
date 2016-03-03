@@ -3,6 +3,7 @@ package pulseanddecibels.jp.yamatenki.activity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -16,18 +17,24 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import pulseanddecibels.jp.yamatenki.R;
+import pulseanddecibels.jp.yamatenki.database.Database;
 import pulseanddecibels.jp.yamatenki.enums.Subscription;
 import pulseanddecibels.jp.yamatenki.interfaces.OnInAppBillingServiceSetupComplete;
+import pulseanddecibels.jp.yamatenki.utils.Constants;
 import pulseanddecibels.jp.yamatenki.utils.Settings;
 import pulseanddecibels.jp.yamatenki.utils.SubscriptionSingleton;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
@@ -44,11 +51,16 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
     Settings settings;
     TextView subscriptionSubtitle;
     PercentRelativeLayout subscriptionSetting;
+    boolean languageChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getIntent().getBooleanExtra("languageChanged", false)) {
+            languageChanged = true;
+        }
         settings = new Settings(this);
+        Utils.setLocale(this);
         setContentView(R.layout.activity_settings);
         TextView header = (TextView) findViewById(R.id.text_settings_header);
         header.setTypeface(Utils.getHannariTypeFace(this));
@@ -56,6 +68,8 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
         initialiseSettingCheckedNoSubtitle(displayWarningSetting, R.string.text_setting_title_warning, "setting_dont_display_warning");
         PercentRelativeLayout downloadMobileSetting = (PercentRelativeLayout) findViewById(R.id.setting_download_only_wifi);
         initialiseSettingCheckedNoSubtitle(downloadMobileSetting, R.string.text_setting_title_mobile, "setting_download_only_wifi");
+        PercentRelativeLayout languageSettings = (PercentRelativeLayout) findViewById(R.id.setting_language);
+        initialiseLanguageSetting(languageSettings);
         PercentRelativeLayout resetChecklistSetting = (PercentRelativeLayout) findViewById(R.id.setting_reset_checklist);
         initialiseSettingCheckedNoSubtitle(resetChecklistSetting, R.string.text_setting_title_checklist_reset, "setting_reset_checklist");
         subscriptionSetting = (PercentRelativeLayout) findViewById(R.id.setting_subscription);
@@ -101,7 +115,7 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
                 TextView subscriptionHelp = (TextView) dialog.findViewById(R.id.subscription_help);
 
                 //Make the "help" text clickable
-                if(Utils.isEnglishLocale(SettingsActivity.this)) {
+                if(Utils.isEnglishLanguageSelected(SettingsActivity.this)) {
                     pattern = Pattern.compile("Help");
                     Linkify.addLinks(subscriptionHelp, pattern, "https://support.google.com/googleplay/answer/2476088?hl=en");
                 } else {
@@ -134,7 +148,7 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
         TextView monthlyPrice = (TextView) subItem.findViewById(R.id.price1);
         TextView periodPrice = (TextView) subItem.findViewById(R.id.price2);
 
-        if(Utils.isEnglishLocale(this)) {
+        if(Utils.isEnglishLanguageSelected(this)) {
             period.setText(periodText);
             LinearLayout subscriptionBlock = (LinearLayout) subItem.findViewById(R.id.subscription_block);
             subscriptionBlock.setBackgroundColor(ContextCompat.getColor(this, colorId));
@@ -161,7 +175,7 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
 
 
         periodPriceText = String.format(getString(R.string.text_payment_amount), periodPriceText);
-        if(Utils.isEnglishLocale(this)) {
+        if(Utils.isEnglishLanguageSelected(this)) {
             periodPriceText = periodPriceText.replace("¥", "\n¥");
         }
         periodPrice.setText(periodPriceText);
@@ -217,6 +231,66 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
         checkbox.setOnClickListener(toggleCheck);
     }
 
+    private void initialiseLanguageSetting(PercentRelativeLayout setting) {
+        String currentLanguage = Constants.getLanguageDisplayName(settings.getLanguage(), this);
+
+        TextView title = (TextView) setting.findViewById(R.id.setting_title);
+        title.setText(getString(R.string.text_setting_language_title));
+        final TextView subTitle = (TextView) setting.findViewById(R.id.setting_subtitle);
+        subTitle.setText(currentLanguage);
+
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(SettingsActivity.this, R.style.RatingDialog);
+                dialog.setContentView(R.layout.dialog_language);
+                dialog.setTitle(getResources().getString(R.string.text_setting_language_title));
+
+                ListView languageListView = (ListView) dialog.findViewById(R.id.language_list);
+                String[] languages = new String[] {
+                        getString(R.string.text_setting_language_subtitle_default),
+                        getString(R.string.text_setting_language_subtitle_japanese),
+                        getString(R.string.text_setting_language_subtitle_english)
+                };
+
+                ArrayAdapter<String> listAdapter = new ArrayAdapter<>(SettingsActivity.this, R.layout.list_item_simple, languages);
+                languageListView.setAdapter(listAdapter);
+
+                languageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String selectedLanguage = Constants.DEFAULT_LANGUAGE_CODE;
+                        if (position == 1) {
+                            selectedLanguage = Constants.JAPANESE_LANGUAGE_CODE;
+                        } else if (position == 2) {
+                            selectedLanguage = Constants.ENGLISH_LANGUAGE_CODE;
+                        }
+                        if(!settings.getLanguage().equals(selectedLanguage)) {
+                            settings.setLanguage(selectedLanguage);
+                            subTitle.setText(Constants.getLanguageDisplayName(settings.getLanguage(), SettingsActivity.this));
+                            Utils.setLocale(SettingsActivity.this);
+                            languageChanged = true;
+                            //reload Checklist
+                            if(Utils.isEnglishLanguageSelected(SettingsActivity.this)) {
+                                Database.loadEnglishChecklist(SettingsActivity.this);
+                            } else {
+                                Database.loadJapaneseChecklist(SettingsActivity.this);
+                            }
+                        }
+                        dialog.dismiss();
+                        if(languageChanged) {
+                            finish();
+                            Intent intent = getIntent();
+                            intent.putExtra("languageChanged", true);
+                            startActivity(intent);
+                        }
+                    }
+                });
+                dialog.show();
+            }
+        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (!SubscriptionSingleton.getInstance(this).getIabHelperInstance(this).handleActivityResult(requestCode, resultCode, data)) {
@@ -266,5 +340,37 @@ public class SettingsActivity extends Activity implements IabHelper.OnIabPurchas
             }
         }
 
+    }
+
+    /**
+     * Force language (locale) change from within the application
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if(new Settings(this).getLanguage().equals(Constants.ENGLISH_LANGUAGE_CODE)) {
+            newConfig.locale = Locale.ENGLISH;
+        } else if (new Settings(this).getLanguage().equals(Constants.JAPANESE_LANGUAGE_CODE)) {
+            newConfig.locale = Locale.JAPANESE;
+        }
+
+        super.onConfigurationChanged(newConfig);
+
+        Locale.setDefault(newConfig.locale);
+        getBaseContext().getResources().updateConfiguration(newConfig, getResources().getDisplayMetrics());
+    }
+
+    /**
+     * Override this because if language was changed, we want to reload the Main Activity with new language
+     */
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        if(languageChanged) {
+            //reload main activity with the new language, clear the back-stack
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra("languageChanged", true);
+        }
+        startActivity(intent);
     }
 }

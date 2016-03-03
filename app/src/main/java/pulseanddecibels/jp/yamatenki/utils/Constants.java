@@ -1,5 +1,9 @@
 package pulseanddecibels.jp.yamatenki.utils;
 
+import android.content.Context;
+
+import pulseanddecibels.jp.yamatenki.R;
+
 /**
  * Created by Diarmaid Lindsay on 2015/12/10.
  * Copyright Pulse and Decibels 2015
@@ -16,6 +20,17 @@ public class Constants {
     public static final String SUBSCRIPTION_6_MONTH_SKU = "new6month";
     public static final String SUBSCRIPTION_1_YEAR_SKU = "new1year";
 
-    public static final String ENGLISH_LANGUAGE = "en";
-    public static final String JAPANESE_LANGUAGE = "jp";
+    public static final String DEFAULT_LANGUAGE_CODE = "df";
+    public static final String ENGLISH_LANGUAGE_CODE = "en";
+    public static final String JAPANESE_LANGUAGE_CODE = "jp";
+
+    public static String getLanguageDisplayName(String code, Context context) {
+        if(code.equals(Constants.ENGLISH_LANGUAGE_CODE)) {
+            return context.getString(R.string.text_setting_language_subtitle_english);
+        } else if (code.equals(Constants.JAPANESE_LANGUAGE_CODE)) {
+            return context.getString(R.string.text_setting_language_subtitle_japanese);
+        } else {
+            return context.getString(R.string.text_setting_language_subtitle_default);
+        }
+    }
 }

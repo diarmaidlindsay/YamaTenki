@@ -29,7 +29,7 @@
             android:value="AIzaSyAdPCD1-Iega7MlRRfMH-I_65ewXjGYvKQ"/>
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+            android:value="1676238312590862"/>
         <!-- Splash Screen -->
         <activity
             android:name="pulseanddecibels.jp.yamatenki.activity.SplashActivity"
@@ -46,6 +46,7 @@
         <activity
             android:name="pulseanddecibels.jp.yamatenki.activity.MainActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>

@@ -72,6 +72,7 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.setLocale(this);
         mountainListAdapter = new MountainListAdapter(this);
         if(savedInstanceState != null && savedInstanceState.getSerializable("subscription") != null) {
             Serializable sub = savedInstanceState.getSerializable("subscription");
@@ -492,7 +493,7 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
     }
 
     private String getAreaForButtonId(int areaId) {
-        return Utils.isEnglishLocale(this) ?
+        return Utils.isEnglishLanguageSelected(this) ?
                 getEnglishAreaForButtonId(areaId) :
                 getJapaneseAreaForButtonId(areaId);
     }

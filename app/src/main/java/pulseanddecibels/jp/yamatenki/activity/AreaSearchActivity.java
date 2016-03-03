@@ -20,6 +20,7 @@ public class AreaSearchActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.setLocale(this);
         setContentView(R.layout.activity_area);
         header = (TextView) findViewById(R.id.text_search_header);
         header.setTypeface(Utils.getHannariTypeFace(this));

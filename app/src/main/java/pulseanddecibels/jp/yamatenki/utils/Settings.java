@@ -77,6 +77,14 @@ public class Settings {
         settings.edit().putString("last_locale", locale).apply();
     }
 
+    public String getLanguage() {
+        return settings.getString("language", Constants.DEFAULT_LANGUAGE_CODE);
+    }
+
+    public void setLanguage(String language) {
+        settings.edit().putString("language", language).apply();
+    }
+
     public static boolean isDebugMode() {
         return DEBUG_MODE;
     }

@@ -60,6 +60,7 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.setLocale(this);
         setContentView(R.layout.activity_memo_edit);
         Bundle arguments = getIntent().getExtras();
         mountainId = arguments.getLong("mountainId");
@@ -156,7 +157,7 @@ public class MemoDetailActivity extends FragmentActivity implements CalendarDate
         MountainDao mountainDao = Database.getInstance(this).getMountainDao();
         Mountain mountain =
                 mountainDao.queryBuilder().where(MountainDao.Properties.Id.eq(mountainId)).unique();
-        if(Utils.isEnglishLocale(this)) {
+        if(Utils.isEnglishLanguageSelected(this)) {
             mountainSubtitle.setText(mountain.getTitleEnglish());
         } else {
             mountainSubtitle.setText(mountain.getTitle());

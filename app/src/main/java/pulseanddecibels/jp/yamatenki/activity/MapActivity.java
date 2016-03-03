@@ -55,6 +55,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback, GoogleM
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.setLocale(this);
         setContentView(R.layout.activity_map);
         if(savedInstanceState != null && savedInstanceState.getSerializable("subscription") != null) {
             Serializable sub = savedInstanceState.getSerializable("subscription");
@@ -166,7 +167,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback, GoogleM
                     continue;
                 }
                 LatLng latLng = new LatLng(coordinate.getLatitude(), coordinate.getLongitude());
-                String title = Utils.isEnglishLocale(MapActivity.this) ?
+                String title = Utils.isEnglishLanguageSelected(MapActivity.this) ?
                         mountain.getTitleEnglish() :
                         mountain.getTitleExt();
                 Marker marker = googleMap.addMarker(new MarkerOptions()

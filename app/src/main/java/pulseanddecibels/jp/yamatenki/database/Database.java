@@ -94,20 +94,6 @@ public class Database {
         }
     }
 
-    public static List<String> parsePrefectureCSV(Context context) throws IOException {
-        return parseCSV(context, "databases/prefectureList.csv");
-    }
-
-    public static List<String> parseAreaCSV(Context context) throws IOException {
-        return parseCSV(context, "databases/areaList.csv");
-    }
-
-    public static List<String> parseChecklistCSV(Context context) throws IOException {
-        return parseCSV(context, Utils.isEnglishLocale(context) ?
-                "databases/initialChecklist_en.csv" :
-                "databases/initialChecklist_jp.csv");
-    }
-
     private static List<String> parseCSV(Context context, String path) throws IOException {
         List<String> csvEntries = new ArrayList<>();
 
@@ -122,16 +108,56 @@ public class Database {
         return csvEntries;
     }
 
+    public static List<String> parsePrefectureCSV(Context context) throws IOException {
+        return parseCSV(context, "databases/prefectureList.csv");
+    }
+
+    public static List<String> parseAreaCSV(Context context) throws IOException {
+        return parseCSV(context, "databases/areaList.csv");
+    }
+
+    private static List<String> parseChecklistCSV(Context context) throws IOException {
+        return parseCSV(context, Utils.isEnglishLanguageSelected(context) ?
+                "databases/initialChecklist_en.csv" :
+                "databases/initialChecklist_jp.csv");
+    }
+
+    public static void loadEnglishChecklist(Context context) {
+        try {
+            initialiseChecklist(context, parseCSV(context, "databases/initialChecklist_en.csv"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void loadJapaneseChecklist(Context context) {
+        try {
+            initialiseChecklist(context, parseCSV(context, "databases/initialChecklist_jp.csv"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void initialiseChecklist(Context context, List<String> checkList) {
+        CheckListItemDao checkListItemDao = Database.getInstance(context).getCheckListItemDao();
+        checkListItemDao.deleteAll();
+
+        List<CheckListItem> checkListItemList = new ArrayList<>();
+        for (String item : checkList) {
+            checkListItemList.add(new CheckListItem(null, item, false));
+        }
+        checkListItemDao.insertInTx(checkListItemList);
+    }
+
     public static void initialiseData(Context context) {
         AreaDao areaDao = Database.getInstance(context).getAreaDao();
         PrefectureDao prefectureDao = Database.getInstance(context).getPrefectureDao();
-        CheckListItemDao checkListItemDao = Database.getInstance(context).getCheckListItemDao();
-
         areaDao.deleteAll();
         prefectureDao.deleteAll();
-        checkListItemDao.deleteAll();
 
         try {
+            initialiseChecklist(context, parseChecklistCSV(context));
+
             List<String> prefecturesListRaw = Database.parsePrefectureCSV(context);
             List<Prefecture> prefectureList = new ArrayList<>();
             for (String prefecture : prefecturesListRaw) {
@@ -146,13 +172,6 @@ public class Database {
                 areaList.add(new Area((long) i, areasListRaw.get(i)));
             }
             areaDao.insertInTx(areaList);
-
-            List<String> checklistListRaw = Database.parseChecklistCSV(context);
-            List<CheckListItem> checkList = new ArrayList<>();
-            for (String item : checklistListRaw) {
-                checkList.add(new CheckListItem(null, item, false));
-            }
-            checkListItemDao.insertInTx(checkList);
 
         } catch (IOException e) {
             e.printStackTrace();

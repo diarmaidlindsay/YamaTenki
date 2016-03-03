@@ -33,6 +33,12 @@
                 android:id="@+id/setting_download_only_wifi"
                 layout="@layout/scroll_item_settings_no_subtitle"/>
 
+            <View style="@style/Divider"/>
+
+            <include
+                android:id="@+id/setting_language"
+                layout="@layout/scroll_item_settings_language"/>
+
             <View style="@style/Divider" android:visibility="gone"/>
 
             <include

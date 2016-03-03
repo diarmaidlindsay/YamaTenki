@@ -145,7 +145,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         mountain = mountainDao.load(mountainId);
         title = (TextView) findViewById(R.id.text_forecast_header);
         title.setTypeface(Utils.getHannariTypeFace(this));
-        if(Utils.isEnglishLocale(this)) {
+        if(Utils.isEnglishLanguageSelected(this)) {
             title.setText(mountain.getTitleEnglish());
         } else {
             title.setText(mountain.getTitle());
@@ -726,6 +726,9 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         Mountain mountain = mountainDao.load(mountainId);
         Coordinate coordinate = mountain.getCoordinate();
 
+        String title = Utils.isEnglishLanguageSelected(this) ?
+                mountain.getTitleEnglish() :
+                mountain.getTitleExt();
         LatLng latLng = new LatLng(coordinate.getLatitude(), coordinate.getLongitude());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         map.moveCamera(cameraUpdate);
@@ -733,7 +736,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                 .position(latLng)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.mountain_axe_pin))
                 .snippet(mountain.getHeight() + "m")
-                .title(mountain.getTitleExt())).showInfoWindow();
+                .title(title)).showInfoWindow();
 
         dialog.show();
     }
@@ -804,7 +807,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         final Mountain mountain = mountainDao.load(mountainId);
 
         TextView snForecastHeader = (TextView) snLayout.findViewById(R.id.sn_forecast_header);
-        if(Utils.isEnglishLocale(this)) {
+        if(Utils.isEnglishLanguageSelected(this)) {
             snForecastHeader.setText(mountain.getTitleEnglish());
         } else {
             snForecastHeader.setText(mountain.getTitle());

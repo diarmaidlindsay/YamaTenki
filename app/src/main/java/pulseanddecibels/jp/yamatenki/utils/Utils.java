@@ -1,12 +1,14 @@
 package pulseanddecibels.jp.yamatenki.utils;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Diarmaid Lindsay on 2015/09/30.
@@ -70,7 +72,47 @@ public class Utils {
         return context.getResources().getConfiguration().locale.getLanguage();
     }
 
-    public static boolean isEnglishLocale(Context context) {
-        return getLocale(context).equals(Constants.ENGLISH_LANGUAGE);
+    /**
+     * In Android System settings or override using YamaTenki settings.
+     *
+     * False = Japanese
+     * True = English
+     */
+    public static boolean isEnglishLanguageSelected(Context context) {
+        String language = new Settings(context).getLanguage();
+        //if "Default" is selected, use the System Language
+        if(language.equals(Constants.DEFAULT_LANGUAGE_CODE)) {
+            //check the Android system language setting
+            return getLocale(context).equals(Constants.ENGLISH_LANGUAGE_CODE);
+        } else {
+            //use the setting which the user picked in the Settings Screen
+            return language.equals(Constants.ENGLISH_LANGUAGE_CODE);
+        }
+    }
+
+    /**
+     * http://stackoverflow.com/questions/6421657/how-to-force-language-in-android-application
+     *
+     * Force the language which was set in "Settings" to apply to the Context (Activity) provided
+     */
+    public static void setLocale(Context context){
+        String languageCode = new Settings(context).getLanguage();
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        //if "Default" then use the Android Locale, else use the Locale (Language) from settings
+        if(languageCode.equals(Constants.DEFAULT_LANGUAGE_CODE)) {
+            //can't use Locale.forLanguageTag because requires Android v21+
+            String lastLocale = new Settings(context).getLastLocale();
+            if(lastLocale.equals(Constants.ENGLISH_LANGUAGE_CODE)) {
+                config.locale = Locale.ENGLISH;
+            } else {
+                //default to Japanese
+                config.locale = Locale.JAPANESE;
+            }
+        } else {
+            config.locale = locale;
+        }
+        context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
     }
 }

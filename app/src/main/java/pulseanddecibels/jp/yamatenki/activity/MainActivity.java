@@ -45,6 +45,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.setLocale(this);
         setContentView(R.layout.activity_main);
         TextView header = (TextView) findViewById(R.id.text_main_header);
         header.setTypeface(Utils.getHannariTypeFace(this));
@@ -132,6 +133,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
             }
         });

@@ -30,6 +30,7 @@ public class ChecklistActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.setLocale(this);
         setContentView(R.layout.activity_checklist);
         listAdapter = new ChecklistListAdapter(this);
         TextView header = (TextView) findViewById(R.id.checklist_header);

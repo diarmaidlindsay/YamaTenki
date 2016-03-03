@@ -132,7 +132,7 @@ public class MountainListAdapter extends BaseAdapter {
             convertView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.yama_background));
         }
         Mountain mountain = (Mountain) getItem(position);
-        if(Utils.isEnglishLocale(mContext)) {
+        if(Utils.isEnglishLanguageSelected(mContext)) {
             viewHolder.name.setText(mountain.getTitleEnglish());
         } else {
             viewHolder.name.setText(mountain.getTitle());

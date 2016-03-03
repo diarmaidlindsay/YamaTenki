@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/yama_background"
+    android:orientation="vertical"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/setting_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/LargeBrownText"
+        app:layout_widthPercent="90%"/>
+
+    <TextView
+        android:id="@+id/setting_subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/SmallBrownText"
+        app:layout_widthPercent="90%"
+        android:layout_below="@id/setting_title"/>
+
+</android.support.percent.PercentRelativeLayout>

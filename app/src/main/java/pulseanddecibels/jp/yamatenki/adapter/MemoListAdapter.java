@@ -86,7 +86,7 @@ public class MemoListAdapter extends BaseAdapter {
         final MyMemo memo = (MyMemo) getItem(position);
         Mountain mountain = memo.getMountain();
 
-        if(Utils.isEnglishLocale(mContext)) {
+        if(Utils.isEnglishLanguageSelected(mContext)) {
             viewHolder.name.setText(mountain.getTitleEnglish());
         } else {
             viewHolder.name.setText(mountain.getTitle());
