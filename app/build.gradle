@@ -16,8 +16,8 @@ android {
         applicationId "pulseanddecibels.jp.yamatenki"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 11
-        versionName "1.5"
+        versionCode 12
+        versionName "1.6"
     }
     buildTypes {
         release {
