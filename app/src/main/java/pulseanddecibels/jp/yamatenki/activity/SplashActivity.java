@@ -53,11 +53,10 @@ public class SplashActivity extends Activity {
         JodaTimeAndroid.init(this);
         goFullScreen();
 
-
         if (settings.isFirstTimeRun() ||
                 settings.getLastLocale().equals("") ||
                 !settings.getLastLocale().equals(Utils.getLocale(this))) {
-            //load English or Japanese csv files if the language was changed or if first time
+            //load English or Japanese csv files if the Android language was changed or if first time
             settings.setLastLocale(Utils.getLocale(this));
             new DatabaseSetupTask().execute();
             if(settings.isFirstTimeRun()) {
@@ -131,6 +130,7 @@ public class SplashActivity extends Activity {
 
         final Button agreeButton = (Button) dialog.findViewById(R.id.agree_button);
         agreeButton.setEnabled(false);
+        agreeButton.setAlpha(.5f);
         agreeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,17 +142,6 @@ public class SplashActivity extends Activity {
                 }
             }
         });
-        Button disagreeButton = (Button) dialog.findViewById(R.id.disagree_button);
-        disagreeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                settings.setAgreedToLicense(false);
-                dialog.dismiss();
-                if(!databaseTaskRunning) {
-                    finish();
-                }
-            }
-        });
 
         final CheckBox agreementCheckbox = (CheckBox) dialog.findViewById(R.id.agreement_checkbox);
         agreementCheckbox.setOnClickListener(new View.OnClickListener() {
@@ -160,10 +149,10 @@ public class SplashActivity extends Activity {
             public void onClick(View v) {
                 CheckBox checkbox = (CheckBox) v;
                 if(checkbox.isChecked()) {
-                    agreeButton.setVisibility(View.VISIBLE);
+                    agreeButton.setAlpha(1.0f);
                     agreeButton.setEnabled(true);
                 } else {
-                    agreeButton.setVisibility(View.INVISIBLE);
+                    agreeButton.setAlpha(.5f);
                     agreeButton.setEnabled(false);
                 }
             }
@@ -175,10 +164,10 @@ public class SplashActivity extends Activity {
             public void onClick(View v) {
                 agreementCheckbox.setChecked(!agreementCheckbox.isChecked());
                 if(agreementCheckbox.isChecked()) {
-                    agreeButton.setVisibility(View.VISIBLE);
+                    agreeButton.setAlpha(1.0f);
                     agreeButton.setEnabled(true);
                 } else {
-                    agreeButton.setVisibility(View.INVISIBLE);
+                    agreeButton.setAlpha(.5f);
                     agreeButton.setEnabled(false);
                 }
             }
