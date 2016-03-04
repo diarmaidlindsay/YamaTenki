@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.CursorAdapter;
 import android.text.InputType;
 import android.util.SparseArray;
 import android.view.View;
@@ -23,6 +25,7 @@ import java.io.Serializable;
 import pulseanddecibels.jp.yamatenki.R;
 import pulseanddecibels.jp.yamatenki.adapter.MemoListAdapter;
 import pulseanddecibels.jp.yamatenki.adapter.MountainListAdapter;
+import pulseanddecibels.jp.yamatenki.adapter.SuggestionsAdapter;
 import pulseanddecibels.jp.yamatenki.enums.MemoListColumn;
 import pulseanddecibels.jp.yamatenki.enums.MountainListColumn;
 import pulseanddecibels.jp.yamatenki.enums.Subscription;
@@ -56,11 +59,13 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
     private TextView tableHeaderHeight;
     private TextView tableHeaderRating;
     private TextView tableHeaderDate;
+    private SearchView nameSearchView;
     private SearchView minHeightSearchView;
     private SearchView maxHeightSearchView;
     private SearchView myMountainSearchView;
     private SearchView memoSearchView;
     private MountainListAdapter mountainListAdapter;
+    private SuggestionsAdapter suggestionsAdapter;
     private MemoListAdapter memoListAdapter;
 
     @Override
@@ -129,7 +134,6 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
                 header.setText(String.format(areaTemplate, area));
                 //the Japanese names are stored in the database so always use those
                 mountainListAdapter.searchByArea(getJapaneseAreaForButtonId(areaId));
-
             } else if (latitude != 0 && longitude != 0) {
                 //we came here from Main Activity (Closest 20 Mountains)
                 setContentView(R.layout.activity_search_area);
@@ -143,7 +147,6 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
                 header.setText(getResources().getString(R.string.text_search_height_header));
                 minHeightSearchView = (SearchView) findViewById(R.id.min_height_searchview);
                 maxHeightSearchView = (SearchView) findViewById(R.id.max_height_searchview);
-
                 setupSearchView(minHeightSearchView, true);
                 setupSearchView(maxHeightSearchView, true);
                 minHeightSearchView.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -159,10 +162,13 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
                 setContentView(R.layout.activity_search_name);
                 header = (TextView) findViewById(R.id.text_search_header);
                 header.setText(getResources().getString(R.string.text_search_name_header));
-                SearchView nameSearchView = (SearchView) findViewById(R.id.search_name_searchView);
+                nameSearchView = (SearchView) findViewById(R.id.search_name_searchView);
                 setupSearchView(nameSearchView, false);
                 nameSearchView.setQueryHint(getResources().getString(R.string.text_search_textbox_hint));
                 nameSearchView.setOnQueryTextListener(getNameTextListener(nameSearchView));
+                suggestionsAdapter = getSuggestionsAdapter();
+                nameSearchView.setSuggestionsAdapter(suggestionsAdapter);
+                nameSearchView.setOnSuggestionListener(getSuggestionListener());
                 mountainListAdapter.searchByName(""); //on launch display all
             } else if (searchType != null && searchType.equals("myMountain")) {
                 //we came here from Main Activity (My Mountain List)
@@ -188,7 +194,6 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
             tableHeaderDifficulty.setOnClickListener(getDifficultyHeaderOnClickListener());
             tableHeaderHeight = (TextView) mountainListContainer.findViewById(R.id.table_header_height);
             tableHeaderHeight.setOnClickListener(getHeightHeaderOnClickListener());
-            mountainListAdapter.sort(MountainListColumn.NAME);
             mountainListRequestFocus(); //stop search box auto focusing
         }
 
@@ -257,6 +262,19 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
         searchView.setIconifiedByDefault(false);
     }
 
+    private SuggestionsAdapter getSuggestionsAdapter()
+    {
+        final String[] from = new String[] {"mountainName"};
+        final int[] to = new int[] {R.id.suggestion_item};
+
+        return new SuggestionsAdapter(this,
+                R.layout.list_item_suggestion,
+                null,
+                from,
+                to,
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+    }
+
     private void hideSearchIcon(SearchView searchView) {
         int searchImageViewId = searchView.getContext().getResources()
                 .getIdentifier("android:id/search_mag_icon", null, null);
@@ -319,7 +337,6 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
                 @Override
                 public void run() {
                     mountainListAdapter.searchByName(text);
-                    //result.setText(mountainListAdapter.getCount() + " items displayed");
                 }
             };
 
@@ -335,9 +352,10 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                text = newText;
+                suggestionsAdapter.populateSuggestions(text);
                 //if text cleared display all again
                 if (newText.length() == 0) {
-                    text = newText;
                     mHandler.removeCallbacks(mFilterTask);
                     mHandler.postDelayed(mFilterTask, 0);
                     mountainListRequestFocus();
@@ -585,6 +603,32 @@ public class SearchableActivity extends Activity implements OnInAppBillingServic
             tableHeaderDifficulty.setText(difficultyString);
             tableHeaderHeight.setText(heightString);
         }
+    }
+
+    /**
+     * For Autocomplete function in "Search by Name"
+     */
+    private SearchView.OnSuggestionListener getSuggestionListener()
+    {
+        return new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                Cursor cursor = (Cursor) nameSearchView.getSuggestionsAdapter().getItem(position);
+                String choice = cursor.getString(1);
+                nameSearchView.setQuery(choice, false);
+                mountainListAdapter.searchByName(choice);
+                return true;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Cursor cursor = (Cursor) nameSearchView.getSuggestionsAdapter().getItem(position);
+                String choice = cursor.getString(1);
+                nameSearchView.setQuery(choice, false);
+                mountainListAdapter.searchByName(choice);
+                return true;
+            }
+        };
     }
 
     /**

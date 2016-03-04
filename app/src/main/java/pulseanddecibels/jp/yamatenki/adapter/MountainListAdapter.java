@@ -77,8 +77,8 @@ public class MountainListAdapter extends BaseAdapter {
     private final Context mContext;
     private final LayoutInflater layoutInflater;
     private final Map<Long, Integer> currentMountainStatus = new HashMap<>();
-    private MountainListColumn currentSorting;
-    private SortOrder currentOrder;
+    private MountainListColumn currentSorting = MountainListColumn.NAME;
+    private SortOrder currentOrder = SortOrder.ASC;
     private List mountainList = new ArrayList<>();
     private GeoLocation here;
     private String searchString; //in case we have to resubmit the query after update in child activity
@@ -259,7 +259,7 @@ public class MountainListAdapter extends BaseAdapter {
         }
 
         mountainList = qb.list();
-        notifyDataSetChanged();
+        applyCurrentSorting();
     }
 
     public void searchByMyMountainName(String searchString) {
@@ -383,6 +383,22 @@ public class MountainListAdapter extends BaseAdapter {
                     Collections.sort(mountainList, getHeightComparitor());
                     break;
             }
+        }
+
+        notifyDataSetInvalidated();
+    }
+
+    private void applyCurrentSorting() {
+        switch (currentSorting) {
+            case NAME:
+                Collections.sort(mountainList, getNameComparitor());
+                break;
+            case DIFFICULTY:
+                Collections.sort(mountainList, getDifficultyComparitor());
+                break;
+            case HEIGHT:
+                Collections.sort(mountainList, getHeightComparitor());
+                break;
         }
 
         notifyDataSetInvalidated();
