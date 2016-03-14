@@ -24,7 +24,7 @@ public class ForecastArrayElement {
     private final double totalCloudCover;
     private final boolean daily;
 
-    public ForecastArrayElement(String timeStamp, int mountainStatus, List<WindAndTemperatureElement> windAndTemperatures, Integer temperature, float precipitation, int totalCloudCover, boolean daily) {
+    public ForecastArrayElement(String timeStamp, int mountainStatus, List<WindAndTemperatureElement> windAndTemperatures, Double temperature, float precipitation, int totalCloudCover, boolean daily) {
         this.timeStamp = timeStamp;
         this.mountainStatus = mountainStatus;
         this.windAndTemperatures = windAndTemperatures;

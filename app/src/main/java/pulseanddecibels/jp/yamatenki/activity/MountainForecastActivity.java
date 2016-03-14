@@ -79,6 +79,7 @@ import pulseanddecibels.jp.yamatenki.enums.Subscription;
 import pulseanddecibels.jp.yamatenki.interfaces.OnDownloadComplete;
 import pulseanddecibels.jp.yamatenki.interfaces.OnInAppBillingServiceSetupComplete;
 import pulseanddecibels.jp.yamatenki.utils.DateUtils;
+import pulseanddecibels.jp.yamatenki.utils.ForecastUtils;
 import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
 import pulseanddecibels.jp.yamatenki.utils.Settings;
 import pulseanddecibels.jp.yamatenki.utils.SubscriptionSingleton;
@@ -522,25 +523,25 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                     List<WindAndTemperature> windAndTemperatureList = forecast.getWindAndTemperatureList();
                     //again depending on the amount of heights, we will display a different amount of rows...
                     if (heights.size() == 3 || heights.size() == 2 || heights.size() == 1) {
-                        int direction = getDirectionFromDegrees(windAndTemperatureList.get(0).getWindDirection());
-                        int velocity = windAndTemperatureList.get(0).getWindVelocity().intValue();
+                        int direction = ForecastUtils.getDirectionFromDegrees(windAndTemperatureList.get(0).getWindDirection());
+                        Double velocity = windAndTemperatureList.get(0).getWindVelocity();
                         forecastColumn.getLowHeightTemperature().setText(String.format("%d", windAndTemperatureList.get(0).getTemperature().intValue()));
-                        forecastColumn.getLowHeightWindDirection().setImageResource(getWindImage(direction, velocity));
+                        forecastColumn.getLowHeightWindDirection().setImageResource(ForecastUtils.getWindImage(direction, velocity));
                         forecastColumn.getLowHeightWind().setText(String.format("%d", windAndTemperatureList.get(0).getWindVelocity().intValue()));
 
                     }
                     if (heights.size() == 3 || heights.size() == 2) {
-                        int direction = getDirectionFromDegrees(windAndTemperatureList.get(1).getWindDirection());
-                        int velocity = windAndTemperatureList.get(1).getWindVelocity().intValue();
+                        int direction = ForecastUtils.getDirectionFromDegrees(windAndTemperatureList.get(1).getWindDirection());
+                        Double velocity = windAndTemperatureList.get(1).getWindVelocity();
                         forecastColumn.getMidHeightTemperature().setText(String.format("%d", windAndTemperatureList.get(1).getTemperature().intValue()));
-                        forecastColumn.getMidHeightWindDirection().setImageResource(getWindImage(direction, velocity));
+                        forecastColumn.getMidHeightWindDirection().setImageResource(ForecastUtils.getWindImage(direction, velocity));
                         forecastColumn.getMidHeightWind().setText(String.format("%d", windAndTemperatureList.get(1).getWindVelocity().intValue()));
                     }
                     if (heights.size() == 3) {
-                        int direction = getDirectionFromDegrees(windAndTemperatureList.get(2).getWindDirection());
-                        int velocity = windAndTemperatureList.get(2).getWindVelocity().intValue();
+                        int direction = ForecastUtils.getDirectionFromDegrees(windAndTemperatureList.get(2).getWindDirection());
+                        Double velocity = windAndTemperatureList.get(2).getWindVelocity();
                         forecastColumn.getHighHeightTemperature().setText(String.format("%d", windAndTemperatureList.get(2).getTemperature().intValue()));
-                        forecastColumn.getHighHeightWindDirection().setImageResource(getWindImage(direction, velocity));
+                        forecastColumn.getHighHeightWindDirection().setImageResource(ForecastUtils.getWindImage(direction, velocity));
                         forecastColumn.getHighHeightWind().setText(String.format("%d", windAndTemperatureList.get(2).getWindVelocity().intValue()));
                     }
 
@@ -565,74 +566,6 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                 }
             }
         }
-    }
-
-    private int getWindImage(int direction, int velocity) {
-        final SparseIntArray GREEN_ARROWS = new SparseIntArray() {
-            {
-                append(1, R.drawable.arrow_green01);
-                append(2, R.drawable.arrow_green02);
-                append(3, R.drawable.arrow_green03);
-                append(4, R.drawable.arrow_green04);
-                append(5, R.drawable.arrow_green05);
-                append(6, R.drawable.arrow_green06);
-                append(7, R.drawable.arrow_green07);
-                append(8, R.drawable.arrow_green08);
-            }
-        };
-        final SparseIntArray BLUE_ARROWS = new SparseIntArray() {
-            {
-                append(1, R.drawable.arrow_blue01);
-                append(2, R.drawable.arrow_blue02);
-                append(3, R.drawable.arrow_blue03);
-                append(4, R.drawable.arrow_blue04);
-                append(5, R.drawable.arrow_blue05);
-                append(6, R.drawable.arrow_blue06);
-                append(7, R.drawable.arrow_blue07);
-                append(8, R.drawable.arrow_blue08);
-            }
-        };
-        final SparseIntArray RED_ARROWS = new SparseIntArray() {
-            {
-                append(1, R.drawable.arrow_red01);
-                append(2, R.drawable.arrow_red02);
-                append(3, R.drawable.arrow_red03);
-                append(4, R.drawable.arrow_red04);
-                append(5, R.drawable.arrow_red05);
-                append(6, R.drawable.arrow_red06);
-                append(7, R.drawable.arrow_red07);
-                append(8, R.drawable.arrow_red08);
-            }
-        };
-
-        if (velocity < 8) {
-            return GREEN_ARROWS.get(direction);
-        } else if (velocity < 15) {
-            return BLUE_ARROWS.get(direction);
-        } else {
-            return RED_ARROWS.get(direction);
-        }
-    }
-
-    private int getDirectionFromDegrees(double degrees) {
-        if (((degrees >= 337.5) && (degrees <= 360)) || (degrees >= 0 & degrees < 22.5)) {
-            return 1;
-        } else if (degrees >= 22.5 && degrees < 67.5) {
-            return 2;
-        } else if (degrees >= 67.5 && degrees < 112.5) {
-            return 3;
-        } else if (degrees >= 112.5 && degrees < 157.5) {
-            return 4;
-        } else if (degrees >= 157.5 && degrees < 202.5) {
-            return 5;
-        } else if (degrees >= 202.5 && degrees < 247.5) {
-            return 6;
-        } else if (degrees >= 247.5 && degrees < 292.5) {
-            return 7;
-        } else if (degrees >= 292.5 && degrees < 337.5) {
-            return 8;
-        }
-        return 0;
     }
 
     public View.OnClickListener getHelpDialogOnClickListener(final int stringId) {

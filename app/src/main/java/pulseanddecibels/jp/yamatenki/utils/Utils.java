@@ -23,6 +23,11 @@ public class Utils {
         return number < 10 ? "0" + number : "" + number;
     }
 
+    public static double round (double value, int precision) {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
+    }
+
     public static boolean isNumeric(String value) {
         return value.matches("\\d+");
     }

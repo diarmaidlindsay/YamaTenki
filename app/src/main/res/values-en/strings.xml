@@ -122,7 +122,7 @@
     <string name="text_subscription_not_subscribed">You are currently\nnot subscribed.</string>
     <string name="text_subscription_subscribed">%s subscription is active.</string>
     <string name="button_view_subscription_plans">View\nsubscriptions</string>
-    <string name="text_go_to_subscription_screen">Go to subcription plans Around ¥100 per month</string>
+    <string name="text_go_to_subscription_screen">Go to subcription plans</string>
     <string name="text_dialog_please_wait">Please Wait…</string>
     <string name="toast_height_min_max_error">Please enter altitude in order minimum - maximum.</string>
     <string name="toast_google_account_not_setup">Google Account is not setup on this device.</string>

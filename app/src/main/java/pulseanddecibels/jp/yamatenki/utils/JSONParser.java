@@ -159,14 +159,14 @@ public class JSONParser {
 
         for (int j = 0; j < windAndTemperatures.length(); j++) {
             JSONObject windAndTemperature = windAndTemperatures.getJSONObject(j);
-            int temperature = windAndTemperature.optInt("temperature");
-            int windVelocity = windAndTemperature.optInt("windVelocity");
-            int windDirection = windAndTemperature.optInt("windDirection");
+            Double temperature = windAndTemperature.optDouble("temperature");
+            Double windVelocity = windAndTemperature.optDouble("windVelocity");
+            Double windDirection = windAndTemperature.optDouble("windDirection");
             windAndTemperaturesList.add(new WindAndTemperatureElement(temperature, windVelocity, windDirection));
         }
 
         float precipitation = (float) forecast.optDouble("precipitation");
-        Integer temperature = forecast.has("temperature") ? forecast.optInt("temperature") : null;
+        Double temperature = forecast.has("temperature") ? forecast.optDouble("temperature") : null;
         int totalCloudCover = forecast.optInt("totalCloudCover");
         return new ForecastArrayElement(dateTime, mountainStatus,
                 windAndTemperaturesList, temperature, precipitation, totalCloudCover, daily);
