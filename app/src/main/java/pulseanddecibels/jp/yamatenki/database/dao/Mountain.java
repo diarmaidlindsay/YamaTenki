@@ -17,9 +17,14 @@ public class Mountain {
     private String yid;
     private String title;
     private String titleExt;
+    private String titleSplitted_1;
+    private String titleSplitted_2;
     private String titleEnglish;
+    private String titleSplittedEnglish_1;
+    private String titleSplittedEnglish_2;
     private String kana;
     private String referenceCity;
+    private String referenceCityEnglish;
     private long prefectureId;
     private long areaId;
     private Integer height;
@@ -51,14 +56,19 @@ public class Mountain {
         this.id = id;
     }
 
-    public Mountain(Long id, String yid, String title, String titleExt, String titleEnglish, String kana, String referenceCity, long prefectureId, long areaId, Integer height, Boolean topMountain) {
+    public Mountain(Long id, String yid, String title, String titleExt, String titleSplitted_1, String titleSplitted_2, String titleEnglish, String titleSplittedEnglish_1, String titleSplittedEnglish_2, String kana, String referenceCity, String referenceCityEnglish, long prefectureId, long areaId, Integer height, Boolean topMountain) {
         this.id = id;
         this.yid = yid;
         this.title = title;
         this.titleExt = titleExt;
+        this.titleSplitted_1 = titleSplitted_1;
+        this.titleSplitted_2 = titleSplitted_2;
         this.titleEnglish = titleEnglish;
+        this.titleSplittedEnglish_1 = titleSplittedEnglish_1;
+        this.titleSplittedEnglish_2 = titleSplittedEnglish_2;
         this.kana = kana;
         this.referenceCity = referenceCity;
+        this.referenceCityEnglish = referenceCityEnglish;
         this.prefectureId = prefectureId;
         this.areaId = areaId;
         this.height = height;
@@ -103,12 +113,44 @@ public class Mountain {
         this.titleExt = titleExt;
     }
 
+    public String getTitleSplitted_1() {
+        return titleSplitted_1;
+    }
+
+    public void setTitleSplitted_1(String titleSplitted_1) {
+        this.titleSplitted_1 = titleSplitted_1;
+    }
+
+    public String getTitleSplitted_2() {
+        return titleSplitted_2;
+    }
+
+    public void setTitleSplitted_2(String titleSplitted_2) {
+        this.titleSplitted_2 = titleSplitted_2;
+    }
+
     public String getTitleEnglish() {
         return titleEnglish;
     }
 
     public void setTitleEnglish(String titleEnglish) {
         this.titleEnglish = titleEnglish;
+    }
+
+    public String getTitleSplittedEnglish_1() {
+        return titleSplittedEnglish_1;
+    }
+
+    public void setTitleSplittedEnglish_1(String titleSplittedEnglish_1) {
+        this.titleSplittedEnglish_1 = titleSplittedEnglish_1;
+    }
+
+    public String getTitleSplittedEnglish_2() {
+        return titleSplittedEnglish_2;
+    }
+
+    public void setTitleSplittedEnglish_2(String titleSplittedEnglish_2) {
+        this.titleSplittedEnglish_2 = titleSplittedEnglish_2;
     }
 
     public String getKana() {
@@ -125,6 +167,14 @@ public class Mountain {
 
     public void setReferenceCity(String referenceCity) {
         this.referenceCity = referenceCity;
+    }
+
+    public String getReferenceCityEnglish() {
+        return referenceCityEnglish;
+    }
+
+    public void setReferenceCityEnglish(String referenceCityEnglish) {
+        this.referenceCityEnglish = referenceCityEnglish;
     }
 
     public long getPrefectureId() {

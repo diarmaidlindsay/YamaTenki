@@ -39,6 +39,7 @@ import pulseanddecibels.jp.yamatenki.database.dao.WindAndTemperatureDao;
 import pulseanddecibels.jp.yamatenki.model.ForecastArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainArrayElement;
 import pulseanddecibels.jp.yamatenki.model.MountainForecastJSON;
+import pulseanddecibels.jp.yamatenki.model.PrefectureElement;
 import pulseanddecibels.jp.yamatenki.model.StatusArrayElement;
 import pulseanddecibels.jp.yamatenki.model.WindAndTemperatureElement;
 import pulseanddecibels.jp.yamatenki.utils.Settings;
@@ -52,6 +53,8 @@ public class Database {
     private static DaoMaster daoMaster;
     private static DaoSession daoSession;
     private static SQLiteDatabase db;
+    //was database upgraded this session
+    private static boolean wasUpgraded = false;
 
     private Database() {
 
@@ -81,6 +84,7 @@ public class Database {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             // if we need to add new columns or tables or do data migration in later versions of Yama Tenki, the code should go here
+            // "newVersion" comes from YamaTenkiGreenDao Schema constructor
             if(oldVersion < 4) {
                 //add Reference City to Forecast
                 try {
@@ -91,10 +95,37 @@ public class Database {
                 //force re-downloading of mountain list after adding REFERENCE_CITY
                 new Settings(mContext).setListEtag("");
             }
+            if(oldVersion < 5) {
+                db.beginTransactionNonExclusive();
+                try {
+                    db.execSQL("ALTER TABLE 'MOUNTAIN' ADD 'TITLE_SPLITTED_1' TEXT");
+                    db.execSQL("ALTER TABLE 'MOUNTAIN' ADD 'TITLE_SPLITTED_2' TEXT");
+                    db.execSQL("ALTER TABLE 'MOUNTAIN' ADD 'TITLE_SPLITTED_ENGLISH_1' TEXT");
+                    db.execSQL("ALTER TABLE 'MOUNTAIN' ADD 'TITLE_SPLITTED_ENGLISH_2' TEXT");
+                    db.execSQL("ALTER TABLE 'MOUNTAIN' ADD 'REFERENCE_CITY_ENGLISH' TEXT");
+                    db.execSQL("ALTER TABLE 'PREFECTURE' ADD 'NAME_ENGLISH' TEXT");
+                    db.setTransactionSuccessful();
+                    //force re-downloading of mountain list after adding new fields
+                    new Settings(mContext).setListEtag("");
+                    setWasUpgraded(true);
+                } catch (SQLException e) {
+                    Log.v("onUpgrade", "Title splits were already added to Database, not adding again.");
+                } finally {
+                    db.endTransaction();
+                }
+            }
         }
     }
 
-    private static List<String> parseCSV(Context context, String path) throws IOException {
+    public static void setWasUpgraded(boolean wasUpgraded) {
+        Database.wasUpgraded = wasUpgraded;
+    }
+
+    public static boolean wasUpgraded() {
+        return wasUpgraded;
+    }
+
+    private static List<String> parseCSVSimple(Context context, String path) throws IOException {
         List<String> csvEntries = new ArrayList<>();
 
         InputStream inputStream = context.getAssets().open(path);
@@ -105,26 +136,44 @@ public class Database {
             csvEntries.add(line);
         }
 
+        br.close();
         return csvEntries;
     }
 
-    public static List<String> parsePrefectureCSV(Context context) throws IOException {
-        return parseCSV(context, "databases/prefectureList.csv");
+    public static List<PrefectureElement> parsePrefectureCSV(Context context) throws IOException {
+        List<PrefectureElement> prefectureEntries = new ArrayList<>();
+
+        InputStream inputStream = context.getAssets().open("databases/prefectureList.csv");
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
+        String csvSplitBy = ",";
+
+        while ((line = br.readLine()) != null) {
+            String[] row = line.split(csvSplitBy, 2);
+            if(row.length == 2) {
+                prefectureEntries.add(new PrefectureElement(row[0], row[1]));
+            } else {
+                Log.e("Database.parseCSV", "There was a problem parsing prefectureList.csv");
+            }
+        }
+
+        br.close();
+        return prefectureEntries;
     }
 
     public static List<String> parseAreaCSV(Context context) throws IOException {
-        return parseCSV(context, "databases/areaList.csv");
+        return parseCSVSimple(context, "databases/areaList.csv");
     }
 
     private static List<String> parseChecklistCSV(Context context) throws IOException {
-        return parseCSV(context, Utils.isEnglishLanguageSelected(context) ?
+        return parseCSVSimple(context, Utils.isEnglishLanguageSelected(context) ?
                 "databases/initialChecklist_en.csv" :
                 "databases/initialChecklist_jp.csv");
     }
 
     public static void loadEnglishChecklist(Context context) {
         try {
-            initialiseChecklist(context, parseCSV(context, "databases/initialChecklist_en.csv"));
+            initialiseChecklist(context, parseCSVSimple(context, "databases/initialChecklist_en.csv"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -132,7 +181,7 @@ public class Database {
 
     public static void loadJapaneseChecklist(Context context) {
         try {
-            initialiseChecklist(context, parseCSV(context, "databases/initialChecklist_jp.csv"));
+            initialiseChecklist(context, parseCSVSimple(context, "databases/initialChecklist_jp.csv"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -152,16 +201,16 @@ public class Database {
     public static void initialiseData(Context context) {
         AreaDao areaDao = Database.getInstance(context).getAreaDao();
         PrefectureDao prefectureDao = Database.getInstance(context).getPrefectureDao();
-        areaDao.deleteAll();
-        prefectureDao.deleteAll();
+                areaDao.deleteAll();
+                prefectureDao.deleteAll();
 
         try {
             initialiseChecklist(context, parseChecklistCSV(context));
 
-            List<String> prefecturesListRaw = Database.parsePrefectureCSV(context);
+            List<PrefectureElement> prefecturesListRaw = Database.parsePrefectureCSV(context);
             List<Prefecture> prefectureList = new ArrayList<>();
-            for (String prefecture : prefecturesListRaw) {
-                prefectureList.add(new Prefecture(null, prefecture));
+            for (PrefectureElement element : prefecturesListRaw) {
+                prefectureList.add(new Prefecture(null, element.getName(), element.getNameEnglish()));
             }
             prefectureDao.insertInTx(prefectureList);
 
@@ -196,8 +245,9 @@ public class Database {
             yids.add(key);
             Area area = areaDao.queryBuilder().where(AreaDao.Properties.Id.eq(element.getArea())).unique();
             Prefecture prefecture = prefectureDao.queryBuilder().where(PrefectureDao.Properties.Name.eq(element.getPrefecture().trim())).unique();
-            Mountain mountain = new Mountain(null, element.getYid(), element.getTitle(), element.getTitleExt(), element.getTitleEnglish(), element.getKana(), element.getReferenceCity(),
-                    prefecture.getId(), area.getId(), element.getHeight(), element.getTopMountain() == 1);
+            Mountain mountain = new Mountain(null, element.getYid(), element.getTitle(), element.getTitleExt(), element.getTitleSplitted1(), element.getTitleSplitted2(),
+                    element.getTitleEnglish(), element.getTitleSplittedEnglish1(), element.getTitleSplittedEnglish2(), element.getKana(), element.getReferenceCity(),
+                    element.getReferenceCityEnglish(), prefecture.getId(), area.getId(), element.getHeight(), element.getTopMountain() == 1);
             mountainList.add(mountain);
             Coordinate coordinate = new Coordinate(null, (float) element.getCoordinate().getLatitude(), (float) element.getCoordinate().getLongitude());
             coordinateMap.put(key, coordinate);

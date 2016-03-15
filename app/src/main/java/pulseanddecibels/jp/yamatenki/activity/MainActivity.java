@@ -25,6 +25,7 @@ import permissions.dispatcher.OnNeverAskAgain;
 import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.RuntimePermissions;
 import pulseanddecibels.jp.yamatenki.R;
+import pulseanddecibels.jp.yamatenki.database.Database;
 import pulseanddecibels.jp.yamatenki.utils.JSONDownloader;
 import pulseanddecibels.jp.yamatenki.utils.Settings;
 import pulseanddecibels.jp.yamatenki.utils.Utils;
@@ -46,6 +47,14 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utils.setLocale(this);
+        //force database migration on the main activity causing mountain list to download if necessary
+        Database.getInstance(this);
+        //if migration/upgrade happened, reload the csv files
+        if(Database.wasUpgraded()) {
+            Database.initialiseData(this);
+            //make sure this only runs once
+            Database.setWasUpgraded(false);
+        }
         setContentView(R.layout.activity_main);
         TextView header = (TextView) findViewById(R.id.text_main_header);
         header.setTypeface(Utils.getHannariTypeFace(this));

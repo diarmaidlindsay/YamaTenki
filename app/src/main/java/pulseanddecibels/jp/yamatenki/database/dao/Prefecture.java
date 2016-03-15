@@ -8,6 +8,7 @@ public class Prefecture {
 
     private Long id;
     private String name;
+    private String nameEnglish;
 
     public Prefecture() {
     }
@@ -16,9 +17,10 @@ public class Prefecture {
         this.id = id;
     }
 
-    public Prefecture(Long id, String name) {
+    public Prefecture(Long id, String name, String nameEnglish) {
         this.id = id;
         this.name = name;
+        this.nameEnglish = nameEnglish;
     }
 
     public Long getId() {
@@ -35,6 +37,14 @@ public class Prefecture {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNameEnglish() {
+        return nameEnglish;
+    }
+
+    public void setNameEnglish(String nameEnglish) {
+        this.nameEnglish = nameEnglish;
     }
 
 }

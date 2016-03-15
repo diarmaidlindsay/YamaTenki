@@ -12,7 +12,7 @@ import de.greenrobot.daogenerator.Schema;
 public class YamaTenkiGreenDao {
 
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(1, "pulseanddecibels.jp.yamatenki.database.dao");
+        Schema schema = new Schema(5, "pulseanddecibels.jp.yamatenki.database.dao");
         Entity mountain = schema.addEntity("Mountain");
         Entity coordinate = schema.addEntity("Coordinate");
         Entity forecast = schema.addEntity("Forecast");
@@ -33,9 +33,14 @@ public class YamaTenkiGreenDao {
         mountain.addStringProperty("yid");
         mountain.addStringProperty("title");
         mountain.addStringProperty("titleExt");
+        mountain.addStringProperty("titleSplitted_1");
+        mountain.addStringProperty("titleSplitted_2");
         mountain.addStringProperty("titleEnglish");
+        mountain.addStringProperty("titleSplittedEnglish_1");
+        mountain.addStringProperty("titleSplittedEnglish_2");
         mountain.addStringProperty("kana");
         mountain.addStringProperty("referenceCity");
+        mountain.addStringProperty("referenceCityEnglish");
         Property prefectureId = mountain.addLongProperty("prefectureId").notNull().getProperty();
         Property areaId = mountain.addLongProperty("areaId").notNull().getProperty();
         mountain.addIntProperty("height");
@@ -116,6 +121,7 @@ public class YamaTenkiGreenDao {
          */
         prefecture.addIdProperty();
         prefecture.addStringProperty("name");
+        prefecture.addStringProperty("nameEnglish");
 
         /**
          * My Mountain
