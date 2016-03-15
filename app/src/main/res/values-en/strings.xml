@@ -154,4 +154,5 @@
     <string name="text_setting_language_subtitle_default">Default</string>
     <string name="text_setting_language_subtitle_english">English</string>
     <string name="text_setting_language_subtitle_japanese">Japanese</string>
+    <string name="text_forecast_height_string">%sm</string>
 </resources>
