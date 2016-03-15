@@ -128,20 +128,26 @@ public class JSONParser {
         String yid = mountain.optString("yid");
         String title = mountain.optString("title");
         String titleExt = mountain.optString("titleExt");
+        String titleSplitted1 = mountain.optString("titleSplitted1");
+        String titleSplitted2 = mountain.optString("titleSplitted2");
+        String titleSplittedEnglish1 = mountain.optString("titleSplittedEnglish1");
+        String titleSplittedEnglish2 = mountain.optString("titleSplittedEnglish2");
         String titleEnglish = mountain.optString("titleEnglish");
         String kana = mountain.optString("kana");
         String referenceCity = mountain.optString("referenceCity");
+        String referenceCityEnglish = mountain.optString("referenceCityEnglish");
         JSONObject coordinateObject = mountain.getJSONObject("coordinate");
         double latitude = coordinateObject.optDouble("lat");
         double longitude = coordinateObject.optDouble("lng");
         CoordinateElement coordinate = new CoordinateElement(latitude, longitude);
         String prefecture = mountain.optString("prefecture");
+        String prefectureEnglish = mountain.optString("prefectureEnglish");
         int area = mountain.optInt("area");
         int height = mountain.optInt("height");
         int topMountain = mountain.optInt("topMountain");
 
-        return new MountainArrayElement(yid, title, titleExt, titleEnglish, kana, referenceCity, coordinate, prefecture,
-                area, height, topMountain);
+        return new MountainArrayElement(yid, title, titleExt, titleSplitted1, titleSplitted2, titleEnglish, titleSplittedEnglish1, titleSplittedEnglish2,
+                kana, referenceCity, referenceCityEnglish, coordinate, prefecture, prefectureEnglish, area, height, topMountain);
     }
 
     private static StatusArrayElement parseStatus(JSONObject status) throws JSONException {

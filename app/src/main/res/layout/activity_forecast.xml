@@ -12,13 +12,19 @@
 
         <TextView
             android:id="@+id/text_forecast_header"
-            style="@style/ScreenTitle"
-            android:lines="2"
-            android:maxLines="2"/>
+            style="@style/ScreenTitle"/>
+
+        <TextView
+            android:id="@+id/text_forecast_height"
+            android:layout_below="@id/text_forecast_header"
+            android:textSize="22sp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            style="@style/ScreenTitle"/>
 
         <LinearLayout
             android:id="@+id/mountain_subheader"
-            android:layout_below="@id/text_forecast_header"
+            android:layout_below="@id/text_forecast_height"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center">

@@ -146,17 +146,24 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         mountain = mountainDao.load(mountainId);
         title = (TextView) findViewById(R.id.text_forecast_header);
         title.setTypeface(Utils.getHannariTypeFace(this));
-        if(Utils.isEnglishLanguageSelected(this)) {
-            title.setText(mountain.getTitleEnglish());
-        } else {
-            title.setText(mountain.getTitle());
-        }
+        title.setText(getForecastTitle());
+        TextView mountainHeight = (TextView) findViewById(R.id.text_forecast_height);
+        mountainHeight.setTypeface(Utils.getHannariTypeFace(this));
+        mountainHeight.setText(String.format(getString(R.string.text_forecast_height_string), mountain.getHeight()));
         TextView mountainPrefecture = (TextView) findViewById(R.id.mountain_prefecture);
         mountainPrefecture.setTypeface(Utils.getHannariTypeFace(this));
-        mountainPrefecture.setText(mountain.getPrefecture().getName());
+        mountainPrefecture.setText(
+                Utils.isEnglishLanguageSelected(this) ?
+                        mountain.getPrefecture().getNameEnglish() :
+                        mountain.getPrefecture().getName()
+        );
         TextView mountainReferenceCity = (TextView) findViewById(R.id.mountain_reference_city);
         mountainReferenceCity.setTypeface(Utils.getHannariTypeFace(this));
-        mountainReferenceCity.setText(mountain.getReferenceCity());
+        mountainReferenceCity.setText(
+                Utils.isEnglishLanguageSelected(this) ?
+                        mountain.getReferenceCityEnglish() :
+                        mountain.getReferenceCity()
+        );
         ImageView currentDifficultyImage = (ImageView) findViewById(R.id.mountain_forecast_current_difficulty);
         currentDifficultyImage.setImageResource(DIFFICULTY_BIG_IMAGES.get(mountain.getStatus()));
         TextView currentDifficultyText = (TextView) findViewById(R.id.mountain_forecast_current_difficulty_text);
@@ -659,9 +666,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         Mountain mountain = mountainDao.load(mountainId);
         Coordinate coordinate = mountain.getCoordinate();
 
-        String title = Utils.isEnglishLanguageSelected(this) ?
-                mountain.getTitleEnglish() :
-                mountain.getTitleExt();
+        String title = getForecastTitle();
         LatLng latLng = new LatLng(coordinate.getLatitude(), coordinate.getLongitude());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         map.moveCamera(cameraUpdate);
@@ -672,6 +677,28 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
                 .title(title)).showInfoWindow();
 
         dialog.show();
+    }
+
+    private String getForecastTitle() {
+        String title;
+        String titleSplitted1;
+        String titleSplitted2;
+
+        if(Utils.isEnglishLanguageSelected(this)) {
+            titleSplitted1 = mountain.getTitleSplittedEnglish_1();
+            titleSplitted2 = mountain.getTitleSplittedEnglish_2();
+        } else {
+            titleSplitted1 = mountain.getTitleSplitted_1();
+            titleSplitted2 = mountain.getTitleSplitted_2();
+        }
+
+        if(titleSplitted2 != null && !titleSplitted2.equals("")) {
+            title = titleSplitted1 + "\n" + titleSplitted2;
+        } else {
+            title = titleSplitted1;
+        }
+
+        return title;
     }
 
     private void displayFacebookDialog() {
@@ -740,11 +767,7 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         final Mountain mountain = mountainDao.load(mountainId);
 
         TextView snForecastHeader = (TextView) snLayout.findViewById(R.id.sn_forecast_header);
-        if(Utils.isEnglishLanguageSelected(this)) {
-            snForecastHeader.setText(mountain.getTitleEnglish());
-        } else {
-            snForecastHeader.setText(mountain.getTitle());
-        }
+        snForecastHeader.setText(getForecastTitle());
 
         snForecastHeader.setTypeface(Utils.getHannariTypeFace(this));
 
