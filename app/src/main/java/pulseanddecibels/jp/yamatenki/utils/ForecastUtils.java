@@ -46,9 +46,9 @@ public class ForecastUtils {
                 append(8, R.drawable.arrow_red08);
             }
         };
-        if (velocity <= 0.3) {
+        if (velocity <= 7) {
             return GREEN_ARROWS.get(direction);
-        } else if (velocity <= 10) {
+        } else if (velocity <= 14) {
             return BLUE_ARROWS.get(direction);
         } else {
             return RED_ARROWS.get(direction);

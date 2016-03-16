@@ -6,7 +6,7 @@ android {
         config {
             keyAlias 'Yama Tenki Key'
             keyPassword 'yamatenki'
-            storeFile file('${System.properties[\'user.home\']}/Documents/AndroidKeystore.jks')
+            storeFile file('/Users/lindsay/Documents/AndroidKeystore.jks')
             storePassword 'miyawaki'
         }
     }
@@ -16,8 +16,8 @@ android {
         applicationId "pulseanddecibels.jp.yamatenki"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 13
-        versionName "1.7"
+        versionCode 14
+        versionName "1.7.1"
     }
     buildTypes {
         release {
