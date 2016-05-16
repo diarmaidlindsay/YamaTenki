@@ -1,6 +1,7 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="300dp"
               android:layout_height="500dp"
+              android:orientation="vertical"
               xmlns:map="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.gms.maps.MapView
@@ -16,5 +17,13 @@
         map:uiZoomGestures="true"
         map:liteMode="false"
         />
+    <TextView
+        android:id="@+id/help_coordinates"
+        style="@style/SmallBrownText"
+        android:text="@string/text_help_coordinates"
+        android:textColor="@android:color/holo_red_light"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"/>
 
-</LinearLayout>
+</FrameLayout>

@@ -666,6 +666,9 @@ public class MountainForecastActivity extends Activity implements OnDownloadComp
         Mountain mountain = mountainDao.load(mountainId);
         Coordinate coordinate = mountain.getCoordinate();
 
+        TextView coordinatesText = (TextView) dialog.findViewById(R.id.help_coordinates);
+        coordinatesText.setText(String.format(getString(R.string.text_help_coordinates), coordinate.getLatitude(), coordinate.getLongitude()));
+
         String title = getForecastTitle();
         LatLng latLng = new LatLng(coordinate.getLatitude(), coordinate.getLongitude());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);

@@ -155,4 +155,5 @@
     <string name="text_setting_language_subtitle_english">English</string>
     <string name="text_setting_language_subtitle_japanese">Japanese</string>
     <string name="text_forecast_height_string">%sm</string>
+    <string name="text_help_coordinates">The measurement point is %1$sN %2$sE</string>
 </resources>
