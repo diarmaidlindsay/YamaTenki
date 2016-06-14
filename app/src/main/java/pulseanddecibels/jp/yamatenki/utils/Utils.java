@@ -15,8 +15,13 @@ import java.util.Locale;
  * Copyright Pulse and Decibels 2015
  */
 public class Utils {
+    private static Typeface hannariFont;
+
     public static Typeface getHannariTypeFace(Context context) {
-        return Typeface.createFromAsset(context.getAssets(), "fonts/Hannari.otf");
+        if(hannariFont == null) {
+            hannariFont = Typeface.createFromAsset(context.getAssets(), "fonts/Hannari.otf");
+        }
+        return hannariFont;
     }
 
     public static String num2DigitString(int number) {
